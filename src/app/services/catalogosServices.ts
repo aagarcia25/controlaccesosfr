@@ -8,10 +8,15 @@ export class CatalogosServices {
         return await post('aniosindex', data);
     };
 
+      public static async visita_index(data : any) {
+        return await post('visita_index', data);
+    };
+
 
         public static async Filesindex(data : any) {
         return await post('Filesindex', data);
     };
 
+    
     
 }

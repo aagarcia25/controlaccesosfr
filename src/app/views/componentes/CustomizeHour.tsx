@@ -1,9 +1,9 @@
 import Typography from "@mui/material/Typography";
-import { DateTimePicker } from "@mui/x-date-pickers";
+import { MobileTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-const CustomizedDate = ({
+const CustomizeHour = ({
   value,
   label,
   onchange,
@@ -16,10 +16,14 @@ const CustomizedDate = ({
     <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Typography sx={{ fontFamily: "sans-serif" }}>{label}:</Typography>
-        <DateTimePicker value={value} onChange={(v) => onchange(v)} />
+        <MobileTimePicker
+          openTo="hours"
+          value={value}
+          onChange={(v) => onchange(v)}
+        />
       </LocalizationProvider>
     </div>
   );
 };
 
-export default CustomizedDate;
+export default CustomizeHour;

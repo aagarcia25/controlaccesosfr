@@ -45,7 +45,7 @@ const Visitas = () => {
   const [NombreReceptor, setNombreReceptor] = useState("");
   const [ApellidoPReceptor, setApellidoPReceptor] = useState("");
   const [ApellidoMReceptor, setApellidoMReceptor] = useState("");
-  const [openModal, setopenModal] = useState(true);
+  const [openModal, setopenModal] = useState(false);
 
   const [fini, setFini] = useState<Dayjs | null>();
 
@@ -72,90 +72,89 @@ const Visitas = () => {
 
   const handleSend = () => {
     let send = false;
-    setopenModal(true);
-    // if (!idvista) {
-    //   Swal.fire("Indique el Tipo de Acceso", "¡Error!", "info");
-    //   send = false;
-    // }
+    if (!idvista) {
+      Swal.fire("Indique el Tipo de Acceso", "¡Error!", "info");
+      send = false;
+    }
 
-    // if (idvista == "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
-    //   if (
-    //     !NombreVisitante ||
-    //     !ApellidoPVisitante ||
-    //     !NombreReceptor ||
-    //     !ApellidoMReceptor ||
-    //     !idunidad ||
-    //     !idpiso ||
-    //     !idvista ||
-    //     !idDuracion
-    //   ) {
-    //     Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
-    //     send = false;
-    //   } else {
-    //     send = true;
-    //   }
-    // } else if (idvista == "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
-    //   if (
-    //     !proveedor ||
-    //     !NombreVisitante ||
-    //     !ApellidoPVisitante ||
-    //     !NombreReceptor ||
-    //     !ApellidoMReceptor ||
-    //     !idunidad ||
-    //     !idpiso ||
-    //     !idvista ||
-    //     !idDuracion
-    //   ) {
-    //     Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
-    //     send = false;
-    //   } else {
-    //     send = true;
-    //   }
-    // }
+    if (idvista == "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
+      if (
+        !NombreVisitante ||
+        !ApellidoPVisitante ||
+        !NombreReceptor ||
+        !ApellidoMReceptor ||
+        !idunidad ||
+        !idpiso ||
+        !idvista ||
+        !idDuracion
+      ) {
+        Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
+        send = false;
+      } else {
+        send = true;
+      }
+    } else if (idvista == "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
+      if (
+        !proveedor ||
+        !NombreVisitante ||
+        !ApellidoPVisitante ||
+        !NombreReceptor ||
+        !ApellidoMReceptor ||
+        !idunidad ||
+        !idpiso ||
+        !idvista ||
+        !idDuracion
+      ) {
+        Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
+        send = false;
+      } else {
+        send = true;
+      }
+    }
 
-    // let data = {
-    //   NUMOPERACION: 1,
-    //   CHID: id,
-    //   CHUSER: user.Id,
-    //   ModificadoPor: user.Id,
-    //   FechaVisita: fini?.format("YYYY-MM-DDTHH:mm:ssZ"),
-    //   Duracion: idDuracion,
-    //   IdTipoAcceso: idvista,
-    //   Proveedor: proveedor,
-    //   NombreVisitante: NombreVisitante,
-    //   ApellidoPVisitante: ApellidoPVisitante,
-    //   ApellidoMVisitante: ApellidoMVisitante,
-    //   idTipoentidad: idTipo,
-    //   idEntidad: idEntidad,
-    //   NombreReceptor: NombreReceptor,
-    //   ApellidoPReceptor: ApellidoPReceptor,
-    //   ApellidoMReceptor: ApellidoMReceptor,
-    //   idEntidadReceptor: idunidad,
-    //   PisoReceptor: idpiso,
-    // };
-    // console.log(data);
+    let data = {
+      NUMOPERACION: 1,
+      CHID: id,
+      CHUSER: user.Id,
+      ModificadoPor: user.Id,
+      FechaVisita: fini?.format("YYYY-MM-DDTHH:mm:ssZ"),
+      Duracion: idDuracion,
+      IdTipoAcceso: idvista,
+      Proveedor: proveedor,
+      NombreVisitante: NombreVisitante,
+      ApellidoPVisitante: ApellidoPVisitante,
+      ApellidoMVisitante: ApellidoMVisitante,
+      idTipoentidad: idTipo,
+      idEntidad: idEntidad,
+      NombreReceptor: NombreReceptor,
+      ApellidoPReceptor: ApellidoPReceptor,
+      ApellidoMReceptor: ApellidoMReceptor,
+      idEntidadReceptor: idunidad,
+      PisoReceptor: idpiso,
+    };
 
-    // if (send) {
-
-    //   CatalogosServices.visita_index(data).then((res) => {
-    //     if (res.SUCCESS) {
-    //       Toast.fire({
-    //         icon: "success",
-    //         title: "¡Registro Agregado!",
-    //       });
-    //       console.log(res.RESPONSE);
-    //       Swal.fire(res.RESPONSE, "¡Error!", "info");
-
-    //       //  handleClose();
-    //     } else {
-    //       Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-    //     }
-    //   });
-    // }
+    if (send) {
+      CatalogosServices.visita_index(data).then((res) => {
+        if (res.SUCCESS) {
+          Toast.fire({
+            icon: "success",
+            title: "¡Registro Agregado!",
+          });
+          console.log("Registro Guardado");
+          console.log(res.RESPONSE);
+          setVrows(res.RESPONSE);
+          setId(res.RESPONSE.id);
+          //  handleClose();
+          setopenModal(true);
+        } else {
+          Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+        }
+      });
+    }
   };
 
   const handleClose = () => {
-    // navigate("/");
+    navigate("/");
   };
 
   const handleFilteridvisita = (v: any) => {
@@ -495,7 +494,11 @@ const Visitas = () => {
           </Grid>
         </Box>
       </ModalForm>
-      {openModal ? <VisitasModal handleClose={handleClose} obj={vrows} /> : ""}
+      {openModal ? (
+        <VisitasModal handleClose={handleClose} id={id} tipo={0} />
+      ) : (
+        ""
+      )}
     </>
   );
 };

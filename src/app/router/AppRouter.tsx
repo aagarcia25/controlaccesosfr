@@ -34,7 +34,7 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         {/* SECCION DE VISITAS */}
         <Route
           path="/inicio/visitas"
-          element={log ? <Visitas /> : <AuthRouter />}
+          element={log ? <Visitas editid={""} /> : <AuthRouter />}
         />
 
         {/* SECCION DE VISITAS */}

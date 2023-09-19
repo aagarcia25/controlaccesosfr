@@ -24,4 +24,17 @@ export interface Visita {
   IdEstatus: string
   tiempo: string
   entidadname: string
+  color: string
+  entidadreceptor: string
+  pisoreceptorrr: string
+}
+
+export interface agenda { 
+ id: string
+  title: string
+  allDay: boolean
+  start: Date
+  end: Date
+  color?: string
+  estatus?:string
 }

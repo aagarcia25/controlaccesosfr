@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -20,9 +20,11 @@ import CustomizedDate from "../componentes/CustomizedDate";
 import ModalForm from "../componentes/ModalForm";
 import SelectFrag from "../componentes/SelectFrag";
 import VisitasModal from "./VisitasModal";
+import Progress from "../Progress";
 
-const Visitas = () => {
+const Visitas = ({ editid }: { editid: string }) => {
   const navigate = useNavigate();
+  const [open, setopen] = useState(false);
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [vrows, setVrows] = useState({});
   const [id, setId] = useState("");
@@ -49,6 +51,28 @@ const Visitas = () => {
 
   const [fini, setFini] = useState<Dayjs | null>();
 
+  const loadFilter = (operacion: number, id?: string) => {
+    setopen(true);
+    let data = { NUMOPERACION: operacion, P_ID: id };
+    ShareService.SelectIndex(data).then((res) => {
+      if (operacion === 1) {
+        setListIdTipo(res.RESPONSE);
+      } else if (operacion === 2) {
+        setListEntidad(res.RESPONSE);
+        setopen(false);
+      } else if (operacion === 3) {
+        setListDuracion(res.RESPONSE);
+      } else if (operacion === 4) {
+        setListVisita(res.RESPONSE);
+      } else if (operacion === 5) {
+        setListPiso(res.RESPONSE);
+      } else if (operacion === 6) {
+        setListUnidad(res.RESPONSE);
+        setopen(false);
+      }
+    });
+  };
+
   const handleFilteridunidad = (v: string) => {
     setidunidad(v);
   };
@@ -70,8 +94,77 @@ const Visitas = () => {
     loadFilter(2, v);
   };
 
+  const handleedit = (id: string) => {
+    setopen(true);
+    let data = {
+      NUMOPERACION: 5,
+      CHID: id,
+    };
+
+    CatalogosServices.visita_index(data).then((res) => {
+      if (res.SUCCESS) {
+        Toast.fire({
+          icon: "success",
+          title: "¡Consulta Exitosa!",
+        });
+        console.log("Registro Guardado");
+        setidvista(res.RESPONSE[0].IdTipoAcceso);
+        setId(res.RESPONSE[0].id);
+        handleFilterChange2(dayjs(res.RESPONSE[0].FechaVisita));
+        setidDuracion(res.RESPONSE[0].Duracion);
+        setNombreVisitante(res.RESPONSE[0].NombreVisitante);
+        setApellidoPVisitante(res.RESPONSE[0].ApellidoMVisitante);
+        setApellidoMVisitante(res.RESPONSE[0].ApellidoPVisitante);
+        setNombreReceptor(res.RESPONSE[0].NombreReceptor);
+        setApellidoPReceptor(res.RESPONSE[0].ApellidoMReceptor);
+        setApellidoMReceptor(res.RESPONSE[0].ApellidoPReceptor);
+        handleFilteridTipo(res.RESPONSE[0].idTipoentidad);
+        setidEntidad(res.RESPONSE[0].idEntidad);
+        setidunidad(res.RESPONSE[0].IdEntidadReceptor);
+        setproveedor(res.RESPONSE[0].Proveedor);
+        handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
+
+        setopen(false);
+      } else {
+        Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+        setopen(false);
+      }
+    });
+  };
+
+  const handledeleted = () => {
+    let data = {
+      NUMOPERACION: 3,
+      CHID: id,
+      CHUSER: user.Id,
+    };
+
+    Swal.fire({
+      title: "¿Estas Seguro Eliminar Esta Cita?",
+      icon: "question",
+      showDenyButton: false,
+      showCancelButton: false,
+      confirmButtonText: "Aceptar",
+      background: "EBEBEB",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        CatalogosServices.visita_index(data).then((res) => {
+          if (res.SUCCESS) {
+            Toast.fire({
+              icon: "success",
+              title: "¡Registro Eliminado!",
+            });
+            handleClose();
+          } else {
+            Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+          }
+        });
+      }
+    });
+  };
   const handleSend = () => {
     let send = false;
+
     if (!idvista) {
       Swal.fire("Indique el Tipo de Acceso", "¡Error!", "info");
       send = false;
@@ -101,7 +194,7 @@ const Visitas = () => {
         !NombreReceptor ||
         !ApellidoMReceptor ||
         !idunidad ||
-        !idpiso ||
+        (!idpiso && idpiso !== "false") ||
         !idvista ||
         !idDuracion
       ) {
@@ -112,8 +205,15 @@ const Visitas = () => {
       }
     }
 
+    let tipooperacion = 0;
+    if (editid != "") {
+      tipooperacion = 2;
+    } else {
+      tipooperacion = 1;
+    }
+
     let data = {
-      NUMOPERACION: 1,
+      NUMOPERACION: tipooperacion,
       CHID: id,
       CHUSER: user.Id,
       ModificadoPor: user.Id,
@@ -165,35 +265,23 @@ const Visitas = () => {
     setFini(v);
   };
 
-  const loadFilter = (operacion: number, id?: string) => {
-    let data = { NUMOPERACION: operacion, P_ID: id };
-    ShareService.SelectIndex(data).then((res) => {
-      if (operacion === 1) {
-        setListIdTipo(res.RESPONSE);
-      } else if (operacion === 2) {
-        setListEntidad(res.RESPONSE);
-      } else if (operacion === 3) {
-        setListDuracion(res.RESPONSE);
-      } else if (operacion === 4) {
-        setListVisita(res.RESPONSE);
-      } else if (operacion === 5) {
-        setListPiso(res.RESPONSE);
-      } else if (operacion === 6) {
-        setListUnidad(res.RESPONSE);
-      }
-    });
-  };
-
   useEffect(() => {
     loadFilter(1);
     loadFilter(3);
     loadFilter(4);
     loadFilter(5);
     loadFilter(6);
+
+    setTimeout(() => {
+      if (editid != "") {
+        handleedit(editid);
+      }
+    }, 2000);
   }, []);
 
   return (
     <>
+      <Progress open={open}></Progress>
       <ModalForm title={"Generación de Visita QR"} handleClose={handleClose}>
         <Box boxShadow={3}>
           <Grid
@@ -486,10 +574,23 @@ const Visitas = () => {
               </Grid>
             </Grid>
 
-            <Grid item alignItems="left" justifyContent="left" xs={2}>
+            <Grid
+              item
+              alignItems="left"
+              justifyContent="left"
+              xs={2}
+              margin={1}
+            >
               <Button className={"guardar"} onClick={() => handleSend()}>
                 {"Generar QR"}
               </Button>
+              {editid !== "" ? (
+                <Button className={"guardar"} onClick={() => handledeleted()}>
+                  {"Eliminar Cita"}
+                </Button>
+              ) : (
+                ""
+              )}
             </Grid>
           </Grid>
         </Box>

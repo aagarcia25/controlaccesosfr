@@ -510,7 +510,7 @@ export default function Header(props: HeaderProps) {
                               </IconButton>{" "}
                               Configuración de perfil
                             </MenuItem>
-                            <MenuItem onClick={onNotification}>
+                            {/* <MenuItem onClick={onNotification}>
                               <IconButton onClick={onNotification}>
                                 <NotificationsNoneIcon className="IconoDentroBoton" />
                               </IconButton>{" "}
@@ -521,7 +521,7 @@ export default function Header(props: HeaderProps) {
                                 <CalendarMonthIcon className="IconoDentroBoton" />
                               </IconButton>{" "}
                               Calendario
-                            </MenuItem>
+                            </MenuItem> */}
 
                             <Hidden mdDown>
                               <Grid className="containerMenuItemBotones">

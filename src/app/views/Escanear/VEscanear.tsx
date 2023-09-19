@@ -15,26 +15,18 @@ const VEscanear = () => {
   const [id, setId] = useState("");
   const [selected, setSelected] = useState("environment");
   const [startScan, setStartScan] = useState(false);
-  const [loadingScan, setLoadingScan] = useState(false);
-  const [data, setData] = useState("");
   const [openModal, setopenModal] = useState(false);
+
   const handleSend = () => {
-    setData("");
     setStartScan(!startScan);
   };
 
   const handleScan = (scanData: any) => {
-    setLoadingScan(true);
     if (scanData && scanData !== "") {
-      setData(scanData.text);
       setStartScan(false);
-      setLoadingScan(false);
       setId(scanData.text);
       setopenModal(true);
     }
-  };
-  const handleError = (err: any) => {
-    console.error(err);
   };
 
   return (
@@ -140,9 +132,6 @@ const VEscanear = () => {
                   ""
                 )}
               </Grid>
-              {/* <Grid item xs={12} sm={12} md={2} lg={2}>
-                {data !== "" && <p>{data}</p>}
-              </Grid> */}
             </Grid>
           </Grid>
         </Grid>

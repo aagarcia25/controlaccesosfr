@@ -453,35 +453,13 @@ export default function Header(props: HeaderProps) {
                         onClick={handleToggle("left")}
                         color="inherit"
                       >
-                        {props.imgData !== "undefined" ? (
-                          <>
-                            <img
-                              className="imgDentroDeHeaderInicio"
-                              src={
-                                "data:" +
-                                String(
-                                  props.imgData === "undefined"
-                                    ? Blanco.Tipo
-                                    : props.imgTipo
-                                ) +
-                                ";base64," +
-                                String(
-                                  props.imgData === "undefined"
-                                    ? Blanco.Data
-                                    : props.imgData
-                                )
-                              }
-                            />
-                          </>
-                        ) : (
-                          <PersonIcon
-                            sx={{
-                              width: "60%",
-                              height: "60%",
-                            }}
-                            className="IconoDentroBotonPerfil"
-                          />
-                        )}
+                        <PersonIcon
+                          sx={{
+                            width: "60%",
+                            height: "60%",
+                          }}
+                          className="IconoDentroBotonPerfil"
+                        />
                       </Button>
                     </Tooltip>
                   </div>
@@ -510,7 +488,7 @@ export default function Header(props: HeaderProps) {
                               </IconButton>{" "}
                               Configuración de perfil
                             </MenuItem>
-                            <MenuItem onClick={onNotification}>
+                            {/* <MenuItem onClick={onNotification}>
                               <IconButton onClick={onNotification}>
                                 <NotificationsNoneIcon className="IconoDentroBoton" />
                               </IconButton>{" "}
@@ -521,7 +499,7 @@ export default function Header(props: HeaderProps) {
                                 <CalendarMonthIcon className="IconoDentroBoton" />
                               </IconButton>{" "}
                               Calendario
-                            </MenuItem>
+                            </MenuItem> */}
 
                             <Hidden mdDown>
                               <Grid className="containerMenuItemBotones">

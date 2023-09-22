@@ -123,7 +123,7 @@ const Visitas = ({ editid }: { editid: string }) => {
         setidEntidad(res.RESPONSE[0].idEntidad);
         setidunidad(res.RESPONSE[0].IdEntidadReceptor);
         setproveedor(res.RESPONSE[0].Proveedor);
-        setCorreo(res.RESPONSE[0].Proveedor);
+        setCorreo(res.RESPONSE[0].EmailNotificacion);
         handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
 
         setopen(false);

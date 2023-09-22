@@ -4,7 +4,6 @@ import { USUARIORESPONSE } from "../interfaces/UserInfo";
 import { getUser } from "../services/localStorage";
 import VAgenda from "../views/Agenda/VAgenda";
 import Bienvenido from "../views/Bienvenido";
-import { Anios } from "../views/CatAnio/Anios";
 import { Eo404 } from "../views/Eo404";
 import Inicio from "../views/Inicio";
 import Visitas from "../views/Visitas/Visitas";
@@ -54,10 +53,6 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         {/* FIN SECCION DE AGENDA */}
 
         {/* SECCION DE CATALOGOS */}
-        <Route
-          path="/inicio/catalogos/anio"
-          element={log ? <Anios /> : <AuthRouter />}
-        />
 
         {/* SECCION DE PERFIL */}
         <Route

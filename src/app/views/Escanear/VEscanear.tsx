@@ -79,12 +79,10 @@ const VEscanear = () => {
             <Grid
               container
               item
-              spacing={1}
               xs={12}
               sm={12}
               md={12}
               lg={12}
-              direction="row"
               justifyContent="center"
               alignItems="center"
             >
@@ -106,11 +104,10 @@ const VEscanear = () => {
               md={12}
               lg={12}
               direction="row"
-              justifyContent="center"
+              justifyContent="flex-start"
               alignItems="center"
             >
-              <Grid item xs={12} sm={12} md={5} lg={2}></Grid>
-              <Grid item xs={12} sm={12} md={5} lg={8} textAlign={"center"}>
+              <Grid item xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
                 {startScan ? (
                   <>
                     <Typography variant="h6">
@@ -119,13 +116,8 @@ const VEscanear = () => {
 
                     <QrReader
                       scanDelay={300}
-                      constraints={{ facingMode: "user" }}
+                      constraints={{ facingMode: selected }}
                       onResult={handleScan}
-                      containerStyle={{
-                        width: "200px",
-                        heigth: "200px",
-                        display: "inline-block",
-                      }}
                     />
                   </>
                 ) : (

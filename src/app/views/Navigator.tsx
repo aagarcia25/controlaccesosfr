@@ -1,7 +1,4 @@
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import SendIcon from "@mui/icons-material/Send";
-import { Collapse, Grid, Tooltip, Typography } from "@mui/material";
+import { Grid, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
@@ -12,8 +9,10 @@ import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/img/logo.svg";
-import { getMenus } from "../services/localStorage";
 import { menus } from "../interfaces/menu";
+import { getMenus } from "../services/localStorage";
+
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function Navigator(props: DrawerProps, logoFijo: any) {
   const { ...other } = props;
@@ -78,7 +77,7 @@ export default function Navigator(props: DrawerProps, logoFijo: any) {
                 <div key={Math.random()}>
                   <ListItemButton onClick={() => navigate(item.Path)}>
                     <ListItemIcon>
-                      <SendIcon />
+                      <ArrowForwardIosIcon />
                     </ListItemIcon>
                     <ListItemText
                       key={Math.random()}

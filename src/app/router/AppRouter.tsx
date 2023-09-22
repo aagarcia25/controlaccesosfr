@@ -10,6 +10,7 @@ import Visitas from "../views/Visitas/Visitas";
 import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
 import VEscanear from "../views/Escanear/VEscanear";
+import VisitasGeneral from "../views/Visitas/VisitasGeneral";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -34,6 +35,10 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         <Route
           path="/inicio/visitas"
           element={log ? <Visitas editid={""} /> : <AuthRouter />}
+        />
+        <Route
+          path="/inicio/visitasGNRL"
+          element={log ? <VisitasGeneral /> : <AuthRouter />}
         />
 
         {/* SECCION DE VISITAS */}

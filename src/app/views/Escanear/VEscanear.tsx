@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import ModalForm from "../componentes/ModalForm";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
+import { useState } from "react";
 import { QrReader } from "react-qr-reader";
+import { useNavigate } from "react-router-dom";
 import VisitasModal from "../Visitas/VisitasModal";
-import { CatalogosServices } from "../../services/catalogosServices";
-import Swal from "sweetalert2";
+import ModalForm from "../componentes/ModalForm";
 
 const VEscanear = () => {
   const navigate = useNavigate();
@@ -13,7 +11,6 @@ const VEscanear = () => {
     navigate("/");
   };
   const [id, setId] = useState("");
-  const [selected, setSelected] = useState("environment");
   const [startScan, setStartScan] = useState(false);
   const [openModal, setopenModal] = useState(false);
 
@@ -54,31 +51,6 @@ const VEscanear = () => {
             <Grid
               container
               item
-              spacing={1}
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid item xs={12} sm={3} md={5} lg={5}></Grid>
-              <Grid item xs={12} sm={3} md={2} lg={2}>
-                {startScan && (
-                  <select onChange={(e) => setSelected(e.target.value)}>
-                    <option value={"environment"}>Back Camera</option>
-                    <option value={"user"}>Front Camera</option>
-                  </select>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={3} md={3} lg={3}></Grid>
-              <Grid item xs={12} sm={3} md={2} lg={2}></Grid>
-            </Grid>
-
-            <Grid
-              container
-              item
               xs={12}
               sm={12}
               md={12}
@@ -116,7 +88,7 @@ const VEscanear = () => {
 
                     <QrReader
                       scanDelay={300}
-                      constraints={{ facingMode: selected }}
+                      constraints={{ facingMode: "environment" }}
                       onResult={handleScan}
                     />
                   </>

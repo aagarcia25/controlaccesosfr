@@ -47,6 +47,7 @@ const Visitas = ({ editid }: { editid: string }) => {
   const [NombreReceptor, setNombreReceptor] = useState("");
   const [ApellidoPReceptor, setApellidoPReceptor] = useState("");
   const [ApellidoMReceptor, setApellidoMReceptor] = useState("");
+  const [Correo, setCorreo] = useState("");
   const [openModal, setopenModal] = useState(false);
 
   const [fini, setFini] = useState<Dayjs | null>();
@@ -122,6 +123,7 @@ const Visitas = ({ editid }: { editid: string }) => {
         setidEntidad(res.RESPONSE[0].idEntidad);
         setidunidad(res.RESPONSE[0].IdEntidadReceptor);
         setproveedor(res.RESPONSE[0].Proveedor);
+        setCorreo(res.RESPONSE[0].Proveedor);
         handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
 
         setopen(false);
@@ -231,6 +233,7 @@ const Visitas = ({ editid }: { editid: string }) => {
       ApellidoMReceptor: ApellidoMReceptor,
       idEntidadReceptor: idunidad,
       PisoReceptor: idpiso,
+      EmailNotificacion: Correo,
     };
 
     if (send) {
@@ -557,7 +560,19 @@ const Visitas = ({ editid }: { editid: string }) => {
                     onchange={handleFilterChange2}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3} md={3} lg={3}></Grid>
+                <Grid item xs={12} sm={3} md={3} lg={3}>
+                  <Typography sx={{ fontFamily: "sans-serif" }}>
+                    Correo para Notificación:
+                  </Typography>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    id="outlined-required"
+                    defaultValue=""
+                    value={Correo}
+                    onChange={(v) => setCorreo(v.target.value)}
+                  />
+                </Grid>
                 <Grid item xs={12} sm={3} md={3} lg={3}></Grid>
                 <Grid item xs={12} sm={3} md={3} lg={3}>
                   <Typography sx={{ fontFamily: "sans-serif" }}>

@@ -56,7 +56,46 @@ const VisitasModal = ({
 
     CatalogosServices.visita_index(data).then((res) => {
       if (res.SUCCESS) {
-        console.log("Escaneo Correcto");
+        let data = {
+          NUMOPERACION: 8,
+          CHID: id,
+          CHUSER: user.Id,
+        };
+        CatalogosServices.visita_index(data).then((resultado) => {
+          if (resultado.SUCCESS) {
+            if (resultado.RESPONSE[0].Finalizado == 0) {
+              setopenview(true);
+              if (resultado.RESPONSE[0].Descripcion == "En Visita") {
+                Swal.fire(
+                  "Se ha Registrado la Fecha de Entrada de la Visita",
+                  "!Aviso!",
+                  "info"
+                );
+              } else if (resultado.RESPONSE[0].Descripcion == "Finalizado") {
+                Swal.fire(
+                  "Se ha Registrado la Fecha de Salida de la Visita",
+                  "!Aviso!",
+                  "info"
+                );
+              }
+            } else {
+              Swal.fire({
+                title: "QR no Valido",
+                icon: "error",
+                showDenyButton: false,
+                showCancelButton: false,
+                confirmButtonText: "Aceptar",
+                background: "EBEBEB",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  navigate("/");
+                }
+              });
+            }
+          } else {
+            Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+          }
+        });
       } else {
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");
       }
@@ -73,14 +112,14 @@ const VisitasModal = ({
     CatalogosServices.visita_index(data).then((res) => {
       if (res.SUCCESS) {
         if (res.RESPONSE[0]) {
-          Toast.fire({
-            icon: "success",
-            title: "¡Registro Agregado!",
-          });
-          console.log(res.RESPONSE[0]);
           setVrows(res.RESPONSE[0]);
-          setopenview(true);
-          setopen(false);
+          if (tipo == 1) {
+            setopenview(false);
+            handleEscaneo();
+          } else {
+            setopenview(true);
+            setopen(false);
+          }
         } else {
           setopenview(false);
           Swal.fire({
@@ -91,9 +130,7 @@ const VisitasModal = ({
             confirmButtonText: "Aceptar",
             background: "EBEBEB",
           }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-              //  navigate("/");
               Swal.fire("Por Favor, Verifique el QR", "¡Atención!", "info");
             }
           });
@@ -108,10 +145,6 @@ const VisitasModal = ({
   useEffect(() => {
     setQrValue(id);
     handleSend();
-
-    if (tipo == 1) {
-      handleEscaneo();
-    }
   }, []);
   return (
     <>

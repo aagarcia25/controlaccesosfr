@@ -4,6 +4,7 @@ import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import { CatalogosServices } from "../../services/catalogosServices";
 import { GridColDef } from "@mui/x-data-grid";
 import { Grid, Typography } from "@mui/material";
+import TitleComponent from "../componentes/TitleComponent";
 
 const VisitasGeneral = () => {
   const [data, setData] = useState([]);
@@ -113,17 +114,8 @@ const VisitasGeneral = () => {
 
   return (
     <div>
-      <Progress open={open}></Progress>
+      <TitleComponent title={"Reporte General de Visitas"} show={open} />
       <Grid container spacing={1} padding={0}>
-        <Grid container item spacing={1} xs={12} sm={12} md={12} lg={12}>
-          <Grid container sx={{ justifyContent: "center" }}>
-            <Grid item xs={12} sx={{ textAlign: "center" }}>
-              <Typography variant="h4" paddingBottom={2}>
-                Reporte General de Visitas
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <MUIXDataGridSimple columns={columnsRel} rows={data} />
         </Grid>

@@ -48,6 +48,11 @@ const Visitas = ({ editid }: { editid: string }) => {
   const [ApellidoPReceptor, setApellidoPReceptor] = useState("");
   const [ApellidoMReceptor, setApellidoMReceptor] = useState("");
   const [Correo, setCorreo] = useState("");
+  const [idEdificio, setidEdificio] = useState("");
+  const [ListEdificio, setListEdificio] = useState<SelectValues[]>([]);
+  const [idAcceso, setidAcceso] = useState("");
+  const [ListAcceso, setListAcceso] = useState<SelectValues[]>([]);
+
   const [openModal, setopenModal] = useState(false);
 
   const [fini, setFini] = useState<Dayjs | null>();
@@ -69,6 +74,11 @@ const Visitas = ({ editid }: { editid: string }) => {
         setListPiso(res.RESPONSE);
       } else if (operacion === 6) {
         setListUnidad(res.RESPONSE);
+        setopen(false);
+      } else if (operacion == 7) {
+        setListEdificio(res.RESPONSE);
+      } else if (operacion == 8) {
+        setListAcceso(res.RESPONSE);
         setopen(false);
       }
     });
@@ -95,6 +105,15 @@ const Visitas = ({ editid }: { editid: string }) => {
     loadFilter(2, v);
   };
 
+  const handleFilterEdificio = (v: string) => {
+    setidEdificio(v);
+    loadFilter(8, v);
+  };
+
+  const handleFilterAcceso = (v: string) => {
+    setidAcceso(v);
+  };
+
   const handleedit = (id: string) => {
     setopen(true);
     let data = {
@@ -112,6 +131,7 @@ const Visitas = ({ editid }: { editid: string }) => {
         setidvista(res.RESPONSE[0].IdTipoAcceso);
         setId(res.RESPONSE[0].id);
         handleFilterChange2(dayjs(res.RESPONSE[0].FechaVisita));
+        handleFilterEdificio(res.RESPONSE[0].idEdificio);
         setidDuracion(res.RESPONSE[0].Duracion);
         setNombreVisitante(res.RESPONSE[0].NombreVisitante);
         setApellidoPVisitante(res.RESPONSE[0].ApellidoMVisitante);
@@ -126,6 +146,7 @@ const Visitas = ({ editid }: { editid: string }) => {
         setCorreo(res.RESPONSE[0].EmailNotificacion);
         handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
 
+        setidAcceso(res.RESPONSE[0].idAcceso);
         setopen(false);
       } else {
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");
@@ -181,7 +202,9 @@ const Visitas = ({ editid }: { editid: string }) => {
         !idunidad ||
         !idpiso ||
         !idvista ||
-        !idDuracion
+        !idDuracion ||
+        !idEdificio ||
+        !idAcceso
       ) {
         Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
         send = false;
@@ -198,7 +221,9 @@ const Visitas = ({ editid }: { editid: string }) => {
         !idunidad ||
         (!idpiso && idpiso !== "false") ||
         !idvista ||
-        !idDuracion
+        !idDuracion ||
+        !idEdificio ||
+        !idAcceso
       ) {
         Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
         send = false;
@@ -234,6 +259,8 @@ const Visitas = ({ editid }: { editid: string }) => {
       idEntidadReceptor: idunidad,
       PisoReceptor: idpiso,
       EmailNotificacion: Correo,
+      IdEdificio: idEdificio,
+      IdAcceso: idAcceso,
     };
 
     if (send) {
@@ -274,6 +301,7 @@ const Visitas = ({ editid }: { editid: string }) => {
     loadFilter(4);
     loadFilter(5);
     loadFilter(6);
+    loadFilter(7, user.Id);
 
     setTimeout(() => {
       if (editid != "") {
@@ -586,6 +614,46 @@ const Visitas = ({ editid }: { editid: string }) => {
                     disabled={false}
                   />
                 </Grid>
+              </Grid>
+
+              <Grid
+                container
+                item
+                spacing={1}
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item xs={12} sm={3} md={3} lg={3}>
+                  <Typography sx={{ fontFamily: "sans-serif" }}>
+                    Edificio:
+                  </Typography>
+                  <SelectFrag
+                    value={idEdificio}
+                    options={ListEdificio}
+                    onInputChange={handleFilterEdificio}
+                    placeholder={"Seleccione.."}
+                    disabled={false}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} md={3} lg={3}>
+                  <Typography sx={{ fontFamily: "sans-serif" }}>
+                    Acceso:
+                  </Typography>
+                  <SelectFrag
+                    value={idAcceso}
+                    options={ListAcceso}
+                    onInputChange={handleFilterAcceso}
+                    placeholder={"Seleccione.."}
+                    disabled={false}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3} md={3} lg={3}></Grid>
+                <Grid item xs={12} sm={3} md={3} lg={3}></Grid>
               </Grid>
             </Grid>
 

@@ -9,6 +9,7 @@ import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 import TitleComponent from "../componentes/TitleComponent";
 import EdificioAccesos from "./EdificioAccesos";
 import EdificioUsuarios from "./EdificioUsuarios";
+import ButtonsAdd from "../componentes/ButtonsAdd";
 export const Edificio = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -21,6 +22,7 @@ export const Edificio = () => {
     setopenEU(false);
   };
 
+  const handleOpen = (v: any) => {};
   const handleAccesos = (v: any) => {
     setVrows(v.row);
     setopenEA(true);
@@ -136,6 +138,7 @@ export const Edificio = () => {
 
       <Grid container spacing={1} padding={0}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
+          <ButtonsAdd handleOpen={handleOpen} agregar={true} />
           <MUIXDataGridSimple columns={columnsRel} rows={data} />
         </Grid>
       </Grid>

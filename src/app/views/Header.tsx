@@ -1,8 +1,6 @@
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import HelpIcon from "@mui/icons-material/Help";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonIcon from "@mui/icons-material/Person";
 import { Backdrop, Button, Fade, Hidden, SpeedDialAction } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -24,9 +22,11 @@ import logoNL from "../assets/img/logo1.svg";
 import { getToken, getUser } from "../services/localStorage";
 import { Blanco } from "../styles/imagen";
 
-// import ButtonsTutorial from "./menu/catalogos/Utilerias/ButtonsTutorial";
 import NotesIcon from "@mui/icons-material/Notes";
+import { base64ToArrayBuffer } from "../helpers/Files";
 import { USUARIORESPONSE } from "../interfaces/UserInfo";
+import { AuthService } from "../services/AuthService";
+import ButtonsTutorial from "./componentes/ButtonsTutorial";
 
 interface HeaderProps {
   onDrawerToggle: () => void;
@@ -34,6 +34,7 @@ interface HeaderProps {
   id: any;
   imgData: string;
   imgTipo: string;
+  //idMenu:any;
 }
 
 export default function Header(props: HeaderProps) {
@@ -70,16 +71,17 @@ export default function Header(props: HeaderProps) {
       NOMBRE: guia,
       TOKEN: JSON.parse(String(getToken())),
     };
-    /*  CatalogosServices.obtenerguias(data).then((res) => {
+
+    AuthService.obtenerguias(data).then((res) => {
       var bufferArray = base64ToArrayBuffer(String(res.RESPONSE.RESPONSE.FILE));
       var blobStore = new Blob([bufferArray], { type: "application/pdf" });
 
       var data = window.URL.createObjectURL(blobStore);
-      var link = document.createElement('a');
+      var link = document.createElement("a");
       document.body.appendChild(link);
       link.href = data;
       window.open(link.href, "_blank");
-    });*/
+    });
   };
 
   const onNotification = () => {
@@ -161,51 +163,7 @@ export default function Header(props: HeaderProps) {
       ),
       name: " Configuración",
     },
-    {
-      icon: (
-        <>
-          <Tooltip title="Calendario">
-            <IconButton
-              className="ButtonColorGenerico"
-              sx={{
-                mt: 0.1,
-                backgroundColor: "#FFFFFF",
-                "&:hover": { backgroundColor: "#CCCCCC" },
-              }}
-              onClick={onOpenCalendar}
-            >
-              <CalendarMonthIcon className="IconoDentroBoton" />
-            </IconButton>
-          </Tooltip>
-        </>
-      ),
-      name: "Calendario",
-    },
 
-    {
-      icon: (
-        <>
-          <Tooltip title="Bandeja de correo">
-            <Badge
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              badgeContent={cnotif}
-              color="primary"
-            >
-              <IconButton
-                className="ButtonColorGenerico"
-                onClick={onNotification}
-              >
-                <NotificationsNoneIcon className="IconoDentroBoton" />
-              </IconButton>
-            </Badge>
-          </Tooltip>
-        </>
-      ),
-      name: "Notificaciones",
-    },
     {
       icon: (
         <>
@@ -488,22 +446,13 @@ export default function Header(props: HeaderProps) {
                               </IconButton>{" "}
                               Configuración de perfil
                             </MenuItem>
-                            {/* <MenuItem onClick={onNotification}>
-                              <IconButton onClick={onNotification}>
-                                <NotificationsNoneIcon className="IconoDentroBoton" />
-                              </IconButton>{" "}
-                              Mi Buzón
-                            </MenuItem>
-                            <MenuItem onClick={onOpenCalendar}>
-                              <IconButton onClick={onOpenCalendar}>
-                                <CalendarMonthIcon className="IconoDentroBoton" />
-                              </IconButton>{" "}
-                              Calendario
-                            </MenuItem> */}
 
                             <Hidden mdDown>
                               <Grid className="containerMenuItemBotones">
-                                {/* <ButtonsTutorial route={"/VIDEOS/TUTORIALES/"} handleCloseMenuVideos={handleCloseMenuVideos} /> */}
+                                <ButtonsTutorial
+                                  route={"/VIDEOS/TUTORIALES/"}
+                                  handleCloseMenuVideos={handleCloseMenuVideos}
+                                />
                               </Grid>
                             </Hidden>
 

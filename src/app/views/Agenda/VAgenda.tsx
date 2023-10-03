@@ -26,7 +26,6 @@ const VAgenda = () => {
   };
 
   const onSelectEvent = (v: any) => {
-    console.log(v);
     if (v.estatus == "0779435b-5718-11ee-b06d-3cd92b4d9bf4") {
       Swal.fire("Cita Finalizada, no se puede modificar", "¡Error!", "info");
     } else {
@@ -45,7 +44,6 @@ const VAgenda = () => {
       NUMOPERACION: 7,
       CHID: user.Id,
     };
-    console.log(data);
 
     CatalogosServices.visita_index(data).then((res) => {
       if (res.SUCCESS) {
@@ -53,7 +51,6 @@ const VAgenda = () => {
           icon: "success",
           title: "¡Consulta Exitosa!",
         });
-        console.log(res.RESPONSE);
 
         let eveitem: agenda[] = [];
         res.RESPONSE.map((item: agenda) => {

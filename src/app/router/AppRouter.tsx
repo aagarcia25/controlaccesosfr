@@ -12,13 +12,14 @@ import { AuthRouter } from "./AuthRouter";
 import VEscanear from "../views/Escanear/VEscanear";
 import VisitasGeneral from "../views/Visitas/VisitasGeneral";
 import { Edificio } from "../views/Edificio/Edificio";
+import AdminAyudas from "../views/AdminVideosTutoriales/AdminAyudas";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
 
   const handleChangeImg = () => {};
-
+  const handleCloseModal = () => {};
   useEffect(() => {
     handleChangeImg();
   }, []);
@@ -32,6 +33,22 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           element={log ? <Bienvenido user={user} /> : <AuthRouter />}
         />
 
+        <Route
+          path="/inicio/ayuda"
+          element={
+            log ? (
+              <AdminAyudas
+                IdMenu={""}
+                modo={""}
+                tipo={0}
+                handleClose={handleCloseModal}
+                dt={undefined}
+              />
+            ) : (
+              <AuthRouter />
+            )
+          }
+        />
         {/* SECCION DE VISITAS */}
         <Route
           path="/inicio/visitas"

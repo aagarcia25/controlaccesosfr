@@ -82,7 +82,6 @@ const VisitasModal = ({
                   CHID: id,
                   CHUSER: user.Id,
                 };
-                console.log(data);
 
                 CatalogosServices.visita_index(data).then((res) => {
                   if (res.SUCCESS) {
@@ -134,7 +133,6 @@ const VisitasModal = ({
       NUMOPERACION: 5,
       CHID: id,
     };
-    console.log(data);
 
     CatalogosServices.visita_index(data).then((res) => {
       if (res.SUCCESS) {

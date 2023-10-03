@@ -57,8 +57,6 @@ const ButtonsTutorial = ({
   const [modo, setModo] = useState<string>("");
 
   const handleClickOpen = (URLVideo: string, modo: string) => {
-    console.log(URLVideo);
-    console.log(modo);
     setModo(modo);
     setURLVideo(URLVideo);
     setOpen(true);
@@ -71,8 +69,6 @@ const ButtonsTutorial = ({
     };
     AuthService.AdminAyudas(data).then((res) => {
       if (res.SUCCESS) {
-        console.log("resultado de obtener guias");
-        console.log(res.SUCCESS);
         setDataVideos(res.RESPONSE);
       } else {
       }
@@ -118,8 +114,6 @@ const ButtonsTutorial = ({
 
   useEffect(() => {
     ValidaSesion();
-    console.log("Listado de Menu");
-    console.log(list);
 
     list.map((item: any) => {
       if (
@@ -128,14 +122,6 @@ const ButtonsTutorial = ({
           .slice(window.location.href.indexOf("#") + 1)
           .replace(/%20/g, " ")
       ) {
-        console.log(item);
-        console.log("ruta");
-        console.log(
-          window.location.href
-            .slice(window.location.href.indexOf("#") + 1)
-            .replace(/%20/g, " ")
-        );
-
         setIdMenu(item.Id);
         handleObtenerVideos(item.Id);
         handleObtenerPreguntasFrecuentes(item.Id, 10);

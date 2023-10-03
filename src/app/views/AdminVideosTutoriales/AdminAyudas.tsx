@@ -172,7 +172,6 @@ const AdminAyudas = ({
         }
       })
       .catch((error) => {
-        console.log(error);
         setslideropen(false);
       });
   };

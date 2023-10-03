@@ -48,7 +48,6 @@ function App() {
 
     UserServices.userAppDetail(data).then((res) => {
       if (res?.status === 200) {
-        console.log(res.data.data);
         setUser(res.data.data);
         setRoles(res.data.roles[0]);
         setMenus(res.data.menus[0]);

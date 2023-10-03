@@ -16,4 +16,7 @@ export class CatalogosServices {
   public static async Edificio_index(data: any) {
     return await post("Edificio_index", data);
   }
+  public static async deleteVideoTutorial(data: any) {
+    return await post("deleteVideoTutorial", data);
+  }
 }

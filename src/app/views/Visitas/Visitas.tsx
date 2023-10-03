@@ -127,7 +127,6 @@ const Visitas = ({ editid }: { editid: string }) => {
           icon: "success",
           title: "¡Consulta Exitosa!",
         });
-        console.log("Registro Guardado");
         setidvista(res.RESPONSE[0].IdTipoAcceso);
         setId(res.RESPONSE[0].id);
         handleFilterChange2(dayjs(res.RESPONSE[0].FechaVisita));
@@ -270,8 +269,6 @@ const Visitas = ({ editid }: { editid: string }) => {
             icon: "success",
             title: "¡Registro Agregado!",
           });
-          console.log("Registro Guardado");
-          console.log(res.RESPONSE);
           setVrows(res.RESPONSE);
           setId(res.RESPONSE.id);
           //  handleClose();

@@ -1,16 +1,15 @@
 import { Button, Grid } from "@mui/material";
+import QRCode from "qrcode.react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Toast } from "../../helpers/Toast";
+import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { Visita } from "../../interfaces/Visitas";
 import { CatalogosServices } from "../../services/catalogosServices";
+import { getUser } from "../../services/localStorage";
 import Progress from "../Progress";
 import ModalForm from "../componentes/ModalForm";
-import QRCode from "qrcode.react";
-import { useNavigate } from "react-router-dom";
 import Visitas from "./Visitas";
-import { USUARIORESPONSE } from "../../interfaces/UserInfo";
-import { getUser } from "../../services/localStorage";
 
 const VisitasModal = ({
   handleClose,
@@ -83,7 +82,6 @@ const VisitasModal = ({
                   CHID: id,
                   CHUSER: user.Id,
                 };
-                console.log(data);
 
                 CatalogosServices.visita_index(data).then((res) => {
                   if (res.SUCCESS) {
@@ -116,12 +114,25 @@ const VisitasModal = ({
     });
   };
 
+  const handleRenviar = () => {
+    let data = {
+      NUMOPERACION: 11,
+      CHID: id,
+    };
+    CatalogosServices.visita_index(data).then((res) => {
+      if (res.SUCCESS) {
+        Swal.fire("Se Envio Correo con el QR de la Visita", "¡Aviso!", "info");
+      } else {
+        Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+      }
+    });
+  };
+
   const handleSend = () => {
     let data = {
       NUMOPERACION: 5,
       CHID: id,
     };
-    console.log(data);
 
     CatalogosServices.visita_index(data).then((res) => {
       if (res.SUCCESS) {
@@ -300,9 +311,9 @@ const VisitasModal = ({
                       <Grid item xs={12} sm={12} md={12} lg={2}>
                         <Button
                           className={"guardar"}
-                          onClick={() => handleSend()}
+                          onClick={() => handleRenviar()}
                         >
-                          {"Enviar QR"}
+                          {"Renviar QR"}
                         </Button>
                       </Grid>
                       <Grid item xs={12} sm={12} md={12} lg={2}></Grid>

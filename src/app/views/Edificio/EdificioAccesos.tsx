@@ -57,12 +57,8 @@ const EdificioAccesos = ({
     });
   };
 
-  const handleOpen = (v: any) => {
-    console.log(v);
-  };
-  const handleEdit = (v: any) => {
-    console.log(v);
-  };
+  const handleOpen = (v: any) => {};
+  const handleEdit = (v: any) => {};
   const columnsRel: GridColDef[] = [
     {
       field: "id",

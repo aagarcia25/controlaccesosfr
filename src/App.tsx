@@ -202,7 +202,7 @@ function App() {
         <BloqueoSesion handlePassword={handleOnActive} />
       ) : acceso ? (
         <>
-          <HashRouter basename={"/"}>
+          <HashRouter basename={"/sica/"}>
             <AppRouter login={login} />
           </HashRouter>
         </>

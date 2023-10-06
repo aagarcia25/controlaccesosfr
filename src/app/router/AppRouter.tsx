@@ -27,9 +27,9 @@ export const AppRouter = ({ login }: { login: boolean }) => {
   return (
     <Inicio user={user} imgData={String("")} imgTipo={String("")}>
       <Routes>
-        <Route path="/*" element={log ? <Eo404 /> : <AuthRouter />} />
+        <Route path="/sica/*" element={log ? <Eo404 /> : <AuthRouter />} />
         <Route
-          path="/"
+          path="/sica/"
           element={log ? <Bienvenido user={user} /> : <AuthRouter />}
         />
 

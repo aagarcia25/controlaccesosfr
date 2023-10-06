@@ -156,7 +156,7 @@ function App() {
         setRfToken(refjwt);
         setIdApp(idapp);
         var ventana = window.self;
-        ventana.location.replace("/");
+        ventana.location.replace("/sica/");
       } else {
         Swal.fire({
           title: "Token no valido",

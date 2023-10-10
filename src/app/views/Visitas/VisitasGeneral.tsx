@@ -1,20 +1,51 @@
-import React, { useEffect, useState } from "react";
-import Progress from "../Progress";
-import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
-import { CatalogosServices } from "../../services/catalogosServices";
+import InsightsIcon from "@mui/icons-material/Insights";
+import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { CatalogosServices } from "../../services/catalogosServices";
+import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import TitleComponent from "../componentes/TitleComponent";
+import Trazabilidad from "../componentes/Trazabilidad";
 
 const VisitasGeneral = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [verTrazabilidad, setVerTrazabilidad] = useState<boolean>(false);
+  const [vrows, setVrows] = useState<{}>("");
+
+  const handleclose = (data: any) => {
+    setVerTrazabilidad(false);
+  };
+
+  const handleVerTazabilidad = (v: any) => {
+    setVerTrazabilidad(true);
+    setVrows(v.row);
+  };
 
   const columnsRel: GridColDef[] = [
     {
       field: "id",
     },
 
+    {
+      field: "acciones",
+      disableExport: true,
+      headerName: "Acciones",
+      description: "Acciones",
+      sortable: false,
+      width: 100,
+      renderCell: (v: any) => {
+        return (
+          <Box>
+            <Tooltip title={"Ver Trazabilidad"}>
+              <IconButton value="check" onClick={() => handleVerTazabilidad(v)}>
+                <InsightsIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      },
+    },
     {
       field: "FechaCreacion",
       headerName: "Fecha de Creación",
@@ -120,6 +151,11 @@ const VisitasGeneral = () => {
           <MUIXDataGridSimple columns={columnsRel} rows={data} />
         </Grid>
       </Grid>
+      {verTrazabilidad ? (
+        <Trazabilidad handleFunction={handleclose} obj={vrows} />
+      ) : (
+        ""
+      )}
     </div>
   );
 };

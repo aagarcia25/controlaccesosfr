@@ -9,7 +9,7 @@ import {
 } from "@mui/lab";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ItrazabilidadFile } from "../../interfaces/Share";
+import { Itrazabilidadvisita } from "../../interfaces/Share";
 import { CatalogosServices } from "../../services/catalogosServices";
 import Progress from "../Progress";
 import ModalForm from "./ModalForm";
@@ -22,16 +22,15 @@ const Trazabilidad = ({
   obj: any;
 }) => {
   const [openSlider, setOpenSlider] = useState(true);
-  const [data, setdata] = useState<ItrazabilidadFile[]>([]);
-
+  const [data, setdata] = useState<Itrazabilidadvisita[]>([]);
   const consulta = () => {
     let data = {
       NUMOPERACION: 7,
-      P_IDFILE: obj.id,
+      CHID: obj.id,
     };
-    CatalogosServices.Filesindex(data).then((res) => {
+    CatalogosServices.bitacora(data).then((res) => {
       if (res.SUCCESS) {
-        const obj: ItrazabilidadFile[] = res.RESPONSE;
+        const obj: Itrazabilidadvisita[] = res.RESPONSE;
         setdata(obj);
         setOpenSlider(false);
       } else {
@@ -69,7 +68,7 @@ const Trazabilidad = ({
 
                 <TimelineContent sx={{ py: "12px", px: 2 }} key={Math.random()}>
                   <Typography variant="h6" component="span">
-                    {it.Nombre}
+                    {it.usuario}
                   </Typography>
                   <br />
                   <Typography variant="body2" component="span">

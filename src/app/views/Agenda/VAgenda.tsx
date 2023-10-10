@@ -12,6 +12,7 @@ import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { agenda } from "../../interfaces/Visitas";
 import VisitasModal from "../Visitas/VisitasModal";
 import { useNavigate } from "react-router-dom";
+import TitleComponent from "../componentes/TitleComponent";
 
 const VAgenda = () => {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ const VAgenda = () => {
   }, []);
   return (
     <div style={{ height: 500, width: "100%" }}>
-      <Progress open={open}></Progress>
+      <TitleComponent title={"Agenda de Visitas"} show={open} />
       <Calendar
         culture="es"
         localizer={localizer}

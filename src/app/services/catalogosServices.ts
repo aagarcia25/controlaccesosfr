@@ -19,4 +19,7 @@ export class CatalogosServices {
   public static async deleteVideoTutorial(data: any) {
     return await post("deleteVideoTutorial", data);
   }
+  public static async bitacora(data: any) {
+    return await post("bitacora", data);
+  }
 }

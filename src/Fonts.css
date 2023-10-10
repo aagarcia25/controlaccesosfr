@@ -35,3 +35,13 @@
 #usrPlaceholder::placeholder {
   opacity: 1;
 }
+
+
+
+  .MuiBackdrop-root .MuiModal-backdrop .css-919eu4 {
+    background-color: transparent !important;
+  }
+
+  .css-919eu4 {
+    background-color: transparent !important;
+  }

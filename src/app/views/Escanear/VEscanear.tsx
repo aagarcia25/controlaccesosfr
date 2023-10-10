@@ -4,6 +4,7 @@ import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
 import VisitasModal from "../Visitas/VisitasModal";
 import ModalForm from "../componentes/ModalForm";
+import TitleComponent from "../componentes/TitleComponent";
 
 const VEscanear = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const VEscanear = () => {
   const [id, setId] = useState("");
   const [startScan, setStartScan] = useState(false);
   const [openModal, setopenModal] = useState(false);
+  const [open, setopen] = useState(false);
 
   const handleSend = () => {
     setStartScan(!startScan);
@@ -28,78 +30,76 @@ const VEscanear = () => {
 
   return (
     <>
-      <ModalForm title={"Escanear QR"} handleClose={handleClose}>
+      <TitleComponent title={"Escanear QR"} show={open} />
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Grid
           container
+          spacing={1}
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
           direction="row"
           justifyContent="center"
           alignItems="center"
+          sx={{ padding: "2%" }}
         >
           <Grid
             container
             item
-            spacing={1}
             xs={12}
             sm={12}
             md={12}
             lg={12}
-            direction="row"
             justifyContent="center"
             alignItems="center"
-            sx={{ padding: "2%" }}
           >
-            <Grid
-              container
-              item
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid item xs={12} sm={12} md={5} lg={5}></Grid>
-              <Grid item xs={12} sm={12} md={2} lg={2}>
-                <Button className={"guardar"} onClick={() => handleSend()}>
-                  {startScan ? "Detener " : "Escanear QR"}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={12} md={2} lg={3}></Grid>
-              <Grid item xs={12} sm={12} md={2} lg={2}></Grid>
+            <Grid item xs={12} sm={12} md={5} lg={5}></Grid>
+            <Grid item xs={12} sm={12} md={2} lg={2}>
+              <Button className={"guardar"} onClick={() => handleSend()}>
+                {startScan ? "Detener " : "Escanear QR"}
+              </Button>
             </Grid>
+            <Grid item xs={12} sm={12} md={2} lg={3}></Grid>
+            <Grid item xs={12} sm={12} md={2} lg={2}></Grid>
+          </Grid>
 
-            <Grid
-              container
-              item
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="center"
-            >
-              <Grid item xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
-                {startScan ? (
-                  <>
-                    <Typography variant="h6">
-                      <b>Acerque el QR a la Camara</b>
-                    </Typography>
+          <Grid
+            container
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={3}
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <Grid item xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
+              {startScan ? (
+                <>
+                  <Typography variant="h6">
+                    <b>Acerque el QR a la Camara</b>
+                  </Typography>
 
-                    <QrReader
-                      scanDelay={300}
-                      constraints={{ facingMode: "environment" }}
-                      onResult={handleScan}
-                    />
-                  </>
-                ) : (
-                  ""
-                )}
-              </Grid>
+                  <QrReader
+                    scanDelay={300}
+                    constraints={{ facingMode: "environment" }}
+                    onResult={handleScan}
+                  />
+                </>
+              ) : (
+                ""
+              )}
             </Grid>
           </Grid>
         </Grid>
-      </ModalForm>
+      </Grid>
       {openModal ? (
         <VisitasModal handleClose={handleClose} id={id} tipo={1} />
       ) : (

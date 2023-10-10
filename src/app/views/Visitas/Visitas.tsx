@@ -21,6 +21,7 @@ import ModalForm from "../componentes/ModalForm";
 import SelectFrag from "../componentes/SelectFrag";
 import VisitasModal from "./VisitasModal";
 import Progress from "../Progress";
+import TitleComponent from "../componentes/TitleComponent";
 
 const Visitas = ({ editid }: { editid: string }) => {
   const navigate = useNavigate();
@@ -309,8 +310,8 @@ const Visitas = ({ editid }: { editid: string }) => {
 
   return (
     <>
-      <Progress open={open}></Progress>
-      <ModalForm title={"Generación de Visita QR"} handleClose={handleClose}>
+      <TitleComponent title={"Generar Visita"} show={open} />
+      <Grid container>
         <Box boxShadow={3}>
           <Grid
             container
@@ -674,7 +675,8 @@ const Visitas = ({ editid }: { editid: string }) => {
             </Grid>
           </Grid>
         </Box>
-      </ModalForm>
+      </Grid>
+
       {openModal ? (
         <VisitasModal handleClose={handleClose} id={id} tipo={0} />
       ) : (

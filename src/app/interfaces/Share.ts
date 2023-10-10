@@ -27,3 +27,9 @@ export interface responseresult {
   RESPONSE: any[];
   SUCCESS: boolean;
 }
+
+export interface Itrazabilidadvisita {
+  FechaCreacion: string;
+  usuario: string;
+  estatus: string;
+}

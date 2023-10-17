@@ -1,38 +1,30 @@
-import React, { useEffect, useState } from "react";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { getMessagesES } from "../../helpers/getMessages";
-import { localizer } from "../../helpers/calendarLocalizer";
+import { useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
-import { CatalogosServices } from "../../services/catalogosServices";
-import { Toast } from "../../helpers/Toast";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import Progress from "../Progress";
-import { getUser } from "../../services/localStorage";
+import { Toast } from "../../helpers/Toast";
+import { localizer } from "../../helpers/calendarLocalizer";
+import { getMessagesES } from "../../helpers/getMessages";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { agenda } from "../../interfaces/Visitas";
-import VisitasModal from "../Visitas/VisitasModal";
-import { useNavigate } from "react-router-dom";
+import { CatalogosServices } from "../../services/catalogosServices";
+import { getUser } from "../../services/localStorage";
 import TitleComponent from "../componentes/TitleComponent";
 
 const VAgenda = () => {
+  let params = useParams();
   const navigate = useNavigate();
-  const [id, setId] = useState("");
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [open, setopen] = useState(false);
   const [listAgenda, setlistAgenda] = useState<agenda[]>([]);
-  const [openModal, setopenModal] = useState(false);
-
-  const handleClose = () => {
-    navigate("/");
-  };
 
   const onSelectEvent = (v: any) => {
     if (v.estatus == "0779435b-5718-11ee-b06d-3cd92b4d9bf4") {
       Swal.fire("Cita Finalizada, no se puede modificar", "¡Error!", "info");
     } else {
       if (v.color != "#EC7063") {
-        setId(v.id);
-        setopenModal(true);
+        navigate("/inicio/view/" + v.id);
       } else {
         Swal.fire("Cita Vencida, no se puede modificar", "¡Error!", "info");
       }
@@ -44,6 +36,7 @@ const VAgenda = () => {
     let data = {
       NUMOPERACION: 7,
       CHID: user.Id,
+      IDENTIDAD: user.IdEntidad,
     };
 
     CatalogosServices.visita_index(data).then((res) => {
@@ -104,11 +97,6 @@ const VAgenda = () => {
           return { style: { backgroundColor, color } };
         }}
       />
-      {openModal ? (
-        <VisitasModal handleClose={handleClose} id={id} tipo={0} />
-      ) : (
-        ""
-      )}
     </div>
   );
 };

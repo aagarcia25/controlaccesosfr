@@ -225,7 +225,7 @@ const Visitas = () => {
     }
 
     let tipooperacion = 0;
-    if (params.id !== "") {
+    if (params.id !== undefined) {
       tipooperacion = 2;
     } else {
       tipooperacion = 1;
@@ -264,7 +264,7 @@ const Visitas = () => {
           });
           setVrows(res.RESPONSE);
           setId(res.RESPONSE.id);
-          //  handleClose();
+          handleClose();
           setopenModal(true);
         } else {
           Swal.fire(res.STRMESSAGE, "¡Error!", "info");

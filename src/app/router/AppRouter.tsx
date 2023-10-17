@@ -13,6 +13,8 @@ import VEscanear from "../views/Escanear/VEscanear";
 import VisitasGeneral from "../views/Visitas/VisitasGeneral";
 import { Edificio } from "../views/Edificio/Edificio";
 import AdminAyudas from "../views/AdminVideosTutoriales/AdminAyudas";
+import { VisistasRevision } from "../views/Visitas/VisistasRevision";
+import { VisistasEscaneo } from "../views/Visitas/VisistasEscaneo";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -32,7 +34,6 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           path="/"
           element={log ? <Bienvenido user={user} /> : <AuthRouter />}
         />
-
         <Route
           path="/inicio/ayuda"
           element={
@@ -52,35 +53,43 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         {/* SECCION DE VISITAS */}
         <Route
           path="/inicio/visitas"
-          element={log ? <Visitas editid={""} /> : <AuthRouter />}
+          element={log ? <Visitas /> : <AuthRouter />}
+        />
+        <Route
+          path="/inicio/VisistasEscaneo/:id"
+          element={log ? <VisistasEscaneo /> : <AuthRouter />}
+        />
+
+        <Route
+          path="/inicio/visitas/:id"
+          element={log ? <Visitas /> : <AuthRouter />}
         />
         <Route
           path="/inicio/visitasGNRL"
           element={log ? <VisitasGeneral /> : <AuthRouter />}
         />
         <Route
+          path="/inicio/view/:id"
+          element={log ? <VisistasRevision /> : <AuthRouter />}
+        />
+        <Route
           path="/inicio/edificio"
           element={log ? <Edificio /> : <AuthRouter />}
         />
-
         {/* SECCION DE VISITAS */}
-
         {/* SECCION DE ESCANEO */}
         <Route
           path="/inicio/es"
           element={log ? <VEscanear /> : <AuthRouter />}
         />
         {/* FIN SECCION DE ESCANEO */}
-
         {/* SECCION DE AGENDA */}
         <Route
           path="/inicio/agenda"
           element={log ? <VAgenda /> : <AuthRouter />}
         />
         {/* FIN SECCION DE AGENDA */}
-
         {/* SECCION DE CATALOGOS */}
-
         {/* SECCION DE PERFIL */}
         <Route
           path="/perfil"

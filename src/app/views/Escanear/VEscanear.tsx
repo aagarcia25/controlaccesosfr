@@ -2,18 +2,11 @@ import { Button, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
-import VisitasModal from "../Visitas/VisitasModal";
-import ModalForm from "../componentes/ModalForm";
 import TitleComponent from "../componentes/TitleComponent";
 
 const VEscanear = () => {
   const navigate = useNavigate();
-  const handleClose = () => {
-    navigate("/");
-  };
-  const [id, setId] = useState("");
   const [startScan, setStartScan] = useState(false);
-  const [openModal, setopenModal] = useState(false);
   const [open, setopen] = useState(false);
 
   const handleSend = () => {
@@ -23,8 +16,7 @@ const VEscanear = () => {
   const handleScan = (scanData: any) => {
     if (scanData && scanData !== "") {
       setStartScan(false);
-      setId(scanData.text);
-      setopenModal(true);
+      navigate("/inicio/VisistasEscaneo/" + scanData.text);
     }
   };
 
@@ -100,11 +92,6 @@ const VEscanear = () => {
           </Grid>
         </Grid>
       </Grid>
-      {openModal ? (
-        <VisitasModal handleClose={handleClose} id={id} tipo={1} />
-      ) : (
-        ""
-      )}
     </>
   );
 };

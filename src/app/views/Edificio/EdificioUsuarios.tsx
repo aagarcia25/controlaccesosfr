@@ -1,20 +1,19 @@
-import { Button, DialogContent, Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Toast } from "../../helpers/Toast";
+import SelectValues from "../../interfaces/Share";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { ShareService } from "../../services/ShareService";
 import { CatalogosServices } from "../../services/catalogosServices";
 import { getUser } from "../../services/localStorage";
+import Progress from "../Progress";
 import ButtonsAdd from "../componentes/ButtonsAdd";
 import ButtonsDeleted from "../componentes/ButtonsDeleted";
-import ButtonsEdit from "../componentes/ButtonsEdit";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import ModalForm from "../componentes/ModalForm";
 import SelectFrag from "../componentes/SelectFrag";
-import SelectValues from "../../interfaces/Share";
-import { ShareService } from "../../services/ShareService";
-import Progress from "../Progress";
 
 const EdificioUsuarios = ({
   handleClose,

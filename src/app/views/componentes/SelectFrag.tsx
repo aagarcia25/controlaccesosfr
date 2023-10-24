@@ -21,7 +21,7 @@ const SelectFrag = ({
         aria-label={"Presione enter para seleccionar"}
         noOptionsMessage={() => "Sin opciones"}
         value={
-          value != "" ? options.find((element) => element.value === value) : []
+          value !== "" ? options.find((element) => element.value === value) : []
         }
         options={options}
         defaultValue={[]}

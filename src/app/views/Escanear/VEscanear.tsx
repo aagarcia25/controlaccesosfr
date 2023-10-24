@@ -7,7 +7,6 @@ import TitleComponent from "../componentes/TitleComponent";
 const VEscanear = () => {
   const navigate = useNavigate();
   const [startScan, setStartScan] = useState(false);
-  const [open, setopen] = useState(false);
 
   const handleSend = () => {
     setStartScan(!startScan);
@@ -22,7 +21,7 @@ const VEscanear = () => {
 
   return (
     <>
-      <TitleComponent title={"Escanear QR"} show={open} />
+      <TitleComponent title={"Escanear QR"} show={false} />
       <Grid
         container
         direction="row"

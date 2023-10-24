@@ -18,7 +18,6 @@ const Visitas = () => {
   const navigate = useNavigate();
   const [open, setopen] = useState(false);
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
-  const [vrows, setVrows] = useState({});
   const [id, setId] = useState("");
   const [idunidad, setidunidad] = useState("");
   const [ListUnidad, setListUnidad] = useState<SelectValues[]>([]);
@@ -45,9 +44,6 @@ const Visitas = () => {
   const [ListEdificio, setListEdificio] = useState<SelectValues[]>([]);
   const [idAcceso, setidAcceso] = useState("");
   const [ListAcceso, setListAcceso] = useState<SelectValues[]>([]);
-
-  const [openModal, setopenModal] = useState(false);
-
   const [fini, setFini] = useState<Dayjs | null>();
 
   const loadFilter = (operacion: number, id?: string) => {
@@ -68,9 +64,9 @@ const Visitas = () => {
       } else if (operacion === 6) {
         setListUnidad(res.RESPONSE);
         setopen(false);
-      } else if (operacion == 7) {
+      } else if (operacion === 7) {
         setListEdificio(res.RESPONSE);
-      } else if (operacion == 8) {
+      } else if (operacion === 8) {
         setListAcceso(res.RESPONSE);
         setopen(false);
       }
@@ -185,7 +181,7 @@ const Visitas = () => {
       send = false;
     }
 
-    if (idvista == "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
+    if (idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
       if (
         !NombreVisitante ||
         !ApellidoPVisitante ||
@@ -203,7 +199,7 @@ const Visitas = () => {
       } else {
         send = true;
       }
-    } else if (idvista == "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
+    } else if (idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
       if (
         !proveedor ||
         !NombreVisitante ||
@@ -263,10 +259,8 @@ const Visitas = () => {
             icon: "success",
             title: "¡Registro Agregado!",
           });
-          setVrows(res.RESPONSE);
           setId(res.RESPONSE.id);
           handleClose();
-          setopenModal(true);
         } else {
           Swal.fire(res.STRMESSAGE, "¡Error!", "info");
         }
@@ -402,7 +396,7 @@ const Visitas = () => {
                   defaultValue=""
                   value={NombreVisitante}
                   onChange={(v) => setNombreVisitante(v.target.value)}
-                  error={NombreVisitante == "" ? true : false}
+                  error={NombreVisitante === "" ? true : false}
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -417,7 +411,7 @@ const Visitas = () => {
                   defaultValue=""
                   value={ApellidoPVisitante}
                   onChange={(v) => setApellidoPVisitante(v.target.value)}
-                  error={ApellidoPVisitante == "" ? true : false}
+                  error={ApellidoPVisitante === "" ? true : false}
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -432,11 +426,11 @@ const Visitas = () => {
                   defaultValue=""
                   value={ApellidoMVisitante}
                   onChange={(v) => setApellidoMVisitante(v.target.value)}
-                  error={ApellidoMVisitante == "" ? true : false}
+                  error={ApellidoMVisitante === "" ? true : false}
                 />
               </Grid>
 
-              {idvista == "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
+              {idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
                 <Grid
                   container
                   item
@@ -510,7 +504,7 @@ const Visitas = () => {
                   defaultValue=""
                   value={NombreReceptor}
                   onChange={(v) => setNombreReceptor(v.target.value)}
-                  error={NombreReceptor == "" ? true : false}
+                  error={NombreReceptor === "" ? true : false}
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -525,7 +519,7 @@ const Visitas = () => {
                   defaultValue=""
                   value={ApellidoPReceptor}
                   onChange={(v) => setApellidoPReceptor(v.target.value)}
-                  error={ApellidoPReceptor == "" ? true : false}
+                  error={ApellidoPReceptor === "" ? true : false}
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -540,7 +534,7 @@ const Visitas = () => {
                   defaultValue=""
                   value={ApellidoMReceptor}
                   onChange={(v) => setApellidoMReceptor(v.target.value)}
-                  error={ApellidoMReceptor == "" ? true : false}
+                  error={ApellidoMReceptor === "" ? true : false}
                 />
               </Grid>
             </Grid>

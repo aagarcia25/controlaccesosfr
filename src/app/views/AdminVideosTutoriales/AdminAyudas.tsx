@@ -61,7 +61,7 @@ const AdminAyudas = ({
     setslideropen(true);
     if (
       event?.target?.files[0] &&
-      event.target.files[0].type.split("/")[0] == "video"
+      event.target.files[0].type.split("/")[0] === "video"
     ) {
       setNombreArchivo(event?.target?.value?.split("\\")[2]);
       let file = event?.target!?.files[0]!;
@@ -70,7 +70,7 @@ const AdminAyudas = ({
       setslideropen(false);
     } else if (
       event?.target?.files[0] &&
-      event.target.files[0].type == "application/pdf"
+      event.target.files[0].type === "application/pdf"
     ) {
       setNombreArchivo(event?.target?.value?.split("\\")[2]);
       let file = event?.target!?.files[0]!;
@@ -90,16 +90,16 @@ const AdminAyudas = ({
   const loadFilter = (operacion: number) => {
     let data = { NUMOPERACION: operacion };
     ShareService.SelectIndex(data).then((res) => {
-      if (operacion == 9) {
+      if (operacion === 9) {
         setMenus(res.RESPONSE);
-        if (value == "pregunta") {
-          consulta(IdMenu ? IdMenu : idMenu == "false" ? "" : idMenu, "4");
+        if (value === "pregunta") {
+          consulta(IdMenu ? IdMenu : idMenu === "false" ? "" : idMenu, "4");
         }
-        if (value == "guia") {
-          consulta(IdMenu ? IdMenu : idMenu == "false" ? "" : idMenu, "11");
+        if (value === "guia") {
+          consulta(IdMenu ? IdMenu : idMenu === "false" ? "" : idMenu, "11");
         }
-        if (value == "video") {
-          consulta(IdMenu ? IdMenu : idMenu == "false" ? "" : idMenu, "12");
+        if (value === "video") {
+          consulta(IdMenu ? IdMenu : idMenu === "false" ? "" : idMenu, "12");
         }
       }
     });
@@ -110,7 +110,7 @@ const AdminAyudas = ({
     setVideoPreview("");
     setslideropen(true);
     const formData = new FormData();
-    formData.append("NUMOPERACION", value == "video" ? "1" : "2");
+    formData.append("NUMOPERACION", value === "video" ? "1" : "2");
     formData.append("VIDEO", newVideo, nombreArchivo);
     formData.append("PREGUNTA", pregunta);
     formData.append("CHUSER", user.Id);
@@ -142,14 +142,20 @@ const AdminAyudas = ({
             handleClose();
           } else {
             handleLimpiaCampos();
-            if (value == "pregunta") {
-              consulta(IdMenu ? IdMenu : idMenu == "false" ? "" : idMenu, "4");
+            if (value === "pregunta") {
+              consulta(IdMenu ? IdMenu : idMenu === "false" ? "" : idMenu, "4");
             }
-            if (value == "guia") {
-              consulta(IdMenu ? IdMenu : idMenu == "false" ? "" : idMenu, "11");
+            if (value === "guia") {
+              consulta(
+                IdMenu ? IdMenu : idMenu === "false" ? "" : idMenu,
+                "11"
+              );
             }
-            if (value == "video") {
-              consulta(IdMenu ? IdMenu : idMenu == "false" ? "" : idMenu, "12");
+            if (value === "video") {
+              consulta(
+                IdMenu ? IdMenu : idMenu === "false" ? "" : idMenu,
+                "12"
+              );
             }
           }
 
@@ -181,7 +187,7 @@ const AdminAyudas = ({
 
     let data = {
       NUMOPERACION: numOp,
-      CHID: idMenu == "false" ? "" : idMenu,
+      CHID: idMenu === "false" ? "" : idMenu,
     };
 
     AuthService.AdminAyudas(data).then((res) => {
@@ -212,15 +218,15 @@ const AdminAyudas = ({
 
     AuthService.AdminAyudas(data).then((res) => {
       if (res.SUCCESS || res.RESPONSE) {
-        if (value == "pregunta") {
+        if (value === "pregunta") {
           consulta(IdMenu ? IdMenu : idMenu, "4");
         }
 
-        if (value == "video") {
+        if (value === "video") {
           consulta(IdMenu ? IdMenu : idMenu, "12");
         }
 
-        if (value == "guia") {
+        if (value === "guia") {
           consulta(IdMenu ? IdMenu : idMenu, "11");
         }
       }
@@ -318,7 +324,7 @@ const AdminAyudas = ({
       renderCell: (v: any) => {
         return (
           <>
-            {v.row.Departamento == "1"
+            {v.row.Departamento === "1"
               ? "Externo: Municipio u Organismo"
               : "Area Interna"}
           </>
@@ -368,7 +374,7 @@ const AdminAyudas = ({
       renderCell: (v: any) => {
         return (
           <>
-            {v.row.Departamento == "1"
+            {v.row.Departamento === "1"
               ? "Externo: Municipio Organismo"
               : "Area Interna"}
           </>
@@ -418,7 +424,7 @@ const AdminAyudas = ({
       renderCell: (v: any) => {
         return (
           <>
-            {v.row.Departamento == "1"
+            {v.row.Departamento === "1"
               ? "Externo: Municipio Organismo"
               : "Area Interna"}
           </>
@@ -428,14 +434,14 @@ const AdminAyudas = ({
   ];
   const handleFilterChange2 = (v: string) => {
     setIdMenu(v);
-    if (value == "pregunta") {
-      consulta(IdMenu ? IdMenu : v == "false" ? "" : v, "4");
+    if (value === "pregunta") {
+      consulta(IdMenu ? IdMenu : v === "false" ? "" : v, "4");
     }
-    if (value == "guia") {
-      consulta(IdMenu ? IdMenu : v == "false" ? "" : v, "11");
+    if (value === "guia") {
+      consulta(IdMenu ? IdMenu : v === "false" ? "" : v, "11");
     }
-    if (value == "video") {
-      consulta(IdMenu ? IdMenu : v == "false" ? "" : v, "12");
+    if (value === "video") {
+      consulta(IdMenu ? IdMenu : v === "false" ? "" : v, "12");
     }
   };
 
@@ -465,23 +471,23 @@ const AdminAyudas = ({
     });
   };
   useEffect(() => {
-    if (value == "pregunta") {
+    if (value === "pregunta") {
       consulta(IdMenu ? IdMenu : idMenu, "4");
     }
 
-    if (value == "video") {
+    if (value === "video") {
       consulta(IdMenu ? IdMenu : idMenu, "12");
     }
 
-    if (value == "guia") {
+    if (value === "guia") {
       consulta(IdMenu ? IdMenu : idMenu, "11");
     }
     loadFilter(9);
 
-    if (dt?.length == 0) {
+    if (dt?.length === 0) {
     } else {
       setNombreArchivo(dt?.row?.nombreOriginal);
-      if (modo == "Carga Videos") {
+      if (modo === "Carga Videos") {
       }
     }
   }, [dt, value]);
@@ -578,14 +584,14 @@ const AdminAyudas = ({
           {value !== "pregunta" ? (
             <Button
               hidden
-              disabled={modo == "Editar Nombre Video" || !value}
+              disabled={modo === "Editar Nombre Video" || !value}
               component="label"
               className="cancelar"
             >
               Seleccionar {value}
               <input
                 hidden
-                accept={value == "video" ? "video/*" : "application/pdf"}
+                accept={value === "video" ? "video/*" : "application/pdf"}
                 onChange={(v) => {
                   enCambioFile(v);
                 }}
@@ -596,11 +602,11 @@ const AdminAyudas = ({
             ""
           )}
 
-          {value == "video" ? (
+          {value === "video" ? (
             <>
               <Button
                 disabled={
-                  !idMenu || idMenu == "false" || !nombreArchivo //||
+                  !idMenu || idMenu === "false" || !nombreArchivo //||
                   // !newVideo ||
                   // !valueDepartamento
                 }
@@ -612,7 +618,7 @@ const AdminAyudas = ({
               {IdMenu ? (
                 <Button
                   disabled={
-                    !idMenu || idMenu == "false" || !nombreArchivo || !newVideo
+                    !idMenu || idMenu === "false" || !nombreArchivo || !newVideo
                   }
                   className="guardar"
                   onClick={() => SaveVideo(true)}
@@ -627,12 +633,12 @@ const AdminAyudas = ({
             ""
           )}
 
-          {value == "guia" ? (
+          {value === "guia" ? (
             <>
               <Button
                 // disabled={
                 //   !idMenu ||
-                //   idMenu == "false" ||
+                //   idMenu === "false" ||
                 //   !nombreArchivo ||
                 //   !pregunta //||
                 //  // !newVideo ||
@@ -647,7 +653,7 @@ const AdminAyudas = ({
                 <Button
                   disabled={
                     !idMenu ||
-                    idMenu == "false" ||
+                    idMenu === "false" ||
                     !nombreArchivo ||
                     !pregunta ||
                     !newVideo
@@ -665,12 +671,12 @@ const AdminAyudas = ({
             ""
           )}
 
-          {value == "pregunta" ? (
+          {value === "pregunta" ? (
             <>
               <Button
                 disabled={
                   !idMenu ||
-                  idMenu == "false" ||
+                  idMenu === "false" ||
                   // !valueDepartamento ||
                   !pregunta ||
                   !respuesta
@@ -683,7 +689,7 @@ const AdminAyudas = ({
               {IdMenu ? (
                 <Button
                   disabled={
-                    !idMenu || idMenu == "false" || !pregunta || !respuesta
+                    !idMenu || idMenu === "false" || !pregunta || !respuesta
                   }
                   className="guardar"
                   onClick={() => SavePreguntasFrecuentes(true)}
@@ -700,7 +706,7 @@ const AdminAyudas = ({
         </Grid>
       </Grid>
 
-      {value == "video" || value == "guia" ? (
+      {value === "video" || value === "guia" ? (
         <>
           <Grid container>
             <Grid>
@@ -719,7 +725,7 @@ const AdminAyudas = ({
               />
             </Grid>
           </Grid>
-          {value == "guia" ? (
+          {value === "guia" ? (
             <Grid container>
               <Grid>
                 <Typography variant="h6">
@@ -747,7 +753,7 @@ const AdminAyudas = ({
         ""
       )}
 
-      {value == "pregunta" ? (
+      {value === "pregunta" ? (
         <>
           <Grid container>
             <Grid>
@@ -792,11 +798,11 @@ const AdminAyudas = ({
         ""
       )}
 
-      {value == "video" || value == "guia" ? (
+      {value === "video" || value === "guia" ? (
         <Grid container>
           <Grid item xs={12}>
             <MUIXDataGrid
-              columns={value == "video" ? columnsVideo : columnsGuia}
+              columns={value === "video" ? columnsVideo : columnsGuia}
               rows={preguntas}
             />
           </Grid>
@@ -809,15 +815,15 @@ const AdminAyudas = ({
                 alignItems="center"
               >
                 <Grid className="contenedorDeReproductorVideo" item xs={12}>
-                  {value == "video" ? (
+                  {value === "video" ? (
                     <video
                       loop
                       autoPlay
                       width={"100%"}
                       height={"100%"}
                       hidden={
-                        modo == "Editar Nombre Video" ||
-                        videoPreview?.length == 0
+                        modo === "Editar Nombre Video" ||
+                        videoPreview?.length === 0
                       }
                       src={videoPreview}
                       id="videoPlayer"

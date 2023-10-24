@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Grid, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -20,9 +21,7 @@ export default function Navigator(props: DrawerProps, logoFijo: any) {
 
   const list: menus[] = JSON.parse(String(getMenus()));
   const [open, setOpen] = useState(-1);
-  const handleClick = (x: number) => {
-    open === x ? setOpen(-1) : setOpen(x);
-  };
+
   const consulta = (data: string) => {
     navigate(data);
   };

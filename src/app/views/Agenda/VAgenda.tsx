@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Toast } from "../../helpers/Toast";
 import { localizer } from "../../helpers/calendarLocalizer";
@@ -13,17 +13,16 @@ import { getUser } from "../../services/localStorage";
 import TitleComponent from "../componentes/TitleComponent";
 
 const VAgenda = () => {
-  let params = useParams();
   const navigate = useNavigate();
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [open, setopen] = useState(false);
   const [listAgenda, setlistAgenda] = useState<agenda[]>([]);
 
   const onSelectEvent = (v: any) => {
-    if (v.estatus == "0779435b-5718-11ee-b06d-3cd92b4d9bf4") {
+    if (v.estatus === "0779435b-5718-11ee-b06d-3cd92b4d9bf4") {
       Swal.fire("Cita Finalizada, no se puede modificar", "¡Error!", "info");
     } else {
-      if (v.color != "#EC7063") {
+      if (v.color !== "#EC7063") {
         navigate("/inicio/view/" + v.id);
       } else {
         Swal.fire("Cita Vencida, no se puede modificar", "¡Error!", "info");

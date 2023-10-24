@@ -13,38 +13,35 @@ import { getToken, getUser } from "../services/localStorage";
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 
-
-
 export function BloqueoSesion({
   handlePassword,
 }: {
   handlePassword: Function;
 }) {
-
-
   const [password, setPassword] = useState("");
   const [apellPat, setApellPat] = useState("");
   const [apellMat, setApellMat] = useState("");
   const [name, setName] = useState("");
 
-
   useEffect(() => {
- const decoded: UserLogin = jwt_decode(String(getToken()));
-    if (getUser() === null  || getUser() === "undefined") {
-
+    const decoded: UserLogin = jwt_decode(String(getToken()));
+    if (getUser() === null || getUser() === "undefined") {
       setApellMat("");
       setApellPat("");
       setName(decoded.NombreUsuario);
-
     } else {
-      const user: USUARIORESPONSE = JSON.parse(String(getUser() === "undefined" || getUser() === undefined ? null : getUser()));
+      const user: USUARIORESPONSE = JSON.parse(
+        String(
+          getUser() === "undefined" || getUser() === undefined
+            ? null
+            : getUser()
+        )
+      );
       setApellMat(user?.ApellidoMaterno);
       setApellPat(user?.ApellidoPaterno);
       setName(user?.Nombre);
     }
-
-  }, [])
-
+  }, []);
 
   return (
     <Box
@@ -60,7 +57,7 @@ export function BloqueoSesion({
         sx={{
           width: "50%",
           height: "30%",
-          blackgroundColor: '#FFFFFF',
+          blackgroundColor: "#FFFFFF",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -73,7 +70,9 @@ export function BloqueoSesion({
             alignItems: "center",
           }}
         >
-          <Typography sx={{ fontSize: "3vw" }}>{name + ' ' + apellPat + ' ' + apellMat}</Typography>
+          <Typography sx={{ fontSize: "3vw" }}>
+            {name + " " + apellPat + " " + apellMat}
+          </Typography>
           <TextField
             sx={{
               width: "50vw",
@@ -99,15 +98,18 @@ export function BloqueoSesion({
               justifyContent: "center",
             }}
           >
-            <IconButton aria-label="fingerprint" color="secondary" onClick={() => handlePassword(password,name )}>
+            <IconButton
+              aria-label="fingerprint"
+              color="secondary"
+              onClick={() => handlePassword(password, name)}
+            >
               <Fingerprint />
             </IconButton>
           </Box>
 
-
-
           <Typography sx={{ mt: 3, fontSize: "2vw" }}>
-            Sesión pausada por inactividad o Recargar la Página, Ingrese contraseña por Seguridad
+            Sesión pausada por inactividad o Recargar la Página, Ingrese
+            contraseña por Seguridad
           </Typography>
           <Typography sx={{ mt: 5, fontSize: "1.8vw" }}>
             ¿Esa persona no es usted?{" "}
@@ -119,9 +121,10 @@ export function BloqueoSesion({
                 onClick={() => {
                   localStorage.clear();
                   var ventana = window.self;
-                  ventana.location.replace(String(process.env.REACT_APP_APPLICATION_BASE_URL_LOGIN));
+                  ventana.location.replace(
+                    String(process.env.REACT_APP_APPLICATION_BASE_URL_LOGIN)
+                  );
                 }}
-
                 sx={{ mt: 1, fontSize: "1.6vw" }}
               >
                 aquí
@@ -134,5 +137,3 @@ export function BloqueoSesion({
     </Box>
   );
 }
-
-

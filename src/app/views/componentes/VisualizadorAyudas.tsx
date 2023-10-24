@@ -30,7 +30,7 @@ export const VisualizadorAyudas = ({
   const handleClickOpen = (URLVideo: string, modo: string) => {
     let data = {
       TOKEN: JSON.parse(String(getToken())),
-      RUTA: modo == "video" ? "/VIDEOS/TUTORIALES/" : "/GUIAS/",
+      RUTA: modo === "video" ? "/VIDEOS/TUTORIALES/" : "/GUIAS/",
       NOMBRE: URLVideo,
     };
 
@@ -125,7 +125,7 @@ export const VisualizadorAyudas = ({
         </Grid>
 
         <div className="containerCenterVizualizar">
-          {modoVisualizacion == "video" ? (
+          {modoVisualizacion === "video" ? (
             <Grid item className="contenedorDeReproductorVideo">
               <video
                 autoFocus

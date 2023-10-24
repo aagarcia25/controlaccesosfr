@@ -253,6 +253,7 @@ const Visitas = () => {
       EmailNotificacion: Correo,
       IdEdificio: idEdificio,
       IdAcceso: idAcceso,
+      Extencion: ext,
     };
 
     if (send) {
@@ -352,8 +353,11 @@ const Visitas = () => {
             />
           </Grid>
 
-          {idvista == "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
+          {idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
             <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Typography variant="body1" gutterBottom>
+                Proveedor:
+              </Typography>
               <TextField
                 fullWidth
                 size="small"
@@ -363,7 +367,7 @@ const Visitas = () => {
                 defaultValue=""
                 value={proveedor}
                 onChange={(v) => setproveedor(v.target.value)}
-                error={proveedor == "" ? true : false}
+                error={proveedor === "" ? true : false}
               />
             </Grid>
           ) : (
@@ -387,12 +391,14 @@ const Visitas = () => {
               alignItems="center"
             >
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Nombre(s):
+                </Typography>
                 <TextField
                   fullWidth
                   size="small"
                   required
                   id="outlined-required"
-                  label="Nombre(s)"
                   defaultValue=""
                   value={NombreVisitante}
                   onChange={(v) => setNombreVisitante(v.target.value)}
@@ -400,12 +406,14 @@ const Visitas = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Apellido Paterno:
+                </Typography>
                 <TextField
                   fullWidth
                   size="small"
                   required
                   id="outlined-required"
-                  label="Apellido Paterno"
                   defaultValue=""
                   value={ApellidoPVisitante}
                   onChange={(v) => setApellidoPVisitante(v.target.value)}
@@ -413,12 +421,14 @@ const Visitas = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Apellido Materno:
+                </Typography>
                 <TextField
                   fullWidth
                   size="small"
                   required
                   id="outlined-required"
-                  label="Apellido Materno"
                   defaultValue=""
                   value={ApellidoMVisitante}
                   onChange={(v) => setApellidoMVisitante(v.target.value)}
@@ -489,12 +499,14 @@ const Visitas = () => {
               alignItems="center"
             >
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Nombre(s):
+                </Typography>
                 <TextField
                   fullWidth
                   size="small"
                   required
                   id="outlined-required"
-                  label="Nombre(s)"
                   defaultValue=""
                   value={NombreReceptor}
                   onChange={(v) => setNombreReceptor(v.target.value)}
@@ -502,12 +514,14 @@ const Visitas = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Apellido Paterno:
+                </Typography>
                 <TextField
                   fullWidth
                   size="small"
                   required
                   id="outlined-required"
-                  label="Apellido Paterno"
                   defaultValue=""
                   value={ApellidoPReceptor}
                   onChange={(v) => setApellidoPReceptor(v.target.value)}
@@ -515,12 +529,14 @@ const Visitas = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Apellido Materno:
+                </Typography>
                 <TextField
                   size="small"
                   fullWidth
                   required
                   id="outlined-required"
-                  label="Apellido Materno"
                   defaultValue=""
                   value={ApellidoMReceptor}
                   onChange={(v) => setApellidoMReceptor(v.target.value)}
@@ -558,11 +574,13 @@ const Visitas = () => {
               </Grid>
 
               <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Extención:
+                </Typography>
                 <TextField
                   size="small"
                   fullWidth
                   id="outlined-required"
-                  label="Extención"
                   defaultValue=""
                   value={ext}
                   onChange={(v) => setExt(v.target.value)}
@@ -642,21 +660,21 @@ const Visitas = () => {
               />
             </Grid>
             <Grid item xs={12} sm={3} md={3} lg={3}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>Piso:</Typography>
-              <SelectFrag
-                value={idpiso}
-                options={ListPiso}
-                onInputChange={handleFilteridPiso}
-                placeholder={"Seleccione.."}
-                disabled={false}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3} md={3} lg={3}>
               <Typography sx={{ fontFamily: "sans-serif" }}>Acceso:</Typography>
               <SelectFrag
                 value={idAcceso}
                 options={ListAcceso}
                 onInputChange={handleFilterAcceso}
+                placeholder={"Seleccione.."}
+                disabled={false}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3} md={3} lg={3}>
+              <Typography sx={{ fontFamily: "sans-serif" }}>Piso:</Typography>
+              <SelectFrag
+                value={idpiso}
+                options={ListPiso}
+                onInputChange={handleFilteridPiso}
                 placeholder={"Seleccione.."}
                 disabled={false}
               />

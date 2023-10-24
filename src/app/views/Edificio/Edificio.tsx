@@ -50,7 +50,9 @@ export const Edificio = () => {
                 <DoorBackIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={"Personal Autorizado Para Acceso al Edificio"}>
+            <Tooltip
+              title={"Personal Autorizado Para Generar Visitas al Edificio"}
+            >
               <IconButton value="check" onClick={() => handlePersonal(v)}>
                 <AccessibilityNewIcon />
               </IconButton>

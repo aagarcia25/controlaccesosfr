@@ -1,6 +1,6 @@
-import { Grid } from "@mui/material";
+import { Button, DialogContent, Grid, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Toast } from "../../helpers/Toast";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
@@ -11,6 +11,10 @@ import ButtonsDeleted from "../componentes/ButtonsDeleted";
 import ButtonsEdit from "../componentes/ButtonsEdit";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import ModalForm from "../componentes/ModalForm";
+import SelectFrag from "../componentes/SelectFrag";
+import SelectValues from "../../interfaces/Share";
+import { ShareService } from "../../services/ShareService";
+import Progress from "../Progress";
 
 const EdificioUsuarios = ({
   handleClose,
@@ -22,6 +26,10 @@ const EdificioUsuarios = ({
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openModal, setopenModal] = useState(false);
+
+  const [idUsuario, setidUsuario] = useState("");
+  const [ListUsuario, setListUsuario] = useState<SelectValues[]>([]);
 
   const handleDeleted = (v: any) => {
     Swal.fire({
@@ -34,7 +42,7 @@ const EdificioUsuarios = ({
     }).then((result) => {
       if (result.isConfirmed) {
         let data = {
-          NUMOPERACION: 3,
+          NUMOPERACION: 11,
           CHID: v.data.row.id,
           CHUSER: user.Id,
         };
@@ -56,12 +64,39 @@ const EdificioUsuarios = ({
     });
   };
 
+  const handleUsuario = (v: string) => {
+    setidUsuario(v);
+  };
+
+  const close = () => {
+    setopenModal(false);
+  };
   const handleOpen = (v: any) => {
-    console.log(v);
+    setopenModal(true);
   };
-  const handleEdit = (v: any) => {
-    console.log(v);
+
+  const handleSubmit = () => {
+    let data = {
+      NUMOPERACION: 10,
+      CHUSER: user.Id,
+      idUsuario: idUsuario,
+      idEdificio: dt.id,
+    };
+
+    CatalogosServices.Edificio_index(data).then((res) => {
+      if (res.SUCCESS) {
+        Toast.fire({
+          icon: "success",
+          title: "¡Registro Agregado!",
+        });
+        consulta();
+        close();
+      } else {
+        Swal.fire("¡Error!", res.STRMESSAGE, "error");
+      }
+    });
   };
+
   const columnsRel: GridColDef[] = [
     {
       field: "id",
@@ -76,11 +111,6 @@ const EdificioUsuarios = ({
       renderCell: (v: any) => {
         return (
           <>
-            <ButtonsEdit
-              handleAccion={handleEdit}
-              row={v}
-              show={true}
-            ></ButtonsEdit>
             <ButtonsDeleted
               handleAccion={handleDeleted}
               row={v}
@@ -117,6 +147,16 @@ const EdificioUsuarios = ({
     },
   ];
 
+  const loadFilter = (operacion: number, id?: string) => {
+    setOpen(true);
+    let data = { NUMOPERACION: operacion, P_ID: id };
+    ShareService.SelectIndex(data).then((res) => {
+      if (operacion === 10) {
+        setListUsuario(res.RESPONSE);
+      }
+    });
+  };
+
   const consulta = () => {
     let data = {
       NUMOPERACION: 12,
@@ -131,10 +171,12 @@ const EdificioUsuarios = ({
 
   useEffect(() => {
     consulta();
+    loadFilter(10);
   }, []);
 
   return (
     <div>
+      <Progress open={open}></Progress>
       <ModalForm title={"Usuarios Con Acceso"} handleClose={handleClose}>
         <Grid container spacing={1} padding={0}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -143,6 +185,39 @@ const EdificioUsuarios = ({
           </Grid>
         </Grid>
       </ModalForm>
+
+      {openModal ? (
+        <ModalForm title={"Registrar Usuarios"} handleClose={close}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Typography sx={{ fontFamily: "sans-serif" }}>
+                Usuario:
+              </Typography>
+              <SelectFrag
+                value={idUsuario}
+                options={ListUsuario}
+                onInputChange={handleUsuario}
+                placeholder={"Seleccione.."}
+                disabled={false}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Button className={"guardar"} onClick={() => handleSubmit()}>
+                {"Guardar"}
+              </Button>
+            </Grid>
+          </Grid>
+        </ModalForm>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

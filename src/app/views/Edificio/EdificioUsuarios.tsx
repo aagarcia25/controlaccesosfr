@@ -42,7 +42,7 @@ const EdificioUsuarios = ({
     }).then((result) => {
       if (result.isConfirmed) {
         let data = {
-          NUMOPERACION: 3,
+          NUMOPERACION: 11,
           CHID: v.data.row.id,
           CHUSER: user.Id,
         };
@@ -77,16 +77,17 @@ const EdificioUsuarios = ({
 
   const handleSubmit = () => {
     let data = {
-      NUMOPERACION: 1,
-      CHID: idUsuario,
+      NUMOPERACION: 10,
       CHUSER: user.Id,
+      idUsuario: idUsuario,
+      idEdificio: dt.id,
     };
 
     CatalogosServices.Edificio_index(data).then((res) => {
       if (res.SUCCESS) {
         Toast.fire({
           icon: "success",
-          title: "¡Registro Actualizado!",
+          title: "¡Registro Agregado!",
         });
         consulta();
         close();

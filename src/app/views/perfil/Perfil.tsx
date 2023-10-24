@@ -1,3 +1,7 @@
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import PersonIcon from "@mui/icons-material/Person";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -8,19 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
-import PersonIcon from "@mui/icons-material/Person";
-import { DialogCambiarImagen } from "./DialogCambiarImagen";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import React from "react";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { getUser, setToken } from "../../services/localStorage";
-import { UserServices } from "../../services/UserServices";
 import { Toast } from "../../helpers/Toast";
-import { Blanco } from "../../styles/imagen";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { UserServices } from "../../services/UserServices";
+import { getUser, setToken } from "../../services/localStorage";
+import { DialogCambiarImagen } from "./DialogCambiarImagen";
 
 export const Perfil = ({
   handleChangeImg,
@@ -32,8 +30,6 @@ export const Perfil = ({
   imgTipo: string;
 }) => {
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
-  // const [responseStorage, setResponseStorage] = useState<RESPONSESTORAGE>();
-
   const [openDialog, setOpenDialog] = useState(false);
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
@@ -49,7 +45,6 @@ export const Perfil = ({
   const handleCloseDialogImagen = () => {
     setOpenDialog(false);
     handleChangeImg();
-    // GetImage("/PDRMYE/USUARIOS/FOTOPERFIL/", user.RutaFoto)
   };
 
   //PRIMER CARD FUNCIONES
@@ -58,13 +53,11 @@ export const Perfil = ({
     UserServices.verify({}).then((res) => {
       if (res.status === 200) {
         setTokenValid(true);
-        // onClickChangePassword();
       } else if (res.status === 401) {
         UserServices.refreshToken().then((resAppLogin) => {
           if (resAppLogin.status === 200) {
             setTokenValid(true);
             setToken(resAppLogin.data?.token);
-            // onClickChangePassword();
           } else {
             setTokenValid(false);
             Toast.fire({
@@ -124,9 +117,7 @@ export const Perfil = ({
   };
 
   useEffect(() => {
-    // GetImage("/PDRMYE/USUARIOS/FOTOPERFIL/", user.RutaFoto)
     RfToken();
-    // setSumaDescuentos(Number(dt.row.Descuentos) + Number(dt.row.RecAdeudos));
   }, []);
 
   return (

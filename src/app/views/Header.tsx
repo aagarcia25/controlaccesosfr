@@ -1,10 +1,10 @@
+/* eslint-disable jsx-a11y/alt-text */
 import HelpIcon from "@mui/icons-material/Help";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonIcon from "@mui/icons-material/Person";
 import { Backdrop, Button, Fade, Hidden, SpeedDialAction } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import Badge from "@mui/material/Badge";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -34,14 +34,12 @@ interface HeaderProps {
   id: any;
   imgData: string;
   imgTipo: string;
-  //idMenu:any;
 }
 
 export default function Header(props: HeaderProps) {
   const btnPerson = "120%";
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const navigate = useNavigate();
-  const [cnotif, setCnotif] = React.useState(0);
   const { onDrawerToggle } = props;
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -57,10 +55,6 @@ export default function Header(props: HeaderProps) {
       setPlacement(newPlacement);
       setOpen((prevOpen) => !prevOpen);
     };
-  const onOpenCalendar = () => {
-    setOpen((prevOpen) => !prevOpen);
-    navigate("/Calendario");
-  };
 
   const onOpenHelp = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -84,10 +78,6 @@ export default function Header(props: HeaderProps) {
     });
   };
 
-  const onNotification = () => {
-    setOpen((prevOpen) => !prevOpen);
-    navigate("/Notification");
-  };
   const onConfigProfile = () => {
     navigate("/perfil");
     setOpen((prevOpen) => !prevOpen);
@@ -225,19 +215,6 @@ export default function Header(props: HeaderProps) {
 
     prevOpen.current = open;
   }, [open]);
-
-  let data = {
-    NUMOPERACION: 5,
-    CHUSER: user?.Id ? user?.Id : "",
-  };
-
-  React.useEffect(() => {
-    /* CatalogosServices.Notificaciones(data).then((res) => {
-      let result = res.RESPONSE;
-      setCnotif(result[0].count);
-
-    });*/
-  }, [props.imgTipo]);
 
   return (
     <React.Fragment>

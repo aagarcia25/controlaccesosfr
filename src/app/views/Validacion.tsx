@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Box, Button, Typography } from "@mui/material";
 import imgGobEst from "../assets/img/logo1.svg";
 

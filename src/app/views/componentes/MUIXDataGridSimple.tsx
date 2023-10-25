@@ -26,9 +26,7 @@ export default function MUIXDataGridSimple(props: any) {
         {...props.rows}
         density="compact"
         disableSelectionOnClick
-        //disableColumnFilter
         disableIgnoreModificationsIfProcessingProps
-        // disableColumnSelector
         disableDensitySelector
         rowsPerPageOptions={[12]}
         getRowHeight={() => "auto"}
@@ -60,7 +58,7 @@ export default function MUIXDataGridSimple(props: any) {
             showQuickFilter: true,
             quickFilterProps: { debounceMs: 500 },
             csvOptions: {
-              fileName: new Date().getMilliseconds() + "_" + "Export",
+              fileName: new Date().getMilliseconds() + "_Export",
               utf8WithBom: true,
             },
           },

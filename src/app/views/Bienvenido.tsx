@@ -1,5 +1,4 @@
 import { Box, Grid, Hidden } from "@mui/material";
-import { Blanco } from "../styles/imagen";
 
 export default function Bienvenido({ user }: { user: any }) {
   return (

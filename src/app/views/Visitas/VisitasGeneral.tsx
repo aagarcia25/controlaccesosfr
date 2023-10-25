@@ -148,7 +148,9 @@ const VisitasGeneral = () => {
       <TitleComponent title={"Reporte General de Visitas"} show={open} />
       <Grid container spacing={1} padding={0}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
-          <MUIXDataGridSimple columns={columnsRel} rows={data} />
+          <div style={{ height: 500, width: "100%" }}>
+            <MUIXDataGridSimple columns={columnsRel} rows={data} />
+          </div>
         </Grid>
       </Grid>
       {verTrazabilidad ? (

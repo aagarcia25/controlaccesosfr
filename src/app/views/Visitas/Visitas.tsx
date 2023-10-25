@@ -132,8 +132,8 @@ const Visitas = () => {
         setidunidad(res.RESPONSE[0].IdEntidadReceptor);
         setproveedor(res.RESPONSE[0].Proveedor);
         setCorreo(res.RESPONSE[0].EmailNotificacion);
+        setExt(res.RESPONSE[0].Extencion);
         handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
-
         setidAcceso(res.RESPONSE[0].idAcceso);
         setopen(false);
       } else {
@@ -174,6 +174,7 @@ const Visitas = () => {
     });
   };
   const handleSend = () => {
+    setopen(true);
     let send = false;
 
     if (!idvista) {
@@ -196,6 +197,7 @@ const Visitas = () => {
       ) {
         Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
         send = false;
+        setopen(false);
       } else {
         send = true;
       }
@@ -260,9 +262,11 @@ const Visitas = () => {
             title: "¡Registro Agregado!",
           });
           setId(res.RESPONSE.id);
-          handleClose();
+          setopen(false);
+          navigate("/inicio/agenda");
         } else {
           Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+          setopen(false);
         }
       });
     }

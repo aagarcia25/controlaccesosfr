@@ -141,7 +141,9 @@ export const Edificio = () => {
       <Grid container spacing={1} padding={0}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <ButtonsAdd handleOpen={handleOpen} agregar={true} />
-          <MUIXDataGridSimple columns={columnsRel} rows={data} />
+          <div style={{ height: 400, width: "100%" }}>
+            <MUIXDataGridSimple columns={columnsRel} rows={data} />
+          </div>
         </Grid>
       </Grid>
       {openEU ? <EdificioUsuarios handleClose={handleClose} dt={vrows} /> : ""}

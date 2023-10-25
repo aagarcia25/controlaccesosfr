@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Progress from "../Progress";
-import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
-import { CatalogosServices } from "../../services/catalogosServices";
-import { GridColDef } from "@mui/x-data-grid";
-import DoorBackIcon from "@mui/icons-material/DoorBack";
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+import DoorBackIcon from "@mui/icons-material/DoorBack";
+import { Box, Grid, IconButton, Tooltip } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import { CatalogosServices } from "../../services/catalogosServices";
+import ButtonsAdd from "../componentes/ButtonsAdd";
+import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import TitleComponent from "../componentes/TitleComponent";
 import EdificioAccesos from "./EdificioAccesos";
 import EdificioUsuarios from "./EdificioUsuarios";
-import ButtonsAdd from "../componentes/ButtonsAdd";
 export const Edificio = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);

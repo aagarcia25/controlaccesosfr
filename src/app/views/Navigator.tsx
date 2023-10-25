@@ -20,7 +20,6 @@ export default function Navigator(props: DrawerProps, logoFijo: any) {
   const navigate = useNavigate();
 
   const list: menus[] = JSON.parse(String(getMenus()));
-  const [open, setOpen] = useState(-1);
 
   const consulta = (data: string) => {
     navigate(data);

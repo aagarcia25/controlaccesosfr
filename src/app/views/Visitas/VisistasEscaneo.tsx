@@ -192,7 +192,10 @@ export const VisistasEscaneo = () => {
               <b>Correo : </b>
               {vrows?.EmailNotificacion}
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
+              <b>Extención : </b>
+              {vrows?.Extencion}
+            </Grid>
             <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
           </Grid>
 

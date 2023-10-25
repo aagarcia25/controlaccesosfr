@@ -49,6 +49,7 @@ export const VisistasRevision = () => {
   };
 
   const handleRenviar = () => {
+    setopen(true);
     let data = {
       NUMOPERACION: 11,
       CHID: params.id,
@@ -56,8 +57,10 @@ export const VisistasRevision = () => {
     };
     CatalogosServices.visita_index(data).then((res) => {
       if (res.SUCCESS) {
+        setopen(false);
         Swal.fire("Se Envio Correo con el QR de la Visita", "¡Aviso!", "info");
       } else {
+        setopen(false);
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");
       }
     });
@@ -154,7 +157,7 @@ export const VisistasRevision = () => {
             </Grid>
             <Grid item xs={12} sm={4} md={4} lg={4}>
               <b>Persona a Visitar: </b>
-              {vrows?.NombreReceptor} {vrows?.ApellidoMReceptor}
+              {vrows?.NombreReceptor} {vrows?.ApellidoMReceptor}{" "}
               {vrows?.ApellidoPReceptor}
             </Grid>
             <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -168,7 +171,10 @@ export const VisistasRevision = () => {
               <b>Correo : </b>
               {vrows?.EmailNotificacion}
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
+              <b>Extención : </b>
+              {vrows?.Extencion}
+            </Grid>
             <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
           </Grid>
 

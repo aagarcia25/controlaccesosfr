@@ -28,6 +28,7 @@ export interface Visita {
   entidadreceptor: string;
   pisoreceptorrr: string;
   EmailNotificacion: string;
+  Extencion: string;
 }
 
 export interface agenda {

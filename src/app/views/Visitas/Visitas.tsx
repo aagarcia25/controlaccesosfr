@@ -263,7 +263,7 @@ const Visitas = () => {
           });
           setId(res.RESPONSE.id);
           setopen(false);
-          handleClose();
+          navigate("/inicio/agenda");
         } else {
           Swal.fire(res.STRMESSAGE, "¡Error!", "info");
           setopen(false);

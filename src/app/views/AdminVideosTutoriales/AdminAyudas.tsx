@@ -728,9 +728,7 @@ const AdminAyudas = ({
           {value === "guia" ? (
             <Grid container>
               <Grid>
-                <Typography variant="h6">
-                  Pregunta / Titulo de guia:{" "}
-                </Typography>
+                <Typography variant="h6">Pregunta / Título de guía:</Typography>
               </Grid>
               <Grid item xs={12}>
                 <TextField

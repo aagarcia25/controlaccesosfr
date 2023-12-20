@@ -40,24 +40,12 @@ const VEscanear = () => {
           alignItems="center"
           sx={{ padding: "2%" }}
         >
-          <Grid
-            container
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={12} sm={12} md={5} lg={5}></Grid>
-            <Grid item xs={12} sm={12} md={2} lg={2}>
-              <Button className={"guardar"} onClick={() => handleSend()}>
-                {startScan ? "Detener " : "Escanear QR"}
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={12} md={2} lg={3}></Grid>
-            <Grid item xs={12} sm={12} md={2} lg={2}></Grid>
+          <Grid container item xs={12} sm={12} md={12} lg={12} justifyContent="center" alignItems="center">
+
+            <Button className={"guardar"} onClick={() => handleSend()}>
+              {startScan ? "Detener " : "Escanear QR"}
+            </Button>
+
           </Grid>
 
           <Grid

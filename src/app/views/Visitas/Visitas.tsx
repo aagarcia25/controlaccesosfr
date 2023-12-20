@@ -599,14 +599,14 @@ const Visitas = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Grid item xs={12} sm={3} md={3} lg={4}>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
               <CustomizedDate
                 value={fini}
                 label={"Fecha Vista"}
                 onchange={handleFilterChange2}
               />
             </Grid>
-            <Grid item xs={12} sm={3} md={3} lg={4}>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif" }}>
                 Correo para Notificación:
               </Typography>
@@ -619,7 +619,7 @@ const Visitas = () => {
                 onChange={(v) => setCorreo(v.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={3} md={3} lg={4}>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif" }}>
                 Duración:
               </Typography>
@@ -645,7 +645,7 @@ const Visitas = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Grid item xs={12} sm={3} md={3} lg={3}>
+            <Grid item xs={12} sm={4} md={4} lg={3}>
               <Typography sx={{ fontFamily: "sans-serif" }}>
                 Edificio:
               </Typography>
@@ -657,7 +657,7 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
-            <Grid item xs={12} sm={3} md={3} lg={3}>
+            <Grid item xs={12} sm={4} md={4} lg={3}>
               <Typography sx={{ fontFamily: "sans-serif" }}>Acceso:</Typography>
               <SelectFrag
                 value={idAcceso}
@@ -667,7 +667,7 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
-            <Grid item xs={12} sm={3} md={3} lg={3}>
+            <Grid item xs={12} sm={4} md={4} lg={3}>
               <Typography sx={{ fontFamily: "sans-serif" }}>Piso:</Typography>
               <SelectFrag
                 value={idpiso}
@@ -677,7 +677,7 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
-            <Grid item xs={12} sm={3} md={3} lg={3}></Grid>
+          
           </Grid>
         </Grid>
 

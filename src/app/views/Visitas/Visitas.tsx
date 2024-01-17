@@ -174,7 +174,6 @@ const Visitas = () => {
     });
   };
   const handleSend = () => {
-    setopen(true);
     let send = false;
 
     if (!idvista) {
@@ -255,6 +254,7 @@ const Visitas = () => {
     };
 
     if (send) {
+      setopen(true);
       CatalogosServices.visita_index(data).then((res) => {
         if (res.SUCCESS) {
           Toast.fire({
@@ -645,7 +645,7 @@ const Visitas = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Grid item xs={12} sm={4} md={4} lg={3}>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif" }}>
                 Edificio:
               </Typography>
@@ -657,7 +657,7 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={3}>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif" }}>Acceso:</Typography>
               <SelectFrag
                 value={idAcceso}
@@ -667,7 +667,7 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={3}>
+            <Grid item xs={12} sm={4} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif" }}>Piso:</Typography>
               <SelectFrag
                 value={idpiso}
@@ -677,7 +677,6 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
-          
           </Grid>
         </Grid>
 

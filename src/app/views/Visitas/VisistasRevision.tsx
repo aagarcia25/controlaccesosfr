@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import QRCode from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -126,6 +126,38 @@ export const VisistasRevision = () => {
         >
           <Grid
             container
+            justifyContent="center"
+            alignItems="center"
+            spacing={5}
+          >
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              {params.id !== "" && (
+                <Button
+                  className="guardar"
+                  onClick={viewedit}
+                  style={{ margin: 10 }}
+                >
+                  Editar
+                </Button>
+              )}
+              <Button
+                className="guardar"
+                onClick={downloadQRCode}
+                style={{ margin: 10 }}
+              >
+                Descargar QR
+              </Button>
+              <Button
+                className="guardar"
+                onClick={handleRenviar}
+                style={{ margin: 10 }}
+              >
+                Renviar QR
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid
+            container
             direction="row"
             justifyContent="center"
             alignItems="center"
@@ -135,114 +167,95 @@ export const VisistasRevision = () => {
             md={12}
             lg={12}
           >
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Fecha: </b>
-              {vrows?.FechaVisita}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Fecha de Registro: </b>
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b> {vrows?.FechaVisita} </b>
+              </Typography>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Entrada: </b>
-              {vrows?.FechaVisita}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Extención : </b>
+              </Typography>
+
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b> {vrows?.Extencion}</b>
+              </Typography>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Duración: </b>
-              {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Duración: </b>
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>
+                  {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr}{" "}
+                </b>
+              </Typography>
             </Grid>
           </Grid>
 
           <Grid container item xs={12} sm={12} md={12} lg={12}>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Vistante: </b>
-              {vrows?.NombreVisitante} {vrows?.ApellidoPVisitante}{" "}
-              {vrows?.ApellidoMVisitante}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Vistante: </b>
+              </Typography>
+
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>
+                  {vrows?.NombreVisitante} {vrows?.ApellidoPVisitante}{" "}
+                  {vrows?.ApellidoMVisitante}
+                </b>
+              </Typography>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Persona a Visitar: </b>
-              {vrows?.NombreReceptor} {vrows?.ApellidoMReceptor}{" "}
-              {vrows?.ApellidoPReceptor}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Persona a Visitar: </b>
+              </Typography>
+
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>
+                  {vrows?.NombreReceptor} {vrows?.ApellidoMReceptor}{" "}
+                  {vrows?.ApellidoPReceptor}
+                </b>
+              </Typography>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Dependencia: </b>
-              {vrows?.entidadreceptor}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Dependencia: </b>
+              </Typography>
+
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>{vrows?.entidadreceptor}</b>
+              </Typography>
             </Grid>
           </Grid>
 
           <Grid container item xs={12} sm={12} md={12} lg={12}>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Correo : </b>
-              {vrows?.EmailNotificacion}
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Correo : </b>
+              </Typography>
+
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b> {vrows?.EmailNotificacion}</b>
+              </Typography>
             </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <b>Extención : </b>
-              {vrows?.Extencion}
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4}></Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4}></Grid>
           </Grid>
 
-          <Grid
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            sx={{
-              "text-align": "center",
-            }}
-          >
-            <Grid item xs={12} sm={4} md={4} lg={4}></Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} sm={12} md={12} lg={12}>
               <QRCode
                 id="qr-gen"
                 value={qrValue}
                 size={200}
-                level={"H"}
+                level="H"
                 includeMargin={true}
+                style={{ display: "block", margin: "auto" }}
               />
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-                item
-                xs={12}
-                sm={12}
-                md={12}
-                lg={12}
-                spacing={2}
-                sx={{
-                  "text-align": "center",
-                }}
-              >
-                <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-                <Grid item xs={12} sm={12} md={12} lg={2}>
-                  {params.id !== "" ? (
-                    <Button className={"guardar"} onClick={() => viewedit()}>
-                      {"Editar"}
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={2}>
-                  <Button
-                    className={"guardar"}
-                    onClick={() => downloadQRCode()}
-                  >
-                    {"Descargar QR"}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={2}>
-                  <Button className={"guardar"} onClick={() => handleRenviar()}>
-                    {"Renviar QR"}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-                <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-              </Grid>
             </Grid>
           </Grid>
         </Grid>

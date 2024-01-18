@@ -29,6 +29,8 @@ export interface Visita {
   pisoreceptorrr: string;
   EmailNotificacion: string;
   Extencion: string;
+  Indefinido: number;
+  Observaciones: string;
 }
 
 export interface agenda {

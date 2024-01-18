@@ -2088,3 +2088,12 @@ textarea {
 .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
   background-color: transparent !important;
 }
+
+button.registrar {
+  font-size: 30px;
+  transition-duration: 0.2s;
+  font-family: sans-serif;
+  background-color: #15212f;
+  color: rgb(255, 255, 255);
+
+}

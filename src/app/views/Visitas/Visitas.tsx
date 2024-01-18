@@ -1,4 +1,11 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -45,6 +52,11 @@ const Visitas = () => {
   const [idAcceso, setidAcceso] = useState("");
   const [ListAcceso, setListAcceso] = useState<SelectValues[]>([]);
   const [fini, setFini] = useState<Dayjs | null>();
+  const [checked, setChecked] = useState(false);
+  const [Observaciones, setObservaciones] = useState("");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
 
   const loadFilter = (operacion: number, id?: string) => {
     setopen(true);
@@ -135,6 +147,8 @@ const Visitas = () => {
         setExt(res.RESPONSE[0].Extencion);
         handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
         setidAcceso(res.RESPONSE[0].idAcceso);
+        setChecked(res.RESPONSE[0].idAcceso);
+        setObservaciones(res.RESPONSE[0].idAcceso);
         setopen(false);
       } else {
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");
@@ -251,6 +265,8 @@ const Visitas = () => {
       IdEdificio: idEdificio,
       IdAcceso: idAcceso,
       Extencion: ext,
+      Indefinido: checked,
+      Observaciones: Observaciones,
     };
 
     if (send) {
@@ -332,6 +348,7 @@ const Visitas = () => {
               sx={{
                 fontFamily: "sans-serif",
                 textAlign: "center",
+                fontSize: "20px",
               }}
             >
               Completa la información
@@ -667,6 +684,7 @@ const Visitas = () => {
                 disabled={false}
               />
             </Grid>
+
             <Grid item xs={12} sm={4} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif" }}>Piso:</Typography>
               <SelectFrag
@@ -675,6 +693,61 @@ const Visitas = () => {
                 onInputChange={handleFilteridPiso}
                 placeholder={"Seleccione.."}
                 disabled={false}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            item
+            spacing={1}
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+          >
+            <Grid item xs={1} sm={1} md={1} lg={1}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label="Sin Vigencia"
+              />
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            item
+            spacing={1}
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Typography variant="subtitle2" style={{ color: "black" }}>
+                Observaciones:
+              </Typography>
+              <TextField
+                size="small"
+                fullWidth
+                multiline
+                rows={4}
+                id="outlined-required"
+                defaultValue=""
+                value={Observaciones}
+                onChange={(v) => setObservaciones(v.target.value)}
               />
             </Grid>
           </Grid>

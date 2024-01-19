@@ -147,8 +147,8 @@ const Visitas = () => {
         setExt(res.RESPONSE[0].Extencion);
         handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
         setidAcceso(res.RESPONSE[0].idAcceso);
-        setChecked(res.RESPONSE[0].idAcceso);
-        setObservaciones(res.RESPONSE[0].idAcceso);
+        setChecked(res.RESPONSE[0].Indefinido);
+        setObservaciones(res.RESPONSE[0].Observaciones);
         setopen(false);
       } else {
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");

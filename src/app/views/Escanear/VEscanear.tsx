@@ -6,15 +6,9 @@ import TitleComponent from "../componentes/TitleComponent";
 
 const VEscanear = () => {
   const navigate = useNavigate();
-  const [startScan, setStartScan] = useState(false);
-
-  const handleSend = () => {
-    setStartScan(!startScan);
-  };
 
   const handleScan = (scanData: any) => {
     if (scanData && scanData !== "") {
-      setStartScan(false);
       navigate("/inicio/VisistasEscaneo/" + scanData.text);
     }
   };
@@ -40,14 +34,6 @@ const VEscanear = () => {
           alignItems="center"
           sx={{ padding: "2%" }}
         >
-          <Grid container item xs={12} sm={12} md={12} lg={12} justifyContent="center" alignItems="center">
-
-            <Button className={"guardar"} onClick={() => handleSend()}>
-              {startScan ? "Detener " : "Escanear QR"}
-            </Button>
-
-          </Grid>
-
           <Grid
             container
             item
@@ -60,21 +46,17 @@ const VEscanear = () => {
             alignItems="center"
           >
             <Grid item xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
-              {startScan ? (
-                <>
-                  <Typography variant="h6">
-                    <b>Acerque el QR a la Camara</b>
-                  </Typography>
+              <>
+                <Typography variant="h6">
+                  <b>Acerque el QR a la Camara</b>
+                </Typography>
 
-                  <QrReader
-                    scanDelay={300}
-                    constraints={{ facingMode: "environment" }}
-                    onResult={handleScan}
-                  />
-                </>
-              ) : (
-                ""
-              )}
+                <QrReader
+                  scanDelay={300}
+                  constraints={{ facingMode: "environment" }}
+                  onResult={handleScan}
+                />
+              </>
             </Grid>
           </Grid>
         </Grid>

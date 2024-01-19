@@ -15,6 +15,7 @@ import { Edificio } from "../views/Edificio/Edificio";
 import AdminAyudas from "../views/AdminVideosTutoriales/AdminAyudas";
 import { VisistasRevision } from "../views/Visitas/VisistasRevision";
 import { VisistasEscaneo } from "../views/Visitas/VisistasEscaneo";
+import VisitasExpress from "../views/Visitas/VisitasExpress";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -51,6 +52,11 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           }
         />
         {/* SECCION DE VISITAS */}
+        <Route
+          path="/inicio/visitasexpress"
+          element={log ? <VisitasExpress /> : <AuthRouter />}
+        />
+
         <Route
           path="/inicio/visitas"
           element={log ? <Visitas /> : <AuthRouter />}

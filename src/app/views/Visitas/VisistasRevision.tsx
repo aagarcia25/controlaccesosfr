@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import QRCode from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";

@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { MobileDateTimePicker } from "@mui/x-date-pickers";
+import { MobileDateTimePicker, renderTimeViewClock } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 const CustomizedDate = ({
@@ -18,9 +18,15 @@ const CustomizedDate = ({
         <MobileDateTimePicker
           orientation="portrait"
           value={value}
+          //ampm={false}
           onChange={(v) => onchange(v)}
           sx={{ width: "100%" }}
           slotProps={{ textField: { size: "small" } }}
+          viewRenderers={{
+            hours: renderTimeViewClock,
+            minutes: renderTimeViewClock,
+            seconds: renderTimeViewClock,
+          }}
         />
       </LocalizationProvider>
     </div>

@@ -20,7 +20,7 @@ import CustomizedDate from "../componentes/CustomizedDate";
 import SelectFrag from "../componentes/SelectFrag";
 import TitleComponent from "../componentes/TitleComponent";
 
-const Visitas = () => {
+const VisitasExpress = () => {
   let params = useParams();
   const navigate = useNavigate();
   const [open, setopen] = useState(false);
@@ -316,7 +316,7 @@ const Visitas = () => {
 
   return (
     <>
-      <TitleComponent title={"Generar Visita"} show={open} />
+      <TitleComponent title={"Generar Visita Express"} show={open} />
       <Typography
         sx={{
           fontFamily: "sans-serif",
@@ -789,4 +789,4 @@ const Visitas = () => {
   );
 };
 
-export default Visitas;
+export default VisitasExpress;

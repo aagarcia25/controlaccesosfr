@@ -7,6 +7,7 @@ import { base64ToArrayBuffer } from "../../helpers/Files";
 import { Visita } from "../../interfaces/Visitas";
 import { CatalogosServices } from "../../services/catalogosServices";
 import TitleComponent from "../componentes/TitleComponent";
+import { formatFecha } from "../../helpers/FormatDate";
 
 export const VisistasRevision = () => {
   const navigate = useNavigate();
@@ -172,7 +173,7 @@ export const VisistasRevision = () => {
                 <b>Fecha de Registro: </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b> {vrows?.FechaVisita} </b>
+                <b>{formatFecha(vrows?.FechaVisita)}</b>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4}>

@@ -175,7 +175,7 @@ const VisitasGeneral = () => {
 
   useEffect(() => {
     permisos.map((item: PERMISO) => {
-      if (String(item.menu) === "GVISITA") {
+      if (String(item.menu) === "VISITAS") {
         if (String(item.ControlInterno) === "REGISTRA") {
           setRegistra(true);
         }

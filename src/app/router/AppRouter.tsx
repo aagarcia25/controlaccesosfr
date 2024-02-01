@@ -2,20 +2,20 @@ import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { USUARIORESPONSE } from "../interfaces/UserInfo";
 import { getUser } from "../services/localStorage";
+import AdminAyudas from "../views/AdminVideosTutoriales/AdminAyudas";
 import VAgenda from "../views/Agenda/VAgenda";
 import Bienvenido from "../views/Bienvenido";
+import { Edificio } from "../views/Edificio/Edificio";
 import { Eo404 } from "../views/Eo404";
+import VEscanear from "../views/Escanear/VEscanear";
 import Inicio from "../views/Inicio";
+import { VisistasEscaneo } from "../views/Visitas/VisistasEscaneo";
+import { VisistasRevision } from "../views/Visitas/VisistasRevision";
 import Visitas from "../views/Visitas/Visitas";
+import VisitasFlex from "../views/Visitas/VisitasFlex";
+import VisitasGeneral from "../views/Visitas/VisitasGeneral";
 import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
-import VEscanear from "../views/Escanear/VEscanear";
-import VisitasGeneral from "../views/Visitas/VisitasGeneral";
-import { Edificio } from "../views/Edificio/Edificio";
-import AdminAyudas from "../views/AdminVideosTutoriales/AdminAyudas";
-import { VisistasRevision } from "../views/Visitas/VisistasRevision";
-import { VisistasEscaneo } from "../views/Visitas/VisistasEscaneo";
-import VisitasExpress from "../views/Visitas/VisitasExpress";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -53,8 +53,8 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         />
         {/* SECCION DE VISITAS */}
         <Route
-          path="/inicio/visitasexpress"
-          element={log ? <VisitasExpress /> : <AuthRouter />}
+          path="/inicio/VisitasFlex"
+          element={log ? <VisitasFlex /> : <AuthRouter />}
         />
 
         <Route

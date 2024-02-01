@@ -2,17 +2,27 @@ import InsightsIcon from "@mui/icons-material/Insights";
 import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { Toast } from "../../helpers/Toast";
+import { PERMISO, USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { CatalogosServices } from "../../services/catalogosServices";
+import { getPermisos, getUser } from "../../services/localStorage";
+import ButtonsAdd from "../componentes/ButtonsAdd";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import TitleComponent from "../componentes/TitleComponent";
 import Trazabilidad from "../componentes/Trazabilidad";
 
 const VisitasGeneral = () => {
+  const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
+  const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [registra, setRegistra] = useState(false);
+  const [openModal, setopenModal] = useState(false);
   const [verTrazabilidad, setVerTrazabilidad] = useState<boolean>(false);
   const [vrows, setVrows] = useState<{}>("");
-
+  const navigate = useNavigate();
   const handleclose = (data: any) => {
     setVerTrazabilidad(false);
   };
@@ -20,6 +30,10 @@ const VisitasGeneral = () => {
   const handleVerTazabilidad = (v: any) => {
     setVerTrazabilidad(true);
     setVrows(v.row);
+  };
+
+  const handleOpen = (v: any) => {
+    navigate("/inicio/visitasFlex");
   };
 
   const columnsRel: GridColDef[] = [
@@ -48,9 +62,9 @@ const VisitasGeneral = () => {
     },
     {
       field: "FechaCreacion",
-      headerName: "Fecha de Creación",
-      description: "Fecha de Creación",
-      width: 200,
+      headerName: "Fecha Creado",
+      description: "Fecha Creado",
+      width: 170,
     },
     {
       field: "CreadoPor",
@@ -62,25 +76,25 @@ const VisitasGeneral = () => {
       field: "FechaVisita",
       headerName: "Fecha de Visita",
       description: "Fecha de Visita",
-      width: 200,
+      width: 170,
     },
     {
       field: "FechaEntrada",
       headerName: "Registro de Entrada",
       description: "Registro de Entrada",
-      width: 200,
+      width: 170,
     },
     {
       field: "FechaSalida",
       headerName: "Registro de Salida",
       description: "Registro de Salida",
-      width: 200,
+      width: 170,
     },
     {
       field: "tiempovisita",
       headerName: "Duración de la Visita",
       description: "Duración de la Visita Expresada en Horas",
-      width: 200,
+      width: 150,
     },
     {
       field: "Visistante",
@@ -89,33 +103,27 @@ const VisitasGeneral = () => {
       sortable: false,
       width: 400,
       renderCell: (v) => {
-        return (
-          v.row.NombreVisitante +
-          " " +
-          v.row.ApellidoPVisitante +
-          " " +
-          v.row.ApellidoMVisitante
-        );
+        return v.row.NombreVisitante != null
+          ? v.row.NombreVisitante +
+              " " +
+              v.row.ApellidoPVisitante +
+              " " +
+              v.row.ApellidoMVisitante
+          : v.row.Proveedor;
       },
-    },
-    {
-      field: "Proveedor",
-      headerName: "Proveedor Visistante",
-      description: "Proveedor Visistante",
-      width: 200,
     },
     {
       field: "pisoreceptorrr",
       headerName: "Piso de Visita",
       description: "Piso de Visita",
-      width: 200,
+      width: 150,
     },
     {
       field: "Personaavisitar",
       headerName: "Persona a Visitar",
       description: "Persona a Visitar",
       sortable: false,
-      width: 400,
+      width: 300,
       renderCell: (v) => {
         return (
           v.row.NombreReceptor +
@@ -126,7 +134,33 @@ const VisitasGeneral = () => {
         );
       },
     },
+
+    {
+      field: "entidadreceptor",
+      headerName: "Unidad Administrativa",
+      description: "Unidad Administrativa",
+      width: 400,
+    },
   ];
+
+  const handleSubmit = () => {
+    let data = {
+      NUMOPERACION: 1,
+      CHUSER: user.Id,
+    };
+
+    CatalogosServices.visita_index(data).then((res) => {
+      if (res.SUCCESS) {
+        Toast.fire({
+          icon: "success",
+          title: "¡Registro Agregado!",
+        });
+        consulta();
+      } else {
+        Swal.fire("¡Error!", res.STRMESSAGE, "error");
+      }
+    });
+  };
 
   const consulta = () => {
     let data = {
@@ -140,6 +174,14 @@ const VisitasGeneral = () => {
   };
 
   useEffect(() => {
+    permisos.map((item: PERMISO) => {
+      if (String(item.menu) === "GVISITA") {
+        if (String(item.ControlInterno) === "REGISTRA") {
+          setRegistra(true);
+        }
+      }
+    });
+
     consulta();
   }, []);
 
@@ -149,6 +191,7 @@ const VisitasGeneral = () => {
       <Grid container spacing={1} padding={0}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <div style={{ height: 500, width: "100%" }}>
+            <ButtonsAdd handleOpen={handleOpen} agregar={registra} />
             <MUIXDataGridSimple columns={columnsRel} rows={data} />
           </div>
         </Grid>

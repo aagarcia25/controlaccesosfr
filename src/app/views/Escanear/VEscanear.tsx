@@ -15,7 +15,7 @@ const VEscanear = () => {
 
   return (
     <>
-      <TitleComponent title={"Escanear QR"} show={false} />
+      <TitleComponent title={"Acerque el QR a la Cámara"} show={false} />
       <Grid
         container
         direction="row"
@@ -47,10 +47,6 @@ const VEscanear = () => {
           >
             <Grid item xs={12} sm={12} md={12} lg={12} textAlign={"center"}>
               <>
-                <Typography variant="h6">
-                  <b>Acerque el QR a la Camara</b>
-                </Typography>
-
                 <QrReader
                   scanDelay={300}
                   constraints={{ facingMode: "environment" }}

@@ -178,7 +178,7 @@ export const VisistasRevision = () => {
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Extención : </b>
+                <b>Extensión : </b>
               </Typography>
 
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
@@ -241,6 +241,20 @@ export const VisistasRevision = () => {
 
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
                 <b> {vrows?.EmailNotificacion}</b>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4}></Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4}></Grid>
+          </Grid>
+
+          <Grid container item xs={12} sm={12} md={12} lg={12}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Observaciones : </b>
+              </Typography>
+
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b> {vrows?.Observaciones}</b>
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4}></Grid>

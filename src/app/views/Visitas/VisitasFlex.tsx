@@ -386,7 +386,7 @@ const VisitasFlex = () => {
 
               <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Typography variant="subtitle2" style={{ color: "black" }}>
-                  Extención:
+                  Extensión:
                 </Typography>
                 <TextField
                   size="small"

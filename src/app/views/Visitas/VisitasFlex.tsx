@@ -463,7 +463,7 @@ const VisitasFlex = () => {
           >
             <Grid item xs={3} sm={3} md={3} lg={3}>
               <Typography sx={{ fontFamily: "sans-serif" }}>
-                *Correo para Notificación:
+                Correo para Notificación:
               </Typography>
               <TextField
                 size="small"
@@ -472,7 +472,6 @@ const VisitasFlex = () => {
                 defaultValue=""
                 value={Correo}
                 onChange={(v) => setCorreo(v.target.value)}
-                error={Correo === "" ? true : false}
               />
             </Grid>
             <Grid item xs={9} sm={9} md={9} lg={9}>

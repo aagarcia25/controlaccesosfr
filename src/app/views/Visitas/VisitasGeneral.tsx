@@ -93,7 +93,7 @@ const VisitasGeneral = () => {
     {
       field: "tiempovisita",
       headerName: "Duración de la Visita",
-      description: "Duración de la Visita Expresada en Horas",
+      description: "Duración de la Visita Expresada en Horas . Minutos",
       width: 150,
     },
     {

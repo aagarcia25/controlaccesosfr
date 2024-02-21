@@ -511,7 +511,7 @@ const VisitasFlex = () => {
             <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
             <Grid item xs={12} sm={12} md={12} lg={3}>
               <Button className={"guardar"} onClick={() => handleSend()}>
-                {"Generar QR"}
+                {"Guardar Información"}
               </Button>
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={3}></Grid>

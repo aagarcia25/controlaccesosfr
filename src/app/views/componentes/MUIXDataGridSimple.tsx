@@ -40,10 +40,11 @@ export default function MUIXDataGridSimple(props: any) {
         }
         sx={{
           fontFamily: "sans-serif",
+          fontSize: "12px", // Puedes ajustar el tamaño según tus preferencias
           "& .super-app-theme--cell": {
             backgroundColor: "rgba(224, 183, 60, 0.55)",
             color: "#1a3e72",
-            fontWeight: "600",
+            fontWeight: "500",
           },
           "& .super-app.negative": {
             color: "rgb(84, 3, 3)",

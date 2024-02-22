@@ -47,7 +47,7 @@ const VisitasGeneral = () => {
       headerName: "Acciones",
       description: "Acciones",
       sortable: false,
-      width: 100,
+      width: 80,
       renderCell: (v: any) => {
         return (
           <Box>
@@ -61,6 +61,19 @@ const VisitasGeneral = () => {
       },
     },
     {
+      field: "Express",
+      headerName: "Generado",
+      description: "ExpresGenerados",
+      width: 120,
+      renderCell: (v: any) => {
+        return (
+          <>
+            {v.row.Express == 1 ? "Generado por Recepción" : "Generado con QR"}
+          </>
+        );
+      },
+    },
+    {
       field: "FechaCreacion",
       headerName: "Fecha Creado",
       description: "Fecha Creado",
@@ -70,7 +83,7 @@ const VisitasGeneral = () => {
       field: "CreadoPor",
       headerName: "Creado Por",
       description: "Creado Por",
-      width: 200,
+      width: 250,
     },
     {
       field: "FechaVisita",
@@ -96,21 +109,56 @@ const VisitasGeneral = () => {
       description: "Duración de la Visita Expresada en Horas . Minutos",
       width: 150,
     },
+
     {
-      field: "Visistante",
-      headerName: "Visitante",
-      description: "Visitante",
-      sortable: false,
-      width: 400,
-      renderCell: (v) => {
-        return v.row.NombreVisitante != null
-          ? v.row.NombreVisitante +
-              " " +
-              v.row.ApellidoPVisitante +
-              " " +
-              v.row.ApellidoMVisitante
-          : v.row.Proveedor;
-      },
+      field: "Proveedor",
+      headerName: "Proveedor",
+      description: "Proveedor",
+      width: 200,
+    },
+
+    {
+      field: "NombreVisitante",
+      headerName: "Vistante Nombre",
+      description: "Vistante Nombre",
+      width: 200,
+    },
+    {
+      field: "ApellidoPVisitante",
+      headerName: "Visitante Apellido Paterno",
+      description: "Visitante Apellido Paterno ",
+      width: 200,
+    },
+    {
+      field: "ApellidoMVisitante",
+      headerName: "Visitante Apellido Materno",
+      description: "Visitante Apellido Materno",
+      width: 200,
+    },
+
+    {
+      field: "NombreReceptor",
+      headerName: "Receptor Nombre",
+      description: "Receptor Nombre",
+      width: 200,
+    },
+    {
+      field: "ApellidoPReceptor",
+      headerName: "Receptor Apellido Paterno",
+      description: "Receptor Apellido Paterno",
+      width: 200,
+    },
+    {
+      field: "ApellidoMReceptor",
+      headerName: "Receptor Apellido Materno",
+      description: "Receptor Apellido Materno",
+      width: 200,
+    },
+    {
+      field: "entidadreceptor",
+      headerName: "Unidad Administrativa",
+      description: "Unidad Administrativa",
+      width: 450,
     },
     {
       field: "pisoreceptorrr",
@@ -118,49 +166,7 @@ const VisitasGeneral = () => {
       description: "Piso de Visita",
       width: 150,
     },
-    {
-      field: "Personaavisitar",
-      headerName: "Persona a Visitar",
-      description: "Persona a Visitar",
-      sortable: false,
-      width: 300,
-      renderCell: (v) => {
-        return (
-          v.row.NombreReceptor +
-          " " +
-          v.row.ApellidoPReceptor +
-          " " +
-          v.row.ApellidoMReceptor
-        );
-      },
-    },
-
-    {
-      field: "entidadreceptor",
-      headerName: "Unidad Administrativa",
-      description: "Unidad Administrativa",
-      width: 400,
-    },
   ];
-
-  const handleSubmit = () => {
-    let data = {
-      NUMOPERACION: 1,
-      CHUSER: user.Id,
-    };
-
-    CatalogosServices.visita_index(data).then((res) => {
-      if (res.SUCCESS) {
-        Toast.fire({
-          icon: "success",
-          title: "¡Registro Agregado!",
-        });
-        consulta();
-      } else {
-        Swal.fire("¡Error!", res.STRMESSAGE, "error");
-      }
-    });
-  };
 
   const consulta = () => {
     let data = {

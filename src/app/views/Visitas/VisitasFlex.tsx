@@ -1,13 +1,28 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Button,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Toast } from "../../helpers/Toast";
 import SelectValues from "../../interfaces/Share";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { Visita } from "../../interfaces/Visitas";
 import { ShareService } from "../../services/ShareService";
 import { CatalogosServices } from "../../services/catalogosServices";
 import { getUser } from "../../services/localStorage";
+import { TooltipPersonalizado } from "../componentes/CustomizedTooltips";
 import SelectFrag from "../componentes/SelectFrag";
 import TitleComponent from "../componentes/TitleComponent";
 
@@ -37,6 +52,7 @@ const VisitasFlex = () => {
   const [idAcceso, setidAcceso] = useState("");
   const [ListAcceso, setListAcceso] = useState<SelectValues[]>([]);
   const [Observaciones, setObservaciones] = useState("");
+  const [data, setData] = useState([]);
 
   const loadFilter = (operacion: number, id?: string) => {
     setopen(true);
@@ -94,6 +110,60 @@ const VisitasFlex = () => {
 
   const handleFilterAcceso = (v: string) => {
     setidAcceso(v);
+  };
+
+  const handleRowDoubleClick = (v: any) => {
+    console.log(v);
+    let data = {
+      NUMOPERACION: 17,
+      NombreVisitante: v.NombreVisitante,
+    };
+    CatalogosServices.visita_index(data).then((res) => {
+      console.log(res.RESPONSE[0]);
+      setData([]);
+      setNombreVisitante(res.RESPONSE[0].NombreVisitante);
+      setApellidoPVisitante(res.RESPONSE[0].ApellidoPVisitante);
+      setApellidoMVisitante(res.RESPONSE[0].ApellidoMVisitante);
+      setidEntidad(res.RESPONSE[0].NombreVisitante);
+      setNombreReceptor(res.RESPONSE[0].NombreVisitante);
+      setApellidoPReceptor(res.RESPONSE[0].ApellidoPReceptor);
+      setApellidoMReceptor(res.RESPONSE[0].ApellidoMReceptor);
+      setidunidad(res.RESPONSE[0].IdEntidadReceptor);
+      setidpiso(res.RESPONSE[0].PisoReceptor);
+      setCorreo(res.RESPONSE[0].EmailNotificacion);
+      handleFilteridTipo(res.RESPONSE[0].idTipoentidad);
+      handleFilteridEntidad(res.RESPONSE[0].idEntidad);
+      setExt(res.RESPONSE[0].Extencion);
+      setObservaciones(res.RESPONSE[0].Observaciones);
+    });
+  };
+  const cleardata = () => {
+    setData([]);
+    setApellidoPVisitante("");
+    setApellidoMVisitante("");
+    setidEntidad("");
+    setNombreReceptor("");
+    setApellidoPReceptor("");
+    setApellidoMReceptor("");
+    setidunidad("");
+    setidpiso("");
+    setCorreo("");
+    handleFilteridTipo("");
+    handleFilteridEntidad("");
+    setExt("");
+    setObservaciones("");
+  };
+  const handleSearch = (v: string) => {
+    if (v !== "" && v != null) {
+      let data = {
+        NUMOPERACION: 16,
+        NombreVisitante: v,
+      };
+      CatalogosServices.visita_index(data).then((res) => {
+        setData(res.RESPONSE);
+      });
+      console.log(data);
+    }
   };
 
   const handleSend = () => {
@@ -216,15 +286,80 @@ const VisitasFlex = () => {
                   *Nombre(s):
                 </Typography>
                 <TextField
+                  autoComplete="false"
                   fullWidth
                   size="small"
                   required
                   id="outlined-required"
                   defaultValue=""
                   value={NombreVisitante}
-                  onChange={(v) => setNombreVisitante(v.target.value)}
+                  onChange={(v) => {
+                    setNombreVisitante(v.target.value);
+                    handleSearch(v.target.value);
+                  }}
                   error={NombreVisitante === "" ? true : false}
                 />
+                {NombreVisitante === "" ? (
+                  ""
+                ) : data.length > 0 ? (
+                  <TooltipPersonalizado
+                    placement="left"
+                    title={<React.Fragment>Datos Sugeridos</React.Fragment>}
+                  >
+                    <>
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        Doble click sobre el registro para copiar sus datos. o
+                        Limpiar datos{" "}
+                        <DeleteIcon
+                          fontSize="small"
+                          color="error"
+                          onClick={() => cleardata()}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <TableContainer
+                          component={Paper}
+                          style={{
+                            position: "fixed",
+                            zIndex: 2000,
+                            height: 150,
+                            overflowY: "auto",
+                            width: 1200,
+                          }}
+                        >
+                          <Table
+                            sx={{ minWidth: 300 }}
+                            size="small"
+                            aria-label="a dense table"
+                            stickyHeader
+                          >
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Nombre Visitante</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {data.map((item: Visita) => (
+                                <TableRow
+                                  key={item.id}
+                                  onDoubleClick={() =>
+                                    handleRowDoubleClick(item)
+                                  }
+                                >
+                                  <TableCell component="th" scope="row">
+                                    {item.NombreVisitante}{" "}
+                                    {item.ApellidoPVisitante}{" "}
+                                    {item.ApellidoMVisitante}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Grid>
+                    </>
+                  </TooltipPersonalizado>
+                ) : null}
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Typography variant="subtitle2" style={{ color: "black" }}>
@@ -234,6 +369,7 @@ const VisitasFlex = () => {
                   fullWidth
                   size="small"
                   required
+                  autoComplete="false"
                   id="outlined-required"
                   defaultValue=""
                   value={ApellidoPVisitante}
@@ -248,6 +384,7 @@ const VisitasFlex = () => {
                 <TextField
                   fullWidth
                   size="small"
+                  autoComplete="false"
                   required
                   id="outlined-required"
                   defaultValue=""
@@ -319,6 +456,7 @@ const VisitasFlex = () => {
                   *Nombre(s):
                 </Typography>
                 <TextField
+                  autoComplete="false"
                   fullWidth
                   size="small"
                   required
@@ -335,6 +473,7 @@ const VisitasFlex = () => {
                 </Typography>
                 <TextField
                   fullWidth
+                  autoComplete="false"
                   size="small"
                   required
                   id="outlined-required"
@@ -352,6 +491,7 @@ const VisitasFlex = () => {
                   size="small"
                   fullWidth
                   required
+                  autoComplete="false"
                   id="outlined-required"
                   defaultValue=""
                   value={ApellidoMReceptor}
@@ -398,6 +538,7 @@ const VisitasFlex = () => {
                 <TextField
                   size="small"
                   fullWidth
+                  autoComplete="false"
                   id="outlined-required"
                   defaultValue=""
                   value={ext}
@@ -478,6 +619,7 @@ const VisitasFlex = () => {
                 id="outlined-required"
                 defaultValue=""
                 value={Correo}
+                autoComplete="false"
                 onChange={(v) => setCorreo(v.target.value)}
               />
             </Grid>
@@ -492,6 +634,7 @@ const VisitasFlex = () => {
                 rows={3}
                 id="outlined-required"
                 defaultValue=""
+                autoComplete="false"
                 value={Observaciones}
                 onChange={(v) => setObservaciones(v.target.value)}
               />

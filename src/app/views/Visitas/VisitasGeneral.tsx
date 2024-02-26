@@ -18,7 +18,7 @@ const VisitasGeneral = () => {
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [registra, setRegistra] = useState(false);
+  const [registra, setRegistra] = useState(true);
   const [openModal, setopenModal] = useState(false);
   const [verTrazabilidad, setVerTrazabilidad] = useState<boolean>(false);
   const [vrows, setVrows] = useState<{}>("");

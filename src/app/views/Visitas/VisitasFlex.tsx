@@ -55,9 +55,16 @@ const VisitasFlex = () => {
         setListUnidad(res.RESPONSE);
         setopen(false);
       } else if (operacion === 7) {
+        console.log(res.RESPONSE);
         setListEdificio(res.RESPONSE);
+        if ((res.RESPONSE.length = 1)) {
+          handleFilterEdificio(res.RESPONSE[0].value);
+        }
       } else if (operacion === 8) {
         setListAcceso(res.RESPONSE);
+        if ((res.RESPONSE.length = 1)) {
+          handleFilterAcceso(res.RESPONSE[0].value);
+        }
         setopen(false);
       }
     });

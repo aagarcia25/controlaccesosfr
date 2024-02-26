@@ -322,7 +322,7 @@ const VisitasFlex = () => {
                           style={{
                             position: "fixed",
                             zIndex: 2000,
-                            height: 150,
+                            height: 500,
                             overflowY: "auto",
                             width: 1200,
                           }}

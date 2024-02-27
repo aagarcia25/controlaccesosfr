@@ -166,6 +166,28 @@ const VisitasGeneral = () => {
       description: "Piso de Visita",
       width: 150,
     },
+    {
+      field: "Finalizado",
+      headerName: "Finalizado",
+      description: "Finalizado",
+      width: 120,
+      renderCell: (v: any) => {
+        return (
+          <>
+            {v.row.Finalizado == 1 ? "Finalizado" : "En Espera de Validación"}
+          </>
+        );
+      },
+    },
+    {
+      field: "Cancelado",
+      headerName: "Cancelado",
+      description: "Cancelado",
+      width: 120,
+      renderCell: (v: any) => {
+        return <>{v.row.Cancelado == 1 ? "Cancelado por Sistema" : ""}</>;
+      },
+    },
   ];
 
   const consulta = () => {

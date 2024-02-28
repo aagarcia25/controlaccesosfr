@@ -113,10 +113,13 @@ const VisitasFlex = () => {
   };
 
   const handleRowDoubleClick = (v: any) => {
+    console.log("Se dio click");
     console.log(v);
     let data = {
       NUMOPERACION: 17,
       NombreVisitante: v.NombreVisitante,
+      ApellidoPVisitante: v.ApellidoPVisitante,
+      ApellidoMVisitante: v.ApellidoMVisitante,
     };
     CatalogosServices.visita_index(data).then((res) => {
       console.log(res.RESPONSE[0]);
@@ -124,8 +127,8 @@ const VisitasFlex = () => {
       setNombreVisitante(res.RESPONSE[0].NombreVisitante);
       setApellidoPVisitante(res.RESPONSE[0].ApellidoPVisitante);
       setApellidoMVisitante(res.RESPONSE[0].ApellidoMVisitante);
-      setidEntidad(res.RESPONSE[0].NombreVisitante);
-      setNombreReceptor(res.RESPONSE[0].NombreVisitante);
+      setidEntidad(res.RESPONSE[0].idEntidad);
+      setNombreReceptor(res.RESPONSE[0].NombreReceptor);
       setApellidoPReceptor(res.RESPONSE[0].ApellidoPReceptor);
       setApellidoMReceptor(res.RESPONSE[0].ApellidoMReceptor);
       setidunidad(res.RESPONSE[0].IdEntidadReceptor);

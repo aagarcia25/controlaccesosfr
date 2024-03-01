@@ -46,7 +46,7 @@ const Visitas = () => {
   const [ApellidoPReceptor, setApellidoPReceptor] = useState("");
   const [ApellidoMReceptor, setApellidoMReceptor] = useState("");
   const [ext, setExt] = useState("");
-  const [Correo, setCorreo] = useState("");
+  const [Correo, setCorreo] = useState(user.CorreoElectronico || "");
   const [idEdificio, setidEdificio] = useState("");
   const [ListEdificio, setListEdificio] = useState<SelectValues[]>([]);
   const [idAcceso, setidAcceso] = useState("");
@@ -141,11 +141,11 @@ const Visitas = () => {
         handleFilterEdificio(res.RESPONSE[0].idEdificio);
         setidDuracion(res.RESPONSE[0].Duracion);
         setNombreVisitante(res.RESPONSE[0].NombreVisitante);
-        setApellidoPVisitante(res.RESPONSE[0].ApellidoMVisitante);
-        setApellidoMVisitante(res.RESPONSE[0].ApellidoPVisitante);
+        setApellidoPVisitante(res.RESPONSE[0].ApellidoPVisitante);
+        setApellidoMVisitante(res.RESPONSE[0].ApellidoMVisitante);
         setNombreReceptor(res.RESPONSE[0].NombreReceptor);
-        setApellidoPReceptor(res.RESPONSE[0].ApellidoMReceptor);
-        setApellidoMReceptor(res.RESPONSE[0].ApellidoPReceptor);
+        setApellidoPReceptor(res.RESPONSE[0].ApellidoPReceptor);
+        setApellidoMReceptor(res.RESPONSE[0].ApellidoMReceptor);
         handleFilteridTipo(res.RESPONSE[0].idTipoentidad);
         setidEntidad(res.RESPONSE[0].idEntidad);
         setidunidad(res.RESPONSE[0].IdEntidadReceptor);

@@ -288,7 +288,16 @@ const Visitas = () => {
           setopen(false);
           navigate("/inicio/agenda");
         } else {
-          Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+          if (res.STRMESSAGE.includes("NOREPET")) {
+            Swal.fire(
+              "Ya existe un registro con esa hora y visitante",
+              "¡Error!",
+              "info"
+            );
+          } else {
+            Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+          }
+
           setopen(false);
         }
       });

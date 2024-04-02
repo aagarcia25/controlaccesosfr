@@ -61,10 +61,13 @@ const Estadisticas = () => {
         });
         let eveitem: agenda[] = [];
         res.RESPONSE.map((item: VisitaDia) => {
+          var fechaOriginal = new Date(item.fecha);
+          fechaOriginal.setDate(fechaOriginal.getDate() + 1);
+
           let it = {
             title: `${item.cantidad_visitas} visitas`, // Título del evento con la cantidad de visitas
-            start: new Date(item.fecha), // Fecha de inicio del evento
-            end: new Date(item.fecha), // Fecha de fin del evento (en este caso, igual a la fecha de inicio)
+            start: new Date(fechaOriginal), // Fecha de inicio del evento
+            end: new Date(fechaOriginal), // Fecha de fin del evento (en este caso, igual a la fecha de inicio)
             color: "#AF8C55", // Color del evento
             allDay: true,
           };

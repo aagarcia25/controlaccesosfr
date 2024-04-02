@@ -22,4 +22,7 @@ export class CatalogosServices {
   public static async bitacora(data: any) {
     return await post("bitacora", data);
   }
+  public static async graficas(data: any) {
+    return await post("graficas", data);
+  }
 }

@@ -34,7 +34,7 @@ export interface Visita {
 }
 
 export interface agenda {
-  id: string;
+  id?: string;
   title: string;
   allDay: boolean;
   start: Date;

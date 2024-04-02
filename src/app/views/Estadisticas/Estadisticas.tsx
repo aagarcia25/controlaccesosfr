@@ -209,7 +209,7 @@ const Estadisticas = () => {
         alignItems="flex-start"
         sx={{ padding: "2%" }}
       >
-        <Grid item xs={12} sm={6} md={4} lg={3.5}>
+        <Grid item xs={12} sm={6} md={6} lg={4}>
           <Paper elevation={3} style={{ padding: 20 }}>
             {dataset && (
               <BarChart
@@ -222,13 +222,13 @@ const Estadisticas = () => {
                   { dataKey: "Generado con QR", label: "Generado con QR" },
                 ]}
                 dataset={dataset}
-                width={500}
-                height={300}
+                width={400}
+                height={400}
               />
             )}
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={4}>
+        <Grid item xs={12} sm={6} md={6} lg={4}>
           {listAgenda.length >= 1 ? (
             <div style={{ height: 445, width: "100%" }}>
               <Calendar

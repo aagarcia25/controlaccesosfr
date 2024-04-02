@@ -16,6 +16,7 @@ import VisitasFlex from "../views/Visitas/VisitasFlex";
 import VisitasGeneral from "../views/Visitas/VisitasGeneral";
 import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
+import Estadisticas from "../views/Estadisticas/Estadisticas";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -108,6 +109,12 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           }
         />
         {/* FIN SECCION DE PERFIL */}
+        {/* SECCION DE ESTADISTICAS */}
+        <Route
+          path="/inicio/estadisticas"
+          element={log ? <Estadisticas /> : <AuthRouter />}
+        />
+        {/* FIN SECCION DE ESTADISTICAS */}
       </Routes>
     </Inicio>
   );

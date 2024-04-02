@@ -2097,3 +2097,15 @@ button.registrar {
   color: rgb(255, 255, 255);
 
 }
+
+.info {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: width 0.3s; /* transición para el cambio de ancho */
+}
+
+.info:hover {
+  width: 500px; /* Ancho aumentado al pasar el cursor */
+  
+}

@@ -110,7 +110,7 @@ const VAgenda = () => {
           };
           eveitem.push(it);
         });
-        
+        setlistAgenda(eveitem);
         setopen(false);
       } else {
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");

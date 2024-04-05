@@ -4,6 +4,8 @@ import {
   CardContent,
   Grid,
   Paper,
+  ToggleButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
@@ -19,6 +21,9 @@ import { Iroles, menus } from "../../interfaces/menu";
 import { CatalogosServices } from "../../services/catalogosServices";
 import { getMenus, getRoles, getUser } from "../../services/localStorage";
 import TitleComponent from "../componentes/TitleComponent";
+import DownloadIcon from '@mui/icons-material/Download';
+import axios from "axios";
+import { base64ToArrayBuffer } from "../../helpers/Files";
 
 interface VisitaDia {
   fecha: string;
@@ -131,6 +136,51 @@ const Estadisticas = () => {
     }
   };
 
+  const handleGenerarInforme = (v: any) => {
+    
+    //setOpenSlider(true);
+    console.log(v);
+  
+
+    try {
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: process.env.REACT_APP_APPLICATION_BASE_URL + "handleReport",
+        headers: {
+          "Content-Type": "application/json",
+          responseType: "blob",
+        },
+        data: {},
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          var bufferArray = base64ToArrayBuffer(
+            String(response.data.RESPONSE.response64)
+          );
+          var blobStore = new Blob([bufferArray], {
+            type: "application/*",
+          });
+
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blobStore);
+          link.download =
+            "Informe de visitas." + response.data.RESPONSE.extencion;
+          link.click();
+          //setOpenSlider(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          //setOpenSlider(false);
+        });
+    } catch (err: any) {
+      //setOpenSlider(false);
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     loadGrafica(0, "");
     canceladosSistema();
@@ -144,7 +194,7 @@ const Estadisticas = () => {
       <Grid
         container
         item
-        spacing={5}
+        spacing={1}
         xs={12}
         sm={12}
         md={12}
@@ -154,9 +204,9 @@ const Estadisticas = () => {
         alignItems="flex-start"
         sx={{ padding: "2%" }}
       >
-        <Grid item xs={12} sm={6} md={4} lg={3}></Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card sx={{ maxWidth: 345 }}>
+        {/* <Grid item xs={12} sm={6} md={4} lg={2}></Grid> */}
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+          <Card sx={{ maxWidth: "100%" }}>
             <CardActionArea>
               <CardContent>
                 <Typography
@@ -174,8 +224,8 @@ const Estadisticas = () => {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card sx={{ maxWidth: 345 }}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+          <Card sx={{ maxWidth: "100%" }}>
             <CardActionArea>
               <CardContent>
                 <Typography
@@ -193,13 +243,32 @@ const Estadisticas = () => {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}></Grid>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+        <Card sx={{ maxWidth: "100%" }}>
+            <CardActionArea>
+              <CardContent style={{ textAlign: 'center' }}>
+              <Tooltip
+            title={"Descargar Reporte"}>
+            <ToggleButton  className="guardar" size="large" value="check"
+             onClick={handleGenerarInforme}
+             
+            >
+              <DownloadIcon />
+            </ToggleButton>
+          </Tooltip>
+                <Typography variant="h5" color="text.secondary" align="center" style={{ marginTop: 20 }}>
+                  Visitas por Área
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
       </Grid>
 
       <Grid
         container
         item
-        spacing={5}
+        spacing={1}
         xs={12}
         sm={12}
         md={12}
@@ -209,8 +278,11 @@ const Estadisticas = () => {
         alignItems="flex-start"
         sx={{ padding: "2%" }}
       >
+        <Grid item xs={12} sm={6} md={4} lg={2}></Grid>
+
         <Grid item xs={12} sm={6} md={6} lg={4}>
-          <Paper elevation={3} style={{ padding: 20 }}>
+        <Card sx={{ maxWidth: "100%" }}>
+          <Paper elevation={3} style={{ padding: 20, display: 'flex', justifyContent: 'center' }} sx={{ maxWidth: "100%" }}>
             {dataset && (
               <BarChart
                 xAxis={[{ scaleType: "band", dataKey: "Clasificacion" }]}
@@ -222,11 +294,12 @@ const Estadisticas = () => {
                   { dataKey: "Generado con QR", label: "Generado con QR" },
                 ]}
                 dataset={dataset}
-                width={400}
-                height={400}
+                width={350}
+                height={405}
               />
             )}
           </Paper>
+          </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={6} lg={4}>
           {listAgenda.length >= 1 ? (
@@ -277,6 +350,8 @@ const Estadisticas = () => {
             ""
           )}
         </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={2}></Grid>
+
       </Grid>
     </>
   );

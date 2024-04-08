@@ -188,6 +188,12 @@ const VisitasGeneral = () => {
         return <>{v.row.Cancelado == 1 ? "Cancelado por Sistema" : ""}</>;
       },
     },
+    {
+      field: "Observaciones",
+      headerName: "Observaciones",
+      description: "Observaciones",
+      width: 200,
+    },
   ];
 
   const consulta = () => {

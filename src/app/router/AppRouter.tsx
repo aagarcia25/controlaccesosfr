@@ -17,6 +17,7 @@ import VisitasGeneral from "../views/Visitas/VisitasGeneral";
 import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
 import Estadisticas from "../views/Estadisticas/Estadisticas";
+import VisitasIndividual from "../views/Visitas/VisitasIndividual";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -74,6 +75,10 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         <Route
           path="/inicio/visitasGNRL"
           element={log ? <VisitasGeneral /> : <AuthRouter />}
+        />
+        <Route
+          path="/inicio/visitasInd"
+          element={log ? <VisitasIndividual /> : <AuthRouter />}
         />
         <Route
           path="/inicio/view/:id"

@@ -217,8 +217,8 @@ export const VisistasRevision = () => {
 
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
                 <b>
-                  {vrows?.NombreReceptor} {vrows?.ApellidoMReceptor}{" "}
-                  {vrows?.ApellidoPReceptor}
+                  {vrows?.NombreReceptor} {vrows?.ApellidoPReceptor}{" "}
+                  {vrows?.ApellidoMReceptor}
                 </b>
               </Typography>
             </Grid>

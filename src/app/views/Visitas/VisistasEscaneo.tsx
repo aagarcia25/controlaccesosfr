@@ -293,8 +293,8 @@ export const VisistasEscaneo = () => {
                 <b>Persona a Visitar: </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.NombreReceptor} {vrows?.ApellidoMReceptor}{" "}
-                {vrows?.ApellidoPReceptor}
+                {vrows?.NombreReceptor} {vrows?.ApellidoPReceptor}{" "}
+                {vrows?.ApellidoMReceptor}
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
                 <b>Extensión :</b>

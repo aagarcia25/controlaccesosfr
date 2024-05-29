@@ -1,4 +1,5 @@
 import { Box, Grid, Hidden } from "@mui/material";
+import { FavIconAvisos } from "../avisosPAUA/componentes/FavIconAvisos";
 
 export default function Bienvenido({ user }: { user: any }) {
   return (
@@ -13,6 +14,8 @@ export default function Bienvenido({ user }: { user: any }) {
           >
             <div className="containerCarrucelBienvenido"></div>
           </Box>
+          <FavIconAvisos/>
+
         </Grid>
       </Grid>
     </Hidden>

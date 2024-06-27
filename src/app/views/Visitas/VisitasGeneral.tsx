@@ -61,6 +61,24 @@ const VisitasGeneral = () => {
       },
     },
     {
+      field: "Observaciones",
+      headerName: "Observaciones",
+      description: "Observaciones",
+      width: 200,
+    },
+    {
+      field: "EmailNotificacion",
+      headerName: "Correo para notificación",
+      description: "Correo para notificación",
+      width: 200,
+    },
+    {
+      field: "ctaDescripcion",
+      headerName: "Tipo de Acceso",
+      description: "Tipo de Acceso",
+      width: 170,
+    },
+    {
       field: "Express",
       headerName: "Generado",
       description: "ExpresGenerados",
@@ -72,6 +90,12 @@ const VisitasGeneral = () => {
           </>
         );
       },
+    },
+     {
+      field: "Indefinido",
+      headerName: "Vigencia",
+      description: "Vigencia",
+      width: 120,
     },
     {
       field: "FechaCreacion",
@@ -135,6 +159,18 @@ const VisitasGeneral = () => {
       description: "Visitante Apellido Materno",
       width: 200,
     },
+    {
+      field: "tenDescripcion",
+      headerName: "Origen",
+      description: "Origen",
+      width: 200,
+    },
+    {
+      field: "entidadname",
+      headerName: "Área",
+      description: "Área",
+      width: 200,
+    },
 
     {
       field: "NombreReceptor",
@@ -159,6 +195,24 @@ const VisitasGeneral = () => {
       headerName: "Unidad Administrativa",
       description: "Unidad Administrativa",
       width: 450,
+    },
+    {
+      field: "Extencion",
+      headerName: "Extensión",
+      description: "Extensión",
+      width: 150,
+    },
+    {
+      field: "edDescripcion",
+      headerName: "Edificio",
+      description: "Edificio",
+      width: 200,
+    },
+    {
+      field: "ceedDescripcion",
+      headerName: "Acceso",
+      description: "Acceso",
+      width: 200,
     },
     {
       field: "pisoreceptorrr",
@@ -188,12 +242,7 @@ const VisitasGeneral = () => {
         return <>{v.row.Cancelado == 1 ? "Cancelado por Sistema" : ""}</>;
       },
     },
-    {
-      field: "Observaciones",
-      headerName: "Observaciones",
-      description: "Observaciones",
-      width: 200,
-    },
+    
   ];
 
   const consulta = () => {

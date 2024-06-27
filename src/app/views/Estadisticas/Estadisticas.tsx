@@ -1,8 +1,10 @@
 import {
+  Box,
   Card,
   CardActionArea,
   CardContent,
   Grid,
+  IconButton,
   Paper,
   ToggleButton,
   Tooltip,
@@ -24,6 +26,8 @@ import TitleComponent from "../componentes/TitleComponent";
 import DownloadIcon from '@mui/icons-material/Download';
 import axios from "axios";
 import { base64ToArrayBuffer } from "../../helpers/Files";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import MUIXDataGrid from "../MUIXDataGrid";
 
 interface VisitaDia {
   fecha: string;
@@ -37,6 +41,19 @@ const Estadisticas = () => {
   const listMenus: menus[] = JSON.parse(String(getMenus()));
   const navigate = useNavigate();
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
+  const [data, setData] = useState([]);
+
+
+  const columns: GridColDef[] = [
+    { field: "Cantidad", headerName: "Cantidad", description: "Cantidad", width: 70},
+    {
+      field: "Nombre",
+      headerName: "Entidad Visitada",
+      description: "Entidad Visitada",
+      width: 600,
+    },
+    
+  ];
 
   function verificarEscanearEnMenus(menusList: Iroles[]): boolean {
     for (const menu of menusList) {
@@ -181,11 +198,23 @@ const Estadisticas = () => {
     }
   };
 
+  const consulta = () => {
+    let data = {
+      NUMOPERACION: 24,
+    };
+    setOpen(true);
+    CatalogosServices.visita_index(data).then((res) => {
+      setData(res.RESPONSE);
+      setOpen(false);
+    });
+  };
+
   useEffect(() => {
     loadGrafica(0, "");
     canceladosSistema();
     totalVisitas();
     handleSend();
+    consulta();
   }, []);
 
   return (
@@ -278,9 +307,10 @@ const Estadisticas = () => {
         alignItems="flex-start"
         sx={{ padding: "2%" }}
       >
-        <Grid item xs={12} sm={6} md={4} lg={2}></Grid>
+        {/* <Grid item xs={12} sm={6} md={4} lg={2}>
 
-        <Grid item xs={12} sm={6} md={6} lg={4}>
+        </Grid> */}
+        <Grid item xs={12} sm={6} md={4} lg={4}>
         <Card sx={{ maxWidth: "100%" }}>
           <Paper elevation={3} style={{ padding: 20, display: 'flex', justifyContent: 'center' }} sx={{ maxWidth: "100%" }}>
             {dataset && (
@@ -289,7 +319,7 @@ const Estadisticas = () => {
                 series={[
                   {
                     dataKey: "Generado por Recepción",
-                    label: "Generado por Recepción",
+                    label: "Registro Electrónico",
                   },
                   { dataKey: "Generado con QR", label: "Generado con QR" },
                 ]}
@@ -301,7 +331,10 @@ const Estadisticas = () => {
           </Paper>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={6} md={6} lg={4}>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
+        <DataGrid columns={columns} rows={data} sx={{maxHeight:"450px"}} />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={4}>
           {listAgenda.length >= 1 ? (
             <div style={{ height: 445, width: "100%" }}>
               <Calendar
@@ -350,7 +383,6 @@ const Estadisticas = () => {
             ""
           )}
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={2}></Grid>
 
       </Grid>
     </>

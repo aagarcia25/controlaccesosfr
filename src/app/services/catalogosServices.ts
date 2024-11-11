@@ -25,4 +25,7 @@ export class CatalogosServices {
   public static async graficas(data: any) {
     return await post("graficas", data);
   }
+  public static async Estudiante(data: any) {
+    return await post("Estudiante", data);
+  }
 }

@@ -19,6 +19,7 @@ import VisitasGeneralSinVigencia from "../views/Visitas/VisitasGeneralSinVigenci
 import VisitasIndividual from "../views/Visitas/VisitasIndividual";
 import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
+import { Estudiantes } from "../views/Estudiantes/Estudiantes";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -124,7 +125,16 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           element={log ? <Estadisticas /> : <AuthRouter />}
         />
         {/* FIN SECCION DE ESTADISTICAS */}
+
+        {/* SECCION DE ESTUDIANTES */}
+        <Route
+          path="/inicio/ControlEstudiantes"
+          element={log ? <Estudiantes /> : <AuthRouter />}
+        />
+        {/* FIN SECCION DE ESTUDIANTES */}
+
       </Routes>
+
     </Inicio>
   );
 };

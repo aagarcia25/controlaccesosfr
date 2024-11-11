@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TitleComponent from "../componentes/TitleComponent"
-import { Box, Grid, IconButton, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import ButtonsAdd from "../componentes/ButtonsAdd";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import { GridColDef } from "@mui/x-data-grid";
@@ -190,7 +190,7 @@ export const Estudiantes = () => {
             field: "Sexo",
             headerName: "Sexo",
             description: "Sexo",
-            width: 250,
+            width: 150,
         },
         {
             field: "Escolaridad",
@@ -232,24 +232,46 @@ export const Estudiantes = () => {
         consulta();
     }, []);
 
-    return (<>
-        <TitleComponent title={"Estudiantes"} show={openSlider} />
-        <Grid container spacing={1} padding={0}>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
-                <div style={{ height: 500, width: "100%" }}>
-                    <ButtonsAdd handleOpen={handleOpen} agregar={true} />
-                    <MUIXDataGridSimple columns={columnsRel} rows={data} />
-                </div>
-            </Grid>
-        </Grid>
-        {open ? (
-        <EstudiantesModal
-          tipo={tipoOperacion}
-          handleClose={handleClose}
-          dt={vrows}
-        />
-      ) : (
-        ""
-      )}
-    </>)
+    return (
+			<>
+				<Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+					<TitleComponent title={"Estudiantes"} show={openSlider} />
+					<Grid container spacing={2}>
+						<Grid
+							item
+							xs={12}
+							sm={6}
+							md={4}
+							lg={3}
+							display="flex"
+							alignItems="center" 
+						>
+							<Box sx={{ transform: "scale(0.8)", margin:0, padding:0 }}>
+								<ButtonsAdd handleOpen={handleOpen} agregar={true} />
+							</Box>
+						</Grid>
+						<Grid item xs={12}>
+							<Box
+								sx={{
+									height: { xs: 300, sm: 400, md: 500 },
+									width: "100%",
+									overflowX: "auto", 
+								}}
+							>
+								<MUIXDataGridSimple columns={columnsRel} rows={data} />
+							</Box>
+						</Grid>
+					</Grid>
+					{open ? (
+						<EstudiantesModal
+							tipo={tipoOperacion}
+							handleClose={handleClose}
+							dt={vrows}
+						/>
+					) : (
+						""
+					)}
+				</Box>
+			</>
+		);
 }

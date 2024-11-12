@@ -14,6 +14,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { EstudiantesModal } from "./EstudiantesModal";
 import { ButtonsDetail } from "../componentes/ButtonsDetail";
 import ButtonsDeleted from "../componentes/ButtonsDeleted";
+import { ButtonsImport } from "../componentes/ButtonsImport";
 
 export const Estudiantes = () => {
     const [open, setOpen] = useState(false);
@@ -23,6 +24,7 @@ export const Estudiantes = () => {
     const user: USUARIORESPONSE = JSON.parse(String(getUser()));
     const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
     const [agregar, setAgregar] = useState<boolean>(false);
+    const [show, setShow] = useState(false);
 
     const [openSlider, setOpenSlider] = useState(true);
 
@@ -39,6 +41,28 @@ export const Estudiantes = () => {
         setOpen(true);
         setVrows("");
     };
+
+    const handleUpload = (data: any) => {
+        setShow(true);
+        let file = data?.target?.files?.[0] || "";
+        const formData = new FormData();
+        formData.append("inputfile", file, "inputfile.xlxs");
+        formData.append("CHUSER", user.Id);
+        formData.append("tipo", "migraEstudiantes");
+        CatalogosServices.migraData(formData).then((res) => {
+          if (res.SUCCESS) {
+            setShow(false);
+            Toast.fire({
+              icon: "success",
+              title: "¡Consulta Exitosa!",
+            });
+            consulta();
+          } else {
+            setShow(false);
+            Swal.fire("¡Error!", res.STRMESSAGE, "error");
+          }
+        });
+      };
 
     const handleAccion = (v: any) => {
         if (v.tipo === 1) {
@@ -68,7 +92,7 @@ export const Estudiantes = () => {
                                 icon: "success",
                                 title: "¡Registro Eliminado!",
                             });
-                            //consulta({ NUMOPERACION: 4 });
+                            consulta();
                         } else {
                             Swal.fire("¡Error!", res.STRMESSAGE, "error");
                         }
@@ -260,6 +284,9 @@ export const Estudiantes = () => {
 						>
 							<Box sx={{ transform: "scale(0.8)", margin:0, padding:0 }}>
 								<ButtonsAdd handleOpen={handleOpen} agregar={true} />
+							</Box>
+                            <Box sx={{ transform: "scale(0.8)", margin:0, padding:0 }}>
+                                <ButtonsImport handleOpen={handleUpload} agregar={true} />
 							</Box>
 						</Grid>
 						<Grid item xs={12}>

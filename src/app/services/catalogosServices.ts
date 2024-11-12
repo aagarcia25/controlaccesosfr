@@ -1,4 +1,4 @@
-import { post } from "./apiService";
+import { post, postDocument } from "./apiService";
 
 export class CatalogosServices {
   public static async aniosindex(data: any) {
@@ -27,5 +27,8 @@ export class CatalogosServices {
   }
   public static async Estudiante(data: any) {
     return await post("Estudiante", data);
+  }
+  public static async migraData(data: any) {
+    return await postDocument("migraData", data);
   }
 }

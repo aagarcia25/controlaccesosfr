@@ -187,7 +187,7 @@ export const EstudiantesModal = ({
 								fullWidth
 								variant="outlined"
 								onChange={(v) => setNoGaffete(v.target.value)}
-								error={NoGaffete === "" ? true : false}
+								// error={NoGaffete === "" ? true : false}
 								InputProps={{
 									readOnly: tipo === 1 ? false : true,
 								}}
@@ -209,7 +209,7 @@ export const EstudiantesModal = ({
 								fullWidth
 								variant="outlined"
 								onChange={(v) => setNombre(v.target.value)}
-								error={nombre === "" ? true : false}
+								// error={nombre === "" ? true : false}
 								InputProps={{
 									readOnly: tipo === 1 ? false : true,
 								}}
@@ -231,7 +231,7 @@ export const EstudiantesModal = ({
 								fullWidth
 								variant="outlined"
 								onChange={(v) => setTelefono(v.target.value)}
-								error={telefono === "" ? true : false}
+								// error={telefono === "" ? true : false}
 								InputProps={{
 									readOnly: tipo === 1 ? false : true,
 								}}
@@ -286,7 +286,7 @@ export const EstudiantesModal = ({
 								fullWidth
 								variant="outlined"
 								onChange={(v) => setEscolaridad(v.target.value)}
-								error={escolaridad === "" ? true : false}
+								// error={escolaridad === "" ? true : false}
 								InputProps={{
 									readOnly: tipo === 1 ? false : true,
 								}}
@@ -308,7 +308,7 @@ export const EstudiantesModal = ({
 								fullWidth
 								variant="outlined"
 								onChange={(v) => setInstituto(v.target.value)}
-								error={instituto === "" ? true : false}
+								// error={instituto === "" ? true : false}
 								InputProps={{
 									readOnly: tipo === 1 ? false : true,
 								}}
@@ -330,7 +330,7 @@ export const EstudiantesModal = ({
 								fullWidth
 								variant="outlined"
 								onChange={(v) => setResponsable(v.target.value)}
-								error={responsable === "" ? true : false}
+								// error={responsable === "" ? true : false}
 								InputProps={{
 									readOnly: tipo === 1 ? false : true,
 								}}

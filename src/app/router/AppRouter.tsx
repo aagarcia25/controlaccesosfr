@@ -20,6 +20,7 @@ import VisitasIndividual from "../views/Visitas/VisitasIndividual";
 import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
 import { Estudiantes } from "../views/Estudiantes/Estudiantes";
+import DetalleEstudiante from "../views/Estudiantes/DetalleEstudiante";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -130,6 +131,10 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         <Route
           path="/inicio/ControlEstudiantes"
           element={log ? <Estudiantes /> : <AuthRouter />}
+        />
+        <Route
+          path="/inicio/DetalleEstudiante"
+          element={log ? <DetalleEstudiante /> : <AuthRouter />}
         />
         {/* FIN SECCION DE ESTUDIANTES */}
 

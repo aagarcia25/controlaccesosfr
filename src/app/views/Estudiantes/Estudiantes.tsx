@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import TitleComponent from "../componentes/TitleComponent"
+import TitleComponent from "../componentes/TitleComponent";
 import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import ButtonsAdd from "../componentes/ButtonsAdd";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
@@ -15,6 +15,9 @@ import { EstudiantesModal } from "./EstudiantesModal";
 import { ButtonsDetail } from "../componentes/ButtonsDetail";
 import ButtonsDeleted from "../componentes/ButtonsDeleted";
 import { ButtonsImport } from "../componentes/ButtonsImport";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 
 export const Estudiantes = () => {
     const [open, setOpen] = useState(false);
@@ -25,15 +28,17 @@ export const Estudiantes = () => {
     const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
     const [agregar, setAgregar] = useState<boolean>(false);
     const [show, setShow] = useState(false);
+    const [id, setId] = useState("");
+    const navigate = useNavigate();
 
     const [openSlider, setOpenSlider] = useState(true);
-
     const [modo, setModo] = useState("");
     const [tipoOperacion, setTipoOperacion] = useState(0);
 
-    const subirFoto = (v: any) => {
-        
-      };
+    // Nuevo estado para el modal de subir foto
+    const [openModal, setOpenModal] = useState(false);  
+    const [file, setFile] = useState<File | null>(null); 
+    const [loading, setLoading] = useState(false);  
 
     const handleOpen = (v: any) => {
         setTipoOperacion(1);
@@ -50,19 +55,69 @@ export const Estudiantes = () => {
         formData.append("CHUSER", user.Id);
         formData.append("tipo", "migraEstudiantes");
         CatalogosServices.migraData(formData).then((res) => {
-          if (res.SUCCESS) {
-            setShow(false);
-            Toast.fire({
-              icon: "success",
-              title: "¡Consulta Exitosa!",
-            });
-            consulta();
-          } else {
-            setShow(false);
-            Swal.fire("¡Error!", res.STRMESSAGE, "error");
-          }
+            if (res.SUCCESS) {
+                setShow(false);
+                Toast.fire({
+                    icon: "success",
+                    title: "¡Consulta Exitosa!",
+                });
+                consulta();
+            } else {
+                setShow(false);
+                Swal.fire("¡Error!", res.STRMESSAGE, "error");
+            }
         });
-      };
+    };
+
+    const subirFoto = () => {
+        if (!file) {
+            Swal.fire("¡Error!", "Por favor selecciona una foto", "error");
+            return;
+        }
+
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("NUMOPERACION", "5");
+        formData.append("ID", id.toString()); 
+        formData.append("CHUSER", user.Id.toString());  
+        formData.append("TOKEN", "token_value");  
+        formData.append("FILE", file, file.name); 
+
+        axios.post(
+            process.env.REACT_APP_APPLICATION_BASE_URL + "Estudiante",  
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            }
+        )
+        .then((response) => {
+            if (response.data.SUCCESS) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Foto subida correctamente",
+                    text: "La foto ha sido subida exitosamente.",
+                    confirmButtonText: "Ok",
+                });
+                setOpenModal(false);
+                consulta();
+            } else {
+                Swal.fire("¡Error!", "Hubo un problema al subir la foto", "error");
+            }
+        })
+        .catch((error) => {
+            Swal.fire("¡Error!", "No se pudo realizar la operación", "error");
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    };
+    const DetalleEstudiante = () => {
+        navigate("/inicio/DetalleEstudiante");
+    };
 
     const handleAccion = (v: any) => {
         if (v.tipo === 1) {
@@ -108,33 +163,22 @@ export const Estudiantes = () => {
         let data = {
             NUMOPERACION: 4,
         };
-        //setOpen(true);
 
         CatalogosServices.Estudiante(data).then((res) => {
-          
-
             if (res.SUCCESS) {
-                // Toast.fire({
-                //   icon: "success",
-                //   title: "¡Consulta Exitosa!",
-                // });
                 setData(res.RESPONSE);
                 setOpenSlider(false);
-
             } else {
                 setOpenSlider(false);
                 Swal.fire("¡Error!", res.STRMESSAGE, "error");
-
             }
         });
     };
 
     const columnsRel: GridColDef[] = [
-
         {
             field: "id",
         },
-
         {
             field: "acciones",
             disableExport: true,
@@ -148,7 +192,7 @@ export const Estudiantes = () => {
                     <>
                     <ButtonsDetail
                     title={"Detalle del Estudiante"}
-                    handleFunction={subirFoto}
+                    handleFunction={DetalleEstudiante}
                     show={true}
                     icon={<AddPhotoAlternateIcon />}
                     row={v}
@@ -163,22 +207,18 @@ export const Estudiantes = () => {
                             ""
                         )}
                         <ButtonsDetail
-                    title={"Subir Foto"}
-                    handleFunction={subirFoto}
-                    show={true}
-                    icon={<AddPhotoAlternateIcon />}
-                    row={v}
-                    ></ButtonsDetail>
-                        
+                            title={"Subir Foto"}
+                            handleFunction={() => setOpenModal(true)} // Abre el modal
+                            show={true}
+                            icon={<AddPhotoAlternateIcon />}
+                            row={v}
+                        ></ButtonsDetail>
                         <ButtonsDeleted
-                  handleAccion={handleAccion}
-                  row={v}
-                  show={true}
-                ></ButtonsDeleted>
+                            handleAccion={handleAccion}
+                            row={v}
+                            show={true}
+                        ></ButtonsDeleted>
                     </>
-
-                    
-                    
                 );
             },
         },
@@ -264,60 +304,86 @@ export const Estudiantes = () => {
     const handleClose = () => {
         setOpen(false);
         consulta();
-        
-      };
+    };
 
     useEffect(() => {
         permisos.map((item: PERMISO) => {
-        
+            // Aquí podrías realizar alguna validación de permisos si es necesario
         });
 
         consulta();
     }, []);
 
     return (
-			<>
-				<Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
-					<TitleComponent title={"Estudiantes"} show={openSlider} />
-					<Grid container spacing={2}>
-						<Grid
-							item
-							xs={12}
-							sm={6}
-							md={4}
-							lg={3}
-							display="flex"
-							alignItems="center" 
-						>
-							<Box sx={{ transform: "scale(0.8)", margin:0, padding:0 }}>
-								<ButtonsAdd handleOpen={handleOpen} agregar={true} />
-							</Box>
-                            <Box sx={{ transform: "scale(0.8)", margin:0, padding:0 }}>
-                                <ButtonsImport handleOpen={handleUpload} agregar={true} />
-							</Box>
-						</Grid>
-						<Grid item xs={12}>
-							<Box
-								sx={{
-									height: { xs: 300, sm: 400, md: 500 },
-									width: "100%",
-									overflowX: "auto", 
-								}}
-							>
-								<MUIXDataGridSimple columns={columnsRel} rows={data} />
-							</Box>
-						</Grid>
-					</Grid>
-					{open ? (
-						<EstudiantesModal
-							tipo={tipoOperacion}
-							handleClose={handleClose}
-							dt={vrows}
-						/>
-					) : (
-						""
-					)}
-				</Box>
-			</>
-		);
-}
+        <>
+            <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+                <TitleComponent title={"Estudiantes"} show={openSlider} />
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        display="flex"
+                        alignItems="center"
+                    >
+                        <Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
+                            <ButtonsAdd handleOpen={handleOpen} agregar={true} />
+                        </Box>
+                        <Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
+                            <ButtonsImport handleOpen={handleUpload} agregar={true} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box
+                            sx={{
+                                height: { xs: 300, sm: 400, md: 500 },
+                                width: "100%",
+                                overflowX: "auto",
+                            }}
+                        >
+                            <MUIXDataGridSimple columns={columnsRel} rows={data} />
+                        </Box>
+                    </Grid>
+                </Grid>
+                {open ? (
+                    <EstudiantesModal
+                        tipo={tipoOperacion}
+                        handleClose={handleClose}
+                        dt={vrows}
+                    />
+                ) : (
+                    ""
+                )}
+
+                {/* Modal para subir foto */}
+                <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+                    <DialogTitle>Subir Foto</DialogTitle>
+                    <DialogContent>
+                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                            Selecciona una foto para subir.
+                        </Typography>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenModal(false)} color="primary">
+                            Cancelar
+                        </Button>
+                        <Button
+                            onClick={subirFoto}
+                            color="primary"
+                            disabled={loading || !file}
+                        >
+                            {loading ? <CircularProgress size={24} /> : "Subir"}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+        </>
+    );
+};

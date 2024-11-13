@@ -1,7 +1,13 @@
 import React from "react";
 import { Box, Button, Divider, Grid, Typography, Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const DetalleEstudiante = () => {
+export const DetalleEstudiante = () => {
+    const navigate = useNavigate();
+
+	const handleClose = () => {
+        navigate("/inicio/ControlEstudiantes");
+    };
 	return (
 		<Box padding={4}>
 			{/* Título */}
@@ -126,7 +132,7 @@ const DetalleEstudiante = () => {
 				<Button
 					variant="contained"
 					sx={{ backgroundColor: "#A57F52", color: "white", "&:hover": { backgroundColor: "#8C6B45" } }}
-					// onClick={() => handleClose()}
+					 onClick={() => handleClose()}
 				>
 					CERRAR
 				</Button>

@@ -348,7 +348,7 @@ export const EstudiantesModal = ({
 					>
 						<Grid item xs={12} sm="auto">
 							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
-								• Unidad Administrativa
+								• Información Administrativa
 							</Typography>
 						</Grid>
 						<Grid item xs>

@@ -146,6 +146,13 @@ export const Estudiantes = () => {
             renderCell: (v: any) => {
                 return (
                     <>
+                    <ButtonsDetail
+                    title={"Detalle del Estudiante"}
+                    handleFunction={subirFoto}
+                    show={true}
+                    icon={<AddPhotoAlternateIcon />}
+                    row={v}
+                    ></ButtonsDetail>
                         {editar ? (
                             <ButtonsEdit
                                 handleAccion={handleAccion}

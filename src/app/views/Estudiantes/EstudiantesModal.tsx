@@ -7,6 +7,7 @@ import SelectFrag from "../componentes/SelectFrag";
 import SelectValues from "../../interfaces/Share";
 import CustomizedDate from "../componentes/CustomizedDate";
 import dayjs, { Dayjs } from "dayjs";
+import { ShareService } from "../../services/ShareService";
 
 export const EstudiantesModal = ({
     tipo,
@@ -54,6 +55,58 @@ export const EstudiantesModal = ({
     setFFin(v);
   };
     
+  const loadFilter = (operacion: number, P_ID?: string) => {
+    setShow(true);
+    let data = { NUMOPERACION: operacion, P_ID: P_ID };
+    ShareService.SelectIndex(data).then((res) => {
+      if (operacion === 12) {
+        setListGenero(res.RESPONSE);
+        setShow(false);
+      }else if (operacion === 13) {
+        setListTipoEstudiante(res.RESPONSE);
+        setShow(false);
+      }
+      else if (operacion === 11) {
+        setListUnidadAdmin(res.RESPONSE);
+        setShow(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    loadFilter(12);
+    loadFilter(13);
+    loadFilter(11);
+
+    if (Object.keys(dt).length === 0) {
+    } else {
+      //setId(dt?.row?.id);}
+      setTipoEstudiante(dt?.row?.TipoEstudiante);
+      setGenero(dt?.row?.Sexo);
+      setUnidadAdmin(dt?.row?.UnidadAdministrativa);
+      setNoGaffete(dt?.row?.NoGaffete);
+      setNombre(dt?.row?.Nombre);
+      setTelefono(dt?.row?.Telefono);
+      setEscolaridad(dt?.row?.Escolaridad);
+      setInstituto(dt?.row?.InstitucionEducativa);
+      setResponsable(dt?.row?.PersonaResponsable);
+
+      if (fInicio !== null) {
+        setFInicio(dayjs(dt?.row?.FechaInicio,'DD-MM-YYYY'));
+      }
+    //   if (fFin !== null && FVencimiento !== undefined) {
+    //     setFVencimiento(dayjs(dt?.row?.FVencimiento,'DD-MM-YYYY'));
+    //     setSwitchValue(true);
+    //   }
+      if (fFin !== null) {
+        setFFin(dayjs(dt?.row?.FechaFin,'DD-MM-YYYY'));
+      }
+    //   if (Prorroga !== null && Prorroga !== undefined) {
+    //     setProrroga(dayjs(dt?.row?.Prorroga,'DD-MM-YYYY'));
+    //     setSwitchValue(true);
+    //   }
+    }
+  }, [dt]);
     useEffect(() => {
        
         console.log("dt",dt);

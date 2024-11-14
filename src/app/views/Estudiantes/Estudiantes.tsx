@@ -19,6 +19,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloseIcon from '@mui/icons-material/Close';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 export const Estudiantes = () => {
     const [open, setOpen] = useState(false);
@@ -322,75 +324,179 @@ export const Estudiantes = () => {
     }, []);
 
     return (
-        <>
-            <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
-                <TitleComponent title={"Estudiantes"} show={openSlider} />
-                <Grid container spacing={2}>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={4}
-                        lg={3}
-                        display="flex"
-                        alignItems="center"
-                    >
-                        <Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
-                            <ButtonsAdd handleOpen={handleOpen} agregar={true} />
-                        </Box>
-                        <Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
-                            <ButtonsImport handleOpen={handleUpload} agregar={true} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Box
-                            sx={{
-                                height: { xs: 300, sm: 400, md: 500 },
-                                width: "100%",
-                                overflowX: "auto",
-                            }}
-                        >
-                            <MUIXDataGridSimple columns={columnsRel} rows={data} />
-                        </Box>
-                    </Grid>
-                </Grid>
-                {open ? (
-                    <EstudiantesModal
-                        tipo={tipoOperacion}
-                        handleClose={handleClose}
-                        dt={vrows}
-                    />
-                ) : (
-                    ""
-                )}
+			<>
+				<Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+					<TitleComponent title={"Estudiantes"} show={openSlider} />
+					<Grid container spacing={2}>
+						<Grid
+							item
+							xs={12}
+							sm={6}
+							md={4}
+							lg={3}
+							display="flex"
+							alignItems="center"
+						>
+							<Box
+								sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}
+							>
+								<ButtonsAdd handleOpen={handleOpen} agregar={true} />
+							</Box>
+							<Box
+								sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}
+							>
+								<ButtonsImport
+									handleOpen={handleUpload}
+									agregar={true}
+								/>
+							</Box>
+						</Grid>
+						<Grid item xs={12}>
+							<Box
+								sx={{
+									height: { xs: 300, sm: 400, md: 500 },
+									width: "100%",
+									overflowX: "auto",
+								}}
+							>
+								<MUIXDataGridSimple columns={columnsRel} rows={data} />
+							</Box>
+						</Grid>
+					</Grid>
+					{open ? (
+						<EstudiantesModal
+							tipo={tipoOperacion}
+							handleClose={handleClose}
+							dt={vrows}
+						/>
+					) : (
+						""
+					)}
 
-                {/* Modal para subir foto */}
-                <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-                    <DialogTitle>Subir Foto</DialogTitle>
-                    <DialogContent>
-                        <Typography variant="body2" color="textSecondary" gutterBottom>
-                            Selecciona una foto para subir.
-                        </Typography>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setOpenModal(false)} color="primary">
-                            Cancelar
-                        </Button>
-                        <Button
-                            onClick={subirFoto}
-                            color="primary"
-                            disabled={loading || !file}
-                        >
-                            {loading ? <CircularProgress size={24} /> : "Subir"}
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Box>
-        </>
-    );
+					{/* Modal para subir foto */}
+					<Dialog
+						open={openModal}
+						onClose={() => setOpenModal(false)}
+						maxWidth="xs"
+						fullWidth
+					>
+						{/* Botón de cierre en la parte superior derecha */}
+						<IconButton
+							aria-label="close"
+							onClick={() => setOpenModal(false)}
+							sx={{
+								position: "absolute",
+								right: 8,
+								top: 8,
+								color: (theme) => theme.palette.grey[500],
+							}}
+						>
+							<CloseIcon />
+						</IconButton>
+
+						<DialogTitle
+							sx={{
+								fontWeight: "bold",
+								textAlign: "center",
+								fontSize: 24,
+								color: "#A57F52",
+							}}
+						>
+							Cargar Imagen de Perfil
+						</DialogTitle>
+
+						<DialogContent sx={{ color: "black", mb: 2 }}>
+							<Typography sx={{ mb: 1 }}>
+								Seleccione una imagen adecuada que representará el
+								perfil del estudiante.
+							</Typography>
+							<Box
+								sx={{
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center", // Centrar el contenido horizontalmente
+									mt: 2,
+									textAlign: "center", // Centrar el texto dentro del Typography
+								}}
+							>
+								<input
+									type="file"
+									accept="image/*"
+									onChange={(e) =>
+										setFile(e.target.files ? e.target.files[0] : null)
+									}
+									id="upload-button"
+									style={{ display: "none" }}
+								/>
+								<label htmlFor="upload-button">
+									<Button
+										variant="outlined"
+										component="span"
+										startIcon={<UploadFileIcon />}
+										sx={{
+											mr: 2,
+											backgroundColor: "#F0F0F0",
+											color: "#333333",
+											borderColor: "#A0A0A0",
+											"&:hover": {
+												backgroundColor: "#E0E0E0",
+												color: "#000000",
+											},
+											fontSize: 14,
+											textTransform: "none",
+										}}
+									>
+										Seleccionar Archivo
+									</Button>
+								</label>
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									sx={{ color: "#666666" }}
+								>
+									{file ? file.name : "No hay archivo seleccionado"}
+								</Typography>
+							</Box>
+						</DialogContent>
+
+						<DialogActions
+							sx={{ justifyContent: "flex-end", pb: 3, pt: 2, mx: 3 }}
+						>
+							<Button
+								onClick={() => setOpenModal(false)}
+								variant="contained"
+								sx={{
+									backgroundColor: "#A57F52",
+									color: "white",
+									"&:hover": {
+										backgroundColor: "grey.300", // Cambia a gris claro en hover
+										color: "black", // Cambia a letras negras en hover
+									},
+								}}
+							>
+								Cancelar
+							</Button>
+
+							<Button
+								onClick={subirFoto}
+								color="primary"
+								disabled={loading || !file}
+								sx={{
+									backgroundColor: "black",
+									color: "white",
+									width: "40%", // Más ancho
+									height: 36, // Altura reducida
+									"&:hover": {
+										backgroundColor: "#333",
+									},
+								}}
+							>
+								{loading ? <CircularProgress size={24} /> : "Subir"}
+							</Button>
+						</DialogActions>
+					</Dialog>
+				</Box>
+			</>
+		);
 };
+

@@ -18,6 +18,7 @@ import { ButtonsImport } from "../componentes/ButtonsImport";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const Estudiantes = () => {
     const [open, setOpen] = useState(false);
@@ -194,7 +195,7 @@ export const Estudiantes = () => {
                     title={"Detalle del Estudiante"}
                     handleFunction={DetalleEstudiante}
                     show={true}
-                    icon={<AddPhotoAlternateIcon />}
+                    icon={<VisibilityIcon/>}
                     row={v}
                     ></ButtonsDetail>
                         {editar ? (

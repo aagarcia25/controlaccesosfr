@@ -29,15 +29,15 @@ export const DetalleEstudiante = () => {
 				justifyContent="space-between"
 				sx={{ mb: 4 }}
 			>
-				<Grid item xs={12} sm={1} md={1}>
+				<Grid item xs={12} sm={1} md={1} sx={{ textAlign: { xs: "center", sm: "left"} }}>
 					<Avatar
 						alt="Foto de Estudiante"
 						src="https://via.placeholder.com/150" // Reemplaza con la URL de la imagen del estudiante
-						sx={{ width: 120, height: 120, mx: "auto" }}
+						sx={{ width: 120, height: 120, mx: { xs: "auto", sm: "initial" }}}
 					/>
 				</Grid>
 				{/* Información del Estudiante */}
-				<Grid item xs={12} sm={6} md={7} sx={{ ml: -2 }}>
+				<Grid item xs={12} sm={6} md={7} sx={{ textAlign: { xs: "center", sm: "left" } }} marginLeft={2}>
 					{" "}
 					{/* Reduce el marginLeft para acercar el texto a la imagen */}
 					<Typography

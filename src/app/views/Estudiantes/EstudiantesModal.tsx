@@ -201,8 +201,7 @@ export const EstudiantesModal = ({
 							</Typography>
 							<TextField
 								required
-								id="nombre"
-								label="Nombre Completo"
+								id="nombre" 
 								size="small"
 								value={nombre}
 								type="text"
@@ -224,8 +223,7 @@ export const EstudiantesModal = ({
 							<TextField
 								required
 								size="small"
-								id="telefono"
-								label="Teléfono"
+								id="telefono" 
 								value={telefono}
 								type="text"
 								fullWidth
@@ -279,8 +277,7 @@ export const EstudiantesModal = ({
 							<TextField
 								required
 								size="small"
-								id="escolaridad"
-								label="Escolaridad"
+								id="escolaridad" 
 								value={escolaridad}
 								type="text"
 								fullWidth
@@ -301,8 +298,7 @@ export const EstudiantesModal = ({
 							<TextField
 								required
 								size="small"
-								id="instituto"
-								label="Instituto Educativo"
+								id="instituto" 
 								value={instituto}
 								type="text"
 								fullWidth
@@ -323,8 +319,7 @@ export const EstudiantesModal = ({
 							<TextField
 								required
 								size="small"
-								id="responsable"
-								label="Persona Responsable"
+								id="responsable" 
 								value={responsable}
 								type="text"
 								fullWidth

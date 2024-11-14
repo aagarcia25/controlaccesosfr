@@ -208,7 +208,7 @@ export const Estudiantes = () => {
                         )}
                         <ButtonsDetail
                             title={"Subir Foto"}
-                            handleFunction={() => setOpenModal(true)} // Abre el modal
+                            handleFunction={handleOpenUploadFoto} // Abre el modal
                             show={true}
                             icon={<AddPhotoAlternateIcon />}
                             row={v}
@@ -305,6 +305,12 @@ export const Estudiantes = () => {
         setOpen(false);
         consulta();
     };
+    const handleOpenUploadFoto =(v:any)=>{
+        setOpenModal(true)
+        console.log('row',v.row.id);
+        
+        setId(v.row.id||'')
+    }
 
     useEffect(() => {
         permisos.map((item: PERMISO) => {

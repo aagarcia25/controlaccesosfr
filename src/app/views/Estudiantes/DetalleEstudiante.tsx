@@ -217,17 +217,19 @@ const Section = ({
 	children: React.ReactNode;
 }) => (
 	<Box sx={{ mb: 3 }}>
-		<Grid container alignItems="center" spacing={1} sx={{ mb: 1 }}>
-			<Grid item xs={12} sm={3}>
-				<Typography
-					variant="subtitle1"
-					sx={{ fontWeight: "bold", color: "#A57F52",whiteSpace: "nowrap", mr: 1}}
-				>
+		<Grid
+			container
+			alignItems="center"
+			spacing={1}
+			sx={{ mb: 1, marginTop: 2 }}
+		>
+			<Grid item xs={12} sm="auto" >
+				<Typography variant="body1" sx={{ fontWeight: "bold", color: "#A57F52", }}>
 					• {title}
 				</Typography>
 			</Grid>
-			<Grid item xs={12} sm={9}>
-				<Divider sx={{ borderColor: "#B0B0B0", borderBottomWidth: 1 }} />
+			<Grid item xs>
+				<Divider sx={{ borderColor: "#B0B0B0" }} />
 			</Grid>
 			<Grid item xs={12} sm={12}>
 				{children}

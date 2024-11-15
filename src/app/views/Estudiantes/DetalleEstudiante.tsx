@@ -56,18 +56,23 @@ export const DetalleEstudiante = (
 //   };
 const handleVer = (v: any) => {
     setverarchivo(false);
- console.log("dataGlobal",dataGlobal.row.id);
- 
+    console.log("dataGlobal", dataGlobal.row.id);
+
     let data = {
-      NUMOPERACION: 6,
-      P_ROUTE: dataGlobal.row.id+"/",
-      TOKEN: JSON.parse(String(getToken())),
+        NUMOPERACION: 6,
+        P_ROUTE: dataGlobal.row.id + "/",
+        TOKEN: JSON.parse(String(getToken())),
     };
 
     CatalogosServices.Estudiante(data).then((res) => {
-		console.log("ress",res);
-		let data = res.RESPONSE[0]
+        console.log("ress", res);
+        let data = res.RESPONSE[0];
         if (res.SUCCESS) {
+            // Validar si FILE no existe o está vacío
+            if (!data.FILE || data.FILE.trim() === "") {
+                return; // Salir sin hacer nada
+            }
+
             try {
                 // Eliminar encabezado y caracteres inválidos en la cadena Base64
                 let base64String = String(data.FILE)
@@ -81,9 +86,9 @@ const handleVer = (v: any) => {
 
                 const bufferArray = base64ToArrayBuffer(base64String);
                 const blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO || "image/jpeg" });
-                
+
                 const dataUrl = window.URL.createObjectURL(blobStore);
-                
+
                 setURLRuta(dataUrl);
                 setverarchivo(true);
             } catch (error) {
@@ -95,6 +100,7 @@ const handleVer = (v: any) => {
         }
     });
 };
+
 
 // Función para convertir Base64 a ArrayBuffer
 const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
@@ -166,13 +172,13 @@ console.log("URLruta",URLruta);
 						variant="h6"
 						sx={{ fontWeight: "bold", color: "#A57F52" }}
 					>
-						Carlos Alberto Rodríguez Torres
+						{dataGlobal.row.Nombre}
 					</Typography>
 					<Typography sx={{ color: "#333" }}>
 						Horas Acumuladas: 400
 					</Typography>
 					<Typography sx={{ color: "#555" }}>
-						Periodo: 15/01/2024 - 15/06/2024
+						Periodo: {dataGlobal.row.FechaInicio} - {dataGlobal.row.FechaFin}
 					</Typography>
 				</Grid>
 				<Grid
@@ -202,22 +208,22 @@ console.log("URLruta",URLruta);
 				<Grid container spacing={2}>
 					<Grid item xs={12} sm={6}>
 						<Typography>
-							<strong>Tipo de Estudiante:</strong> Servicio Social
+							<strong>Tipo de Estudiante:</strong> {dataGlobal.row.TipoEstudiante}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography>
-							<strong>Número de Gafete:</strong> 1239485
+							<strong>Número de Gafete:</strong> {dataGlobal.row.NoGaffete}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography>
-							<strong>Teléfono:</strong> 555-654-3210
+							<strong>Teléfono:</strong> {dataGlobal.row.Telefono}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography>
-							<strong>Género:</strong> Masculino
+							<strong>Género:</strong> {dataGlobal.row.Sexo}
 						</Typography>
 					</Grid>
 				</Grid>
@@ -228,17 +234,17 @@ console.log("URLruta",URLruta);
 				<Grid container spacing={2}>
 					<Grid item xs={12} sm={6}>
 						<Typography>
-							<strong>Escolaridad:</strong> Licenciatura
+							<strong>Escolaridad:</strong> {dataGlobal.row.Escolaridad}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
 						<Typography>
-							<strong>Persona Responsable:</strong> Lic. Ana Martínez
+							<strong>Persona Responsable:</strong> {dataGlobal.row.PersonaResponsable}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={12}>
 						<Typography>
-							<strong>Instituto Educativo:</strong> Universidad Autónoma
+							<strong>Instituto Educativo:</strong> {dataGlobal.row.InstitucionEducativa}
 						</Typography>
 					</Grid>
 				</Grid>
@@ -255,15 +261,15 @@ console.log("URLruta",URLruta);
 					</Grid>
 					<Grid item xs={12} sm={6} display={"flex"}>
 						<Typography sx={{ fontWeight: "bold" }}>
-							Fecha de Vigencia (Inicio):
+							Fecha de Vigencia (Inicio): 
 						</Typography>
-						<Typography>15/01/2024</Typography>
+						<Typography>{dataGlobal.row.FechaInicio}</Typography> 
 					</Grid>
 					<Grid item xs={12} sm={6} display={"flex"}>
 						<Typography sx={{ fontWeight: "bold" }}>
-							Fecha de Vigencia (Fin):
+							Fecha de Vigencia (Fin): 
 						</Typography>
-						<Typography>15/06/2024</Typography>
+						<Typography>{dataGlobal.row.FechaFin}</Typography>
 					</Grid>
 				</Grid>
 			</Section>

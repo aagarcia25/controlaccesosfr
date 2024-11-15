@@ -21,6 +21,7 @@ import { Perfil } from "../views/perfil/Perfil";
 import { AuthRouter } from "./AuthRouter";
 import { Estudiantes } from "../views/Estudiantes/Estudiantes";
 import DetalleEstudiante from "../views/Estudiantes/DetalleEstudiante";
+import { EstudiantesEscaneo } from "../views/Estudiantes/EstudiantesEscaneo";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -136,6 +137,10 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         <Route
           path="/inicio/DetalleEstudiante"
           element={log ? <DetalleEstudiante dataGlobal={dataGlobal} /> : <AuthRouter />}
+        />
+        <Route
+          path="/inicio/EstudiantesEscaneo/:id"
+          element={log ? <EstudiantesEscaneo /> : <AuthRouter />}
         />
         {/* FIN SECCION DE ESTUDIANTES */}
 

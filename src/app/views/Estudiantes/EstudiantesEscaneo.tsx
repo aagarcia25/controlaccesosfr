@@ -1,15 +1,15 @@
-import { Button, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { getUser } from "../../services/localStorage";
+import { useEffect, useState } from "react";
 import { Visita } from "../../interfaces/Visitas";
 import { CatalogosServices } from "../../services/catalogosServices";
-import { getUser } from "../../services/localStorage";
+import Swal from "sweetalert2";
+import { Button, Grid, Typography } from "@mui/material";
 import TitleComponent from "../componentes/TitleComponent";
-import { formatFecha } from "../../helpers/FormatDate";
 
-export const VisistasEscaneo = () => {
+
+export const EstudiantesEscaneo = () => {
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   let params = useParams();
   const navigate = useNavigate();
@@ -116,9 +116,6 @@ export const VisistasEscaneo = () => {
       CHUSER: user.Id,
     };
     CatalogosServices.visita_index(data).then((resultado) => {
-      console.log("resultado",resultado);
-      console.log("data",data);
-
       if (resultado.SUCCESS) {
         if (resultado.RESPONSE.length > 0) {
           handleSend();
@@ -148,7 +145,7 @@ export const VisistasEscaneo = () => {
 
   return (
     <>
-      <TitleComponent title={"Visita Generada QR"} show={open} />
+      <TitleComponent title={"Estudiante QR"} show={open} />
       <Grid
         container
         direction="row"
@@ -240,7 +237,7 @@ export const VisistasEscaneo = () => {
                 <b>Fecha Visita: </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {formatFecha(vrows?.FechaVisita)}
+                {/* {formatFecha(vrows?.FechaVisita)} */}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4}>
@@ -254,7 +251,7 @@ export const VisistasEscaneo = () => {
                   <Typography
                     sx={{ fontFamily: "sans-serif", fontSize: "30px" }}
                   >
-                    {formatFecha(vrows?.FechaEntrada)}
+                    {/* {formatFecha(vrows?.FechaEntrada)} */}
                   </Typography>
                 </>
               ) : (

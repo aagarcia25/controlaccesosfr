@@ -45,6 +45,7 @@ export const EstudiantesModal = ({
 	const [NoGaffete, setNoGaffete] = useState("");
 	const [nombre, setNombre] = useState("");
 	const [telefono, setTelefono] = useState("");
+	const [email, setemail] = useState("");
 	const [escolaridad, setEscolaridad] = useState("");
 	const [instituto, setInstituto] = useState("");
 	const [responsable, setResponsable] = useState("");
@@ -115,6 +116,7 @@ export const EstudiantesModal = ({
 			setNoGaffete(dt?.row?.NoGaffete);
 			setNombre(dt?.row?.Nombre);
 			setTelefono(dt?.row?.Telefono);
+			setemail(dt?.row?.email);
 			setEscolaridad(dt?.row?.Escolaridad);
 			setInstituto(dt?.row?.InstitucionEducativa);
 			setResponsable(dt?.row?.PersonaResponsable);
@@ -147,9 +149,9 @@ export const EstudiantesModal = ({
 				<Progress open={show}></Progress>
 				<Box margin={2} padding={2}>
 					{/* Información Básica */}
-					<Grid container alignItems="center" spacing={1} sx={{ mb: 1 }}>
+					<Grid container alignItems="center" spacing={1} sx={{ mb: 3 }}>
 						<Grid item xs={12} sm="auto">
-							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							<Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
 								• Información Básica
 							</Typography>
 						</Grid>
@@ -181,7 +183,6 @@ export const EstudiantesModal = ({
 								required
 								size="small"
 								id="NoGaffete"
-								label="Número de Gafete"
 								value={NoGaffete}
 								type="text"
 								fullWidth
@@ -195,7 +196,7 @@ export const EstudiantesModal = ({
 							/>
 						</Grid>
 
-						<Grid item xs={12} sm={6} md={6}>
+						<Grid item xs={12} sm={12} md={12}>
 							<Typography sx={{ fontFamily: "sans-serif" }}>
 								Nombre Completo:
 							</Typography>
@@ -216,7 +217,28 @@ export const EstudiantesModal = ({
 							/>
 						</Grid>
 
-						<Grid item xs={12} sm={3} md={3}>
+						<Grid item xs={12}  sm={6} md={4}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								email:
+							</Typography>
+							<TextField
+								required
+								size="small"
+								id="email" 
+								value={email}
+								type="text"
+								fullWidth
+								variant="outlined"
+								onChange={(v) => setemail(v.target.value)}
+								// error={email === "" ? true : false}
+								InputProps={{
+									readOnly: tipo === 1 ? false : true,
+								}}
+								disabled={false}
+							/>
+						</Grid>
+
+						<Grid item xs={12}  sm={6} md={4}>
 							<Typography sx={{ fontFamily: "sans-serif" }}>
 								Teléfono:
 							</Typography>
@@ -237,7 +259,7 @@ export const EstudiantesModal = ({
 							/>
 						</Grid>
 
-						<Grid item xs={12} sm={3} md={3}>
+						<Grid item xs={12}  sm={6} md={4}>
 							<Typography sx={{ fontFamily: "sans-serif" }}>
 								Género:
 							</Typography>
@@ -256,10 +278,10 @@ export const EstudiantesModal = ({
 						container
 						alignItems="center"
 						spacing={1}
-						sx={{ mb: 1, marginTop: 2 }}
+						sx={{ mb: 3, mt: 4 }}
 					>
 						<Grid item xs={12} sm="auto">
-							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							<Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
 								• Información Académica
 							</Typography>
 						</Grid>
@@ -339,10 +361,10 @@ export const EstudiantesModal = ({
 						container
 						alignItems="center"
 						spacing={1}
-						sx={{ mb: 1, marginTop: 2 }}
+						sx={{ mb: 3, mt: 4 }}
 					>
 						<Grid item xs={12} sm="auto">
-							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							<Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
 								• Información Administrativa
 							</Typography>
 						</Grid>
@@ -387,10 +409,10 @@ export const EstudiantesModal = ({
 						container
 						alignItems="center"
 						spacing={1}
-						sx={{ mb: 1, marginTop: 2 }}
+						sx={{ mb: 3, mt: 4 }}
 					>
 						<Grid item xs={12} sm="auto">
-							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							<Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
 								• Horario y Asistencia
 							</Typography>
 						</Grid>
@@ -511,10 +533,10 @@ export const EstudiantesModal = ({
 						container
 						alignItems="center"
 						spacing={1}
-						sx={{ mb: 1, marginTop: 2 }}
+						sx={{ mb: 3, mt: 4 }}
 					>
 						<Grid item xs={12} sm="auto">
-							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							<Typography variant="body1" sx={{ fontWeight: "bold", fontSize: "1.2rem" }}>
 								• Información de Horas
 							</Typography>
 						</Grid>

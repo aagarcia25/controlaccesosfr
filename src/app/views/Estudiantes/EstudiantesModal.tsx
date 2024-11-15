@@ -219,7 +219,7 @@ export const EstudiantesModal = ({
 
 						<Grid item xs={12}  sm={6} md={4}>
 							<Typography sx={{ fontFamily: "sans-serif" }}>
-								email:
+								Email:
 							</Typography>
 							<TextField
 								required

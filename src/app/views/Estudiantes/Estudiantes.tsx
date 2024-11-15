@@ -44,6 +44,8 @@ export const Estudiantes = (
     const [openModal, setOpenModal] = useState(false);  
     const [file, setFile] = useState<File | null>(null); 
     const [loading, setLoading] = useState(false);  
+    const [openExtenderFechaModal, setOpenExtenderFechaModal] = useState(false); // Nuevo estado para el modal de Extender Fecha
+    const [selectedRowId, setSelectedRowId] = useState<string>("");
 
     const handleOpen = (v: any) => {
         setTipoOperacion(1);
@@ -165,6 +167,11 @@ export const Estudiantes = (
         }
     };
 
+    const handleOpenExtenderFecha = (id: string) => {
+        setSelectedRowId(id);
+        setOpenExtenderFechaModal(true);
+    };
+    
     const consulta = () => {
         let data = {
             NUMOPERACION: 4,
@@ -304,6 +311,39 @@ export const Estudiantes = (
             description: "Número de gaffete",
             minWidth: 150,
             flex: 0.8,
+        },
+        {
+            field: "ExtenderFecha",
+            headerName: "Extender Fecha",
+            minWidth: 150,
+            renderCell: (params: any) => (
+                <Button
+                    variant="contained"
+                    size="small"
+                    // onClick={() => handleOpenExtenderFecha(params.row.id)}
+                    sx={{ backgroundColor: "black", color: "white", fontWeight: "bold", "&:hover": { backgroundColor: "#333" } }}
+                >
+                    ACTUALIZAR
+                </Button>
+            ),
+        },
+        {
+            field: "EstadoQR",
+            headerName: "Estado QR",
+            minWidth: 150,
+            renderCell: (params: any) => (
+                <Box
+                    sx={{
+                        padding: "4px 10px",
+                        borderRadius: "5px",
+                        color: "white",
+                        fontWeight: "bold",
+                        backgroundColor: params.row.EstadoQR === "Generado" ? "#4CAF50" : "#F44336",
+                    }}
+                >
+                    {params.row.EstadoQR === "Generado" ? "GENERADO" : "NO GENERADO"}
+                </Box>
+            ),
         },
     ];
 

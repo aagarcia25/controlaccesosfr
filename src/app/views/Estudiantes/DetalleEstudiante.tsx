@@ -159,7 +159,7 @@ console.log("URLruta",URLruta);
 
 				</Grid>
 				{/* Información del Estudiante */}
-				<Grid item xs={12} sm={6} md={7} sx={{ ml: -2 }}>
+				<Grid item xs={12} sm={6} md={7} sx={{ textAlign: { xs: "center", sm: "left" } }} marginLeft={2}>
 					{" "}
 					{/* Reduce el marginLeft para acercar el texto a la imagen */}
 					<Typography
@@ -339,17 +339,19 @@ const Section = ({
 	children: React.ReactNode;
 }) => (
 	<Box sx={{ mb: 3 }}>
-		<Grid container alignItems="center" spacing={1} sx={{ mb: 1 }}>
-			<Grid item xs={12} sm={2}>
-				<Typography
-					variant="subtitle1"
-					sx={{ fontWeight: "bold", color: "#A57F52" }}
-				>
+		<Grid
+			container
+			alignItems="center"
+			spacing={1}
+			sx={{ mb: 1, marginTop: 2 }}
+		>
+			<Grid item xs={12} sm="auto" >
+				<Typography variant="body1" sx={{ fontWeight: "bold", color: "#A57F52", }}>
 					• {title}
 				</Typography>
 			</Grid>
-			<Grid item xs={12} sm={10}>
-				<Divider sx={{ borderColor: "#B0B0B0", borderBottomWidth: 1 }} />
+			<Grid item xs>
+				<Divider sx={{ borderColor: "#B0B0B0" }} />
 			</Grid>
 			<Grid item xs={12} sm={12}>
 				{children}

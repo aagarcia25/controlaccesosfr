@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { USUARIORESPONSE } from "../interfaces/UserInfo";
 import { getUser } from "../services/localStorage";
@@ -25,6 +25,7 @@ import DetalleEstudiante from "../views/Estudiantes/DetalleEstudiante";
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
+  const [dataGlobal,setDataGlobal]= useState<any>();
 
   const handleChangeImg = () => {};
   const handleCloseModal = () => {};
@@ -130,11 +131,11 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         {/* SECCION DE ESTUDIANTES */}
         <Route
           path="/inicio/ControlEstudiantes"
-          element={log ? <Estudiantes /> : <AuthRouter />}
+          element={log ? <Estudiantes setDataGlobal={setDataGlobal} /> : <AuthRouter />}
         />
         <Route
           path="/inicio/DetalleEstudiante"
-          element={log ? <DetalleEstudiante /> : <AuthRouter />}
+          element={log ? <DetalleEstudiante dataGlobal={dataGlobal} /> : <AuthRouter />}
         />
         {/* FIN SECCION DE ESTUDIANTES */}
 

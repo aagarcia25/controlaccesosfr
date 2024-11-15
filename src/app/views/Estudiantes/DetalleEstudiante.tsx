@@ -1,14 +1,130 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Divider, Grid, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
+import { CatalogosServices } from "../../services/catalogosServices";
+import { base64ToArrayBuffer } from "../../helpers/Files";
+import { getToken } from "../../services/localStorage";
+import Swal from "sweetalert2";
+import { json } from "stream/consumers";
 
-export const DetalleEstudiante = () => {
+
+export const DetalleEstudiante = (
+    {dataGlobal}:{dataGlobal:any}
+) => {
+	const [verarchivo, setverarchivo] = useState(false);
+	const [URLruta, setURLRuta] = useState<string>("");
+    const [id, setId] = useState("");
+
 	const navigate = useNavigate();
 
 	const handleClose = () => {
 		navigate("/inicio/ControlEstudiantes");
 	};
+
+// 	const handleVer = (v: any) => {
+//         setverarchivo(false);
+
+//     //setOpenSlider(true);
+//     let data = {
+//       NUMOPERACION: 6,
+//       P_ROUTE: dataGlobal.row.id,
+//       TOKEN: JSON.parse(String(getToken())),
+//     };
+// console.log("dataGlobal.row.id",dataGlobal.row.id,);
+
+//     CatalogosServices.Estudiante(data).then((res) => {
+// 			console.log("res.SUCCESS",res.SUCCESS);
+//       if (res.SUCCESS) {
+	
+		
+//         var bufferArray = base64ToArrayBuffer(String(res.RESPONSE.FILE));
+//         var blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO }); //type:"application/pdf"
+//         var data = window.URL.createObjectURL(blobStore);
+//         var link = document.createElement("a");
+//         document.body.appendChild(link);
+//         link.download = "Documento.pdf";
+//         link.href = data;
+//         setURLRuta(link.href);
+//         //setOpenSlider(false);
+//         setverarchivo(true);
+//       } else {
+//         //setOpenSlider(false);
+//         Swal.fire("¡Error!", res.STRMESSAGE, "error");
+//       }
+//     });
+//   };
+const handleVer = (v: any) => {
+    setverarchivo(false);
+ console.log("dataGlobal",dataGlobal.row.id);
+ 
+    let data = {
+      NUMOPERACION: 6,
+      P_ROUTE: dataGlobal.row.id+"/",
+      TOKEN: JSON.parse(String(getToken())),
+    };
+
+    CatalogosServices.Estudiante(data).then((res) => {
+		console.log("ress",res);
+		let data = res.RESPONSE[0]
+        if (res.SUCCESS) {
+            try {
+                // Eliminar encabezado y caracteres inválidos en la cadena Base64
+                let base64String = String(data.FILE)
+                    .replace(/^data:image\/[a-zA-Z]+;base64,/, "") // Elimina encabezado Base64 si existe
+                    .replace(/\s/g, ""); // Elimina espacios en blanco
+
+                // Asegúrate de que la longitud sea múltiplo de 4
+                while (base64String.length % 4 !== 0) {
+                    base64String += "="; // Añadir "=" para completar
+                }
+
+                const bufferArray = base64ToArrayBuffer(base64String);
+                const blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO || "image/jpeg" });
+                
+                const dataUrl = window.URL.createObjectURL(blobStore);
+                
+                setURLRuta(dataUrl);
+                setverarchivo(true);
+            } catch (error) {
+                console.error("Error al convertir la imagen:", error);
+                Swal.fire("¡Error!", "La imagen no está correctamente codificada.", "error");
+            }
+        } else {
+            Swal.fire("¡Error!", res.STRMESSAGE, "error");
+        }
+    });
+};
+
+// Función para convertir Base64 a ArrayBuffer
+const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
+    let binaryString = window.atob(base64);
+    let len = binaryString.length;
+    let bytes = new Uint8Array(len);
+
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    return bytes.buffer;
+};
+
+
+
+  useEffect(() => {
+
+    handleVer(dataGlobal.row.id);
+    console.log("dataGlobal",dataGlobal);
+console.log("URLruta",URLruta);
+
+    // if (breadcrumbs.length === 0) {
+    //   handleFunction();
+    // }
+    // setexplorerRoute(breadcrumbs.join(""));
+  }, [
+	//breadcrumbs
+]);
+  
 	return (
 		<Box padding={4}>
 			{/* Título */}
@@ -30,11 +146,17 @@ export const DetalleEstudiante = () => {
 				sx={{ mb: 4 }}
 			>
 				<Grid item xs={12} sm={1} md={1}>
-					<Avatar
+					{/* <Avatar
 						alt="Foto de Estudiante"
-						src="https://via.placeholder.com/150" // Reemplaza con la URL de la imagen del estudiante
+						src="URLruta" // Reemplaza con la URL de la imagen del estudiante
 						sx={{ width: 120, height: 120, mx: "auto" }}
-					/>
+					/> */}
+					<Avatar src={URLruta} 
+						alt="Foto de Estudiante"
+						sx={{ width: 120, height: 120, mx: "auto" }}
+
+						/>
+
 				</Grid>
 				{/* Información del Estudiante */}
 				<Grid item xs={12} sm={6} md={7} sx={{ ml: -2 }}>

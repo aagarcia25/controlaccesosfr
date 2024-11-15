@@ -20,7 +20,9 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-export const Estudiantes = () => {
+export const Estudiantes = (
+    {setDataGlobal}:{setDataGlobal:Function}
+) => {
     const [open, setOpen] = useState(false);
     const [data, setData] = useState([]);
     const [editar, setEditar] = useState<boolean>(true);
@@ -116,7 +118,8 @@ export const Estudiantes = () => {
             setLoading(false);
         });
     };
-    const DetalleEstudiante = () => {
+    const DetalleEstudiante = (v:any) => {
+        setDataGlobal(v)
         navigate("/inicio/DetalleEstudiante");
     };
 
@@ -195,7 +198,7 @@ export const Estudiantes = () => {
                     title={"Detalle del Estudiante"}
                     handleFunction={DetalleEstudiante}
                     show={true}
-                    icon={<VisibilityIcon/>}
+                    icon={<VisibilityIcon />}
                     row={v}
                     ></ButtonsDetail>
                         {editar ? (

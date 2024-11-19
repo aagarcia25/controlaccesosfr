@@ -348,7 +348,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						backgroundColor: "black",
 						color: "white",
 						fontWeight: "bold",
-						"&:hover": { backgroundColor: "#333" },
+						"&:hover": { backgroundColor: "grey.300", color: "black" },
 					}}
 				>
 					ACTUALIZAR
@@ -504,10 +504,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 							sx={{
 								backgroundColor: "black",
 								color: "white",
-								"&:hover": { backgroundColor: "#333" },
+								"&:hover": { backgroundColor: "grey.300", color: "black" },
 							}}
 						>
-							CONFIRMAR
+							Confirmar
 						</Button>
 					</DialogActions>
 				</Dialog>

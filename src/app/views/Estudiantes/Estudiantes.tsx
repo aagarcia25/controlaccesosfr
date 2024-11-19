@@ -28,6 +28,8 @@ import {
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import CustomizedDate from "../componentes/CustomizedDate";
+import dayjs, { Dayjs } from "dayjs";
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -53,6 +55,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [selectedRowId, setSelectedRowId] = useState<string>("");
     const [selectedRow, setSelectedRow] = useState<any>(null);
     const [newFechaFin, setNewFechaFin] = useState("");
+	const [fFin, setFFin] = useState<Dayjs | null>();
+
 
     const handleOpenExtenderFecha = (row: any) => {
         setSelectedRow(row);
@@ -64,10 +68,31 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
         setNewFechaFin("");
     };
 
+	const extenderFechaFin = (data: any) => {
+		CatalogosServices.Estudiante(data).then((res) => {
+		  if (res.SUCCESS) {
+			Toast.fire({
+			  icon: "success",
+			  title: "¡Fecha Extendida!",
+			});
+			setOpenExtenderFechaModal(false);
+			consulta();
+		  } else {
+			Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+		  }
+		});
+	  };
+
     const handleConfirmarFecha = () => {
-        console.log("Nueva Fecha de Fin:", newFechaFin);
-        console.log("Row afectado:", selectedRow);
-        setOpenExtenderFechaModal(false);
+	
+			let data = {
+			  CHID: selectedRow?.id,
+			  NUMOPERACION: 8,
+			  CHUSER: user.Id,
+			  FechaFin:fFin,
+			};
+			extenderFechaFin(data);
+		
     };
 
 	const handleOpen = (v: any) => {
@@ -226,6 +251,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			renderCell: (v: any) => {
 				return (
 					<>
+					
 						<ButtonsDetail
 							title={"Detalle del Estudiante"}
 							handleFunction={DetalleEstudiante}
@@ -376,7 +402,9 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		},
 	];
 
- 
+	const handleFilterChangeFFin = (v: any) => {
+		setFFin(v);
+	};
 
 	const handleClose = () => {
 		setOpen(false);
@@ -396,6 +424,26 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 
 		consulta();
 	}, []);
+	
+	useEffect(() => {
+		if(openExtenderFechaModal){
+			console.log("openExtenderFechaModal",openExtenderFechaModal);
+		console.log("fFin",fFin);
+		console.log("row");
+		
+		
+		if(Object.keys.length === 0){
+
+		}
+		else{
+			console.log("SelectedRow",selectedRow);
+			
+			setFFin(dayjs(selectedRow?.FechaFin));
+
+		}
+		}
+		
+	}, [openExtenderFechaModal]);
 
 	return (
 		<>
@@ -476,14 +524,11 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						<Typography sx={{ mb: 2, fontWeight: "bold" }}>
 							Fecha de Fin Actual: {selectedRow?.FechaFin || "N/A"}
 						</Typography>
-						<TextField
-							fullWidth
-							label="Nueva Fecha de Fin"
-							placeholder="dd/mm/aaaa"
-							variant="outlined"
-							value={newFechaFin}
-							onChange={(e) => setNewFechaFin(e.target.value)}
-						/>
+						<CustomizedDate
+								value={fFin}
+								label={"Fecha de Vigencia (Inicio)"}
+								onchange={handleFilterChangeFFin}
+							/>
 					</DialogContent>
 
 					<DialogActions sx={{ justifyContent: "center", gap: 2, pb: 3 }}>

@@ -447,12 +447,26 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 					maxWidth="xs"
 					fullWidth
 				>
+					{/* Botón de cierre en la parte superior derecha */}
+					<IconButton
+						aria-label="close"
+						onClick={handleCloseExtenderFecha}
+						sx={{
+							position: "absolute",
+							right: 8,
+							top: 8,
+							color: (theme) => theme.palette.grey[500],
+						}}
+					>
+						<CloseIcon />
+					</IconButton>
+
 					<DialogTitle
 						sx={{
 							fontWeight: "bold",
 							textAlign: "center",
 							fontSize: 24,
-							color: "black",
+							color: "#A57F52",
 						}}
 					>
 						EXTENDER FECHA DE FIN
@@ -473,7 +487,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 					</DialogContent>
 
 					<DialogActions sx={{ justifyContent: "center", gap: 2, pb: 3 }}>
-						<Button
+						{/* <Button
 							variant="contained"
 							onClick={handleCloseExtenderFecha}
 							sx={{
@@ -483,7 +497,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 							}}
 						>
 							CANCELAR
-						</Button>
+						</Button> */}
 						<Button
 							variant="contained"
 							onClick={handleConfirmarFecha}

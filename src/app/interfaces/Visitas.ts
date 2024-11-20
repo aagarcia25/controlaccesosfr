@@ -42,3 +42,24 @@ export interface agenda {
   color?: string;
   estatus?: string;
 }
+
+export interface Estudiante {
+  Escolaridad: string;
+  EstadoQR: string;
+  FechaCreacion: string;
+  FechaFin: string;
+  FechaInicio: string;
+  InstitucionEducativa: string;
+  NoGaffete: string;
+  Nombre: string;
+  PersonaResponsable: string;
+  Sexo: string;
+  Telefono: string;
+  TipoEstudiante: string;
+  UltimaActualizacion: string;
+  UnidadAdministrativa: string;
+  creado: string;
+  deleted: string;
+  id: string;
+  modi: string;
+}

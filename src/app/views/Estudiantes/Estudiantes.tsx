@@ -30,6 +30,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CustomizedDate from "../componentes/CustomizedDate";
 import dayjs, { Dayjs } from "dayjs";
+import MUIXDataGridEstudiantes from "../componentes/MUIXDataGridEstudiantes";
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -411,10 +412,17 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		consulta();
 	};
 	const handleOpenUploadFoto = (v: any) => {
-		setOpenModal(true);
+
 		console.log("row", v.row.id);
 
 		setId(v.row.id || "");
+		//if(existeFoto){
+
+		//}else{
+			setOpenModal(true);
+		//}
+		
+		
 	};
 
 	useEffect(() => {
@@ -474,7 +482,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 								overflowX: "auto",
 							}}
 						>
-							<MUIXDataGridSimple columns={columnsRel} rows={data} />
+							<MUIXDataGridEstudiantes columns={columnsRel} rows={data} />
 						</Box>
 					</Grid>
 				</Grid>

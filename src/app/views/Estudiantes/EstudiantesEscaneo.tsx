@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { getUser } from "../../services/localStorage";
 import { useEffect, useState } from "react";
-import { Visita } from "../../interfaces/Visitas";
+import { Estudiante } from "../../interfaces/Visitas";
 import { CatalogosServices } from "../../services/catalogosServices";
 import Swal from "sweetalert2";
 import { Button, Grid, Typography } from "@mui/material";
@@ -13,7 +13,8 @@ export const EstudiantesEscaneo = () => {
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   let params = useParams();
   const navigate = useNavigate();
-  const [vrows, setVrows] = useState<Visita | null>(null);
+  const [vrows, setVrows] = useState<Estudiante | null>(null);
+
   const [open, setopen] = useState(false);
 
   const handlesalir = () => {
@@ -48,41 +49,43 @@ export const EstudiantesEscaneo = () => {
     });
   };
 
-  const handlesalida = () => {
-    let data = {
-      NUMOPERACION: 14,
-      CHID: params.id,
-      CHUSER: user.Id,
-    };
+  // const handlesalida = () => {
+  //   let data = {
+  //     NUMOPERACION: 14,
+  //     CHID: params.id,
+  //     CHUSER: user.Id,
+  //   };
 
-    CatalogosServices.visita_index(data).then((res) => {
-      if (res.SUCCESS) {
-        Swal.fire({
-          title: "!Exito!",
-          icon: "success",
-          html: "Se Registro la Fecha de Salida, el QR ya no es Valido",
-          showDenyButton: false,
-          showCancelButton: false,
-          confirmButtonText: "Aceptar",
-          background: "EBEBEB",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate("/");
-          }
-        });
-      } else {
-        Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-      }
-    });
-  };
+  //   CatalogosServices.visita_index(data).then((res) => {
+  //     if (res.SUCCESS) {
+  //       Swal.fire({
+  //         title: "!Exito!",
+  //         icon: "success",
+  //         html: "Se Registro la Fecha de Salida, el QR ya no es Valido",
+  //         showDenyButton: false,
+  //         showCancelButton: false,
+  //         confirmButtonText: "Aceptar",
+  //         background: "EBEBEB",
+  //       }).then((result) => {
+  //         if (result.isConfirmed) {
+  //           navigate("/");
+  //         }
+  //       });
+  //     } else {
+  //       Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+  //     }
+  //   });
+  // };
 
   const handleSend = () => {
     let data = {
-      NUMOPERACION: 5,
+      NUMOPERACION: 4,
       CHID: params.id,
     };
 
-    CatalogosServices.visita_index(data).then((res) => {
+    CatalogosServices.Estudiante(data).then((res) => {
+      console.log("res",res);
+      
       if (res.SUCCESS) {
         if (res.RESPONSE[0]) {
           setVrows(res.RESPONSE[0]);
@@ -116,8 +119,12 @@ export const EstudiantesEscaneo = () => {
     };
 
     CatalogosServices.Estudiante(data).then((resultado) => {
+      console.log("resultado",resultado);
+
       if (resultado.SUCCESS) {
         if (resultado.RESPONSE && resultado.RESPONSE.datos) {
+          handleSend();
+
           setVrows(resultado.RESPONSE.datos); // Guarda los datos del estudiante
           setopen(false); // Cierra el estado de "escaneo"
         } else {
@@ -147,6 +154,8 @@ export const EstudiantesEscaneo = () => {
 
 
   useEffect(() => {
+    console.log("vrows",vrows);
+    
     handleEscaneo();
   }, []);
 
@@ -192,7 +201,7 @@ export const EstudiantesEscaneo = () => {
                   margin: "auto",
                 }}
               >
-                {vrows?.Indefinido == 1 ? (
+                {/* {vrows?.Indefinido == 1 ? (
                   <>
                     <Typography
                       variant="h5"
@@ -224,7 +233,7 @@ export const EstudiantesEscaneo = () => {
                       Valido para Ingreso y salida el mismo dia de la visita
                     </Typography>
                   </>
-                )}
+                )} */}
               </Typography>
             </Grid>
           </Grid>
@@ -241,14 +250,16 @@ export const EstudiantesEscaneo = () => {
           >
             <Grid item xs={12} sm={12} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Fecha Visita: </b>
+                <b>Periodo: </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
                 {/* {formatFecha(vrows?.FechaVisita)} */}
+                {(vrows?.FechaInicio)}
+
               </Typography>
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4}>
-              {vrows?.FechaEntrada ? (
+              {/* {vrows?.FechaEntrada ? (
                 <>
                   <Typography
                     sx={{ fontFamily: "sans-serif", fontSize: "30px" }}
@@ -257,65 +268,20 @@ export const EstudiantesEscaneo = () => {
                   </Typography>
                   <Typography
                     sx={{ fontFamily: "sans-serif", fontSize: "30px" }}
-                  >
+                  > */}
                     {/* {formatFecha(vrows?.FechaEntrada)} */}
-                  </Typography>
+                  {/* </Typography>
                 </>
               ) : (
                 ""
-              )}
+              )} */}
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Duración: </b>
+                <b>Horario: </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr}
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-          >
-            <Grid item xs={12} sm={12} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Vistante: </b>
-              </Typography>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.NombreVisitante} {vrows?.ApellidoPVisitante}{" "}
-                {vrows?.ApellidoMVisitante}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Persona a Visitar: </b>
-              </Typography>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.NombreReceptor} {vrows?.ApellidoPReceptor}{" "}
-                {vrows?.ApellidoMReceptor}
-              </Typography>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Extensión :</b>
-              </Typography>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.Extencion}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                <b>Dependencia: </b>
-              </Typography>
-              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.entidadreceptor}
+                {/* {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr} */}
               </Typography>
             </Grid>
           </Grid>
@@ -333,11 +299,54 @@ export const EstudiantesEscaneo = () => {
           >
             <Grid item xs={12} sm={12} md={4} lg={4}>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Estudiante: </b>
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                {vrows?.Nombre} 
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Unidad Administrativa: </b>
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                {vrows?.UnidadAdministrativa}
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Persona Responsable:</b>
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+              {vrows?.PersonaResponsable}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                <b>Horas Acumuladas: </b>
+              </Typography>
+              <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
+                {/* {vrows?.entidadreceptor} */}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+          >
+            <Grid item xs={12} sm={12} md={4} lg={4}>
+              {/* <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
                 <b>Observaciones : </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
                 {vrows?.Observaciones}
-              </Typography>
+              </Typography> */}
             </Grid>
           </Grid>
 
@@ -357,7 +366,7 @@ export const EstudiantesEscaneo = () => {
                 <b>Correo : </b>
               </Typography>
               <Typography sx={{ fontFamily: "sans-serif", fontSize: "30px" }}>
-                {vrows?.EmailNotificacion}
+                {/* {vrows?.EmailNotificacion} */}
               </Typography>
             </Grid>
           </Grid>
@@ -395,7 +404,7 @@ export const EstudiantesEscaneo = () => {
                 }}
               >
                 <Grid item xs={12} sm={12} md={12} lg={4}>
-                  {vrows?.FechaEntrada ? (
+                  {/* {vrows?.FechaEntrada ? (
                     <>
                       <Button
                         className={"registrar"}
@@ -411,7 +420,7 @@ export const EstudiantesEscaneo = () => {
                     >
                       {"Registrar Entrada"}
                     </Button>
-                  )}
+                  )} */}
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={4}>
                   <Button className={"registrar"} onClick={() => handlesalir()}>

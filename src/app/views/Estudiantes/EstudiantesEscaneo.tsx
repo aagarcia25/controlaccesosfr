@@ -111,17 +111,18 @@ export const EstudiantesEscaneo = () => {
     setopen(true);
 
     let data = {
-      NUMOPERACION: 8,
-      CHID: params.id,
-      CHUSER: user.Id,
+      NUMOPERACION: 7, // Operación específica para estudiantes
+      CHID: params.id, // ID del QR escaneado
     };
-    CatalogosServices.visita_index(data).then((resultado) => {
+
+    CatalogosServices.Estudiante(data).then((resultado) => {
       if (resultado.SUCCESS) {
-        if (resultado.RESPONSE.length > 0) {
-          handleSend();
+        if (resultado.RESPONSE && resultado.RESPONSE.datos) {
+          setVrows(resultado.RESPONSE.datos); // Guarda los datos del estudiante
+          setopen(false); // Cierra el estado de "escaneo"
         } else {
           Swal.fire({
-            title: "QR no Valido ",
+            title: "QR no Valido",
             icon: "error",
             showDenyButton: false,
             showCancelButton: false,
@@ -129,15 +130,21 @@ export const EstudiantesEscaneo = () => {
             background: "EBEBEB",
           }).then((result) => {
             if (result.isConfirmed) {
-              navigate("/");
+              navigate("/"); // Redirige al usuario si el QR no es válido
             }
           });
         }
       } else {
-        Swal.fire(resultado.STRMESSAGE, "¡Error!", "info");
+        Swal.fire({
+          title: "¡Error!",
+          text: resultado.STRMESSAGE,
+          icon: "error",
+          confirmButtonText: "Aceptar",
+        });
       }
     });
   };
+
 
   useEffect(() => {
     handleEscaneo();

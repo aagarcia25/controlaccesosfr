@@ -393,10 +393,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						color: "white",
 						fontWeight: "bold",
 						backgroundColor:
-							params.row.EstadoQR === "Generado" ? "#4CAF50" : "#F44336",
+							params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336",
 					}}
 				>
-					{params.row.EstadoQR === "Generado" ? "GENERADO" : "NO GENERADO"}
+					{params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
 				</Box>
 			),
 		},

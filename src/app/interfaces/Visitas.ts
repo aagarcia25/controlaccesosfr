@@ -63,3 +63,23 @@ export interface Estudiante {
   id: string;
   modi: string;
 }
+export const newEstudiante: Estudiante = {
+  Escolaridad: "",
+  EstadoQR: "",
+  FechaCreacion: "",
+  FechaFin: "",
+  FechaInicio: "",
+  InstitucionEducativa: "",
+  NoGaffete: "",
+  Nombre: "",
+  PersonaResponsable: "",
+  Sexo: "",
+  Telefono: "",
+  TipoEstudiante: "",
+  UltimaActualizacion: "",
+  UnidadAdministrativa: "",
+  creado: "",
+  deleted: "",
+  id: "",
+  modi: "",
+};

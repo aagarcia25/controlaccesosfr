@@ -292,12 +292,11 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			headerName: "Acciones",
 			description: "Acciones",
 			sortable: false,
-			minWidth: 150,
+			minWidth: 180,
 			flex: 1,
 			renderCell: (v: any) => {
 				return (
 					<>
-					
 						<ButtonsDetail
 							title={"Detalle del Estudiante"}
 							handleFunction={DetalleEstudiante}
@@ -331,10 +330,33 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			},
 		},
 		{
+			field: "EstadoQR",
+			headerName: "Estado QR",
+			minWidth: 100,
+			renderCell: (params: any) => (
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "center", // Centrar horizontalmente
+						alignItems: "center", // Centrar verticalmente
+						padding: "4px 10px",
+						borderRadius: "5px",
+						color: "white",
+						fontWeight: "bold",
+						backgroundColor:
+							params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336", 
+							textAlign: "center",
+					}}
+				>
+					{params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
+				</Box>
+			),
+		},
+		{
 			field: "TipoEstudiante",
 			headerName: "Tipo de estudiante",
 			description: "Tipo de estudiante",
-			minWidth: 200,
+			minWidth: 130,
 			flex: 1,
 		},
 		{
@@ -344,6 +366,15 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			minWidth: 200,
 			flex: 1,
 		},
+
+		{
+			field: "Telefono",
+			headerName: "Teléfono",
+			description: "Teléfono",
+			minWidth: 120,
+			flex: 1,
+		},
+
 		{
 			field: "UnidadAdministrativa",
 			headerName: "Unidad administrativa",
@@ -351,6 +382,20 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			minWidth: 170,
 			flex: 1,
 		},
+		{
+			field: "PersonaResponsable",
+			headerName: "Persona responsable",
+			description: "Persona responsable",
+			minWidth: 170,
+			flex: 1,
+		},
+		// {
+		// 	field: "Escolaridad",
+		// 	headerName: "Escolaridad",
+		// 	description: "Escolaridad",
+		// 	minWidth: 170,
+		// 	flex: 1,
+		// },
 		{
 			field: "FechaInicio",
 			headerName: "Fecha de inicio",
@@ -382,45 +427,26 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			},
 		},
 		{
-			field: "Telefono",
-			headerName: "Teléfono",
-			description: "Teléfono",
-			minWidth: 170,
-			flex: 1,
-		},
-		{
-			field: "Sexo",
-			headerName: "Sexo",
-			description: "Sexo",
-			minWidth: 100,
-			flex: 0.5,
-		},
-		{
-			field: "Escolaridad",
-			headerName: "Escolaridad",
-			description: "Escolaridad",
-			minWidth: 170,
-			flex: 1,
-		},
-		{
 			field: "InstitucionEducativa",
 			headerName: "Institución educativa",
 			description: "Institución educativa",
 			minWidth: 170,
 			flex: 1,
 		},
-		{
-			field: "PersonaResponsable",
-			headerName: "Persona responsable",
-			description: "Persona responsable",
-			minWidth: 170,
-			flex: 1,
-		},
+
+		// {
+		// 	field: "Sexo",
+		// 	headerName: "Sexo",
+		// 	description: "Sexo",
+		// 	minWidth: 100,
+		// 	flex: 0.5,
+		// },
+
 		{
 			field: "NoGaffete",
 			headerName: "Número de gaffete",
 			description: "Número de gaffete",
-			minWidth: 150,
+			minWidth: 120,
 			flex: 0.8,
 		},
 		{
@@ -431,7 +457,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 				<Button
 					variant="contained"
 					size="small"
-                    onClick={() => handleOpenExtenderFecha(params.row)}
+					onClick={() => handleOpenExtenderFecha(params.row)}
 					sx={{
 						backgroundColor: "black",
 						color: "white",
@@ -441,25 +467,6 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 				>
 					ACTUALIZAR
 				</Button>
-			),
-		},
-		{
-			field: "EstadoQR",
-			headerName: "Estado QR",
-			minWidth: 150,
-			renderCell: (params: any) => (
-				<Box
-					sx={{
-						padding: "4px 10px",
-						borderRadius: "5px",
-						color: "white",
-						fontWeight: "bold",
-						backgroundColor:
-							params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336",
-					}}
-				>
-					{params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
-				</Box>
 			),
 		},
 	];

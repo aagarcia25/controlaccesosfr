@@ -1,18 +1,24 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
-import { getUser } from "../../services/localStorage";
+import { getToken, getUser } from "../../services/localStorage";
 import { useEffect, useState } from "react";
-import { Estudiante } from "../../interfaces/Visitas";
+import { Estudiante, newEstudiante } from "../../interfaces/Visitas";
 import { CatalogosServices } from "../../services/catalogosServices";
 import Swal from "sweetalert2";
 import { Button, Grid, Typography, Box } from "@mui/material";
 import TitleComponent from "../componentes/TitleComponent";
+import { formatFecha } from "../../helpers/FormatDate";
 
-export const EstudiantesEscaneo = () => {
+export const EstudiantesEscaneo = (
+	//{ dataGlobal }: { dataGlobal: any }
+
+) => {
 	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
 	let params = useParams();
 	const navigate = useNavigate();
-	const [vrows, setVrows] = useState<Estudiante | null>(null);
+	const [vrows, setVrows] = useState<Estudiante >(newEstudiante);
+	const [URLruta, setURLRuta] = useState<string>("");
+	const [verarchivo, setverarchivo] = useState(false);
 
 	const [open, setopen] = useState(false);
 
@@ -155,8 +161,71 @@ export const EstudiantesEscaneo = () => {
 		});
 	};
 
+	const handleVer = (v: any) => {
+		setverarchivo(false);
+
+		let data = {
+			NUMOPERACION: 6,
+			P_ROUTE: vrows.id  + "/",
+			TOKEN: JSON.parse(String(getToken())),
+		};
+
+		CatalogosServices.Estudiante(data).then((res) => {
+			console.log("ress", res);
+			let data = res.RESPONSE[0];
+			if (res.SUCCESS) {
+				// Validar si FILE no existe o está vacío
+				if (!data.FILE || data.FILE.trim() === "") {
+					return; // Salir sin hacer nada
+				}
+
+				try {
+					// Eliminar encabezado y caracteres inválidos en la cadena Base64
+					let base64String = String(data.FILE)
+						.replace(/^data:image\/[a-zA-Z]+;base64,/, "") // Elimina encabezado Base64 si existe
+						.replace(/\s/g, ""); // Elimina espacios en blanco
+
+					// Asegúrate de que la longitud sea múltiplo de 4
+					while (base64String.length % 4 !== 0) {
+						base64String += "="; // Añadir "=" para completar
+					}
+
+					const bufferArray = base64ToArrayBuffer(base64String);
+					const blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO || "image/jpeg" });
+
+					const dataUrl = window.URL.createObjectURL(blobStore);
+
+					setURLRuta(dataUrl);
+					setverarchivo(true);
+				} catch (error) {
+					console.error("Error al convertir la imagen:", error);
+					Swal.fire("¡Error!", "La imagen no está correctamente codificada.", "error");
+				}
+			} else {
+				Swal.fire("¡Error!", res.STRMESSAGE, "error");
+			}
+		});
+	};
+
+
+	// Función para convertir Base64 a ArrayBuffer
+	const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
+		let binaryString = window.atob(base64);
+		let len = binaryString.length;
+		let bytes = new Uint8Array(len);
+
+		for (let i = 0; i < len; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+
+		return bytes.buffer;
+	};
+
 	useEffect(() => {
 		console.log("vrows", vrows);
+		//console.log("dataGlobal", dataGlobal);
+
+		handleVer(vrows.id);
 
 		handleEscaneo();
 	}, []);
@@ -214,7 +283,7 @@ export const EstudiantesEscaneo = () => {
 					<Grid item xs={12} sx={{ textAlign: "center" }}>
 						<Box
 							component="img"
-							src={"https://via.placeholder.com/200"}
+							src={URLruta}
 							alt="Foto del Estudiante"
 							sx={{
 								width: "200px",
@@ -296,8 +365,13 @@ export const EstudiantesEscaneo = () => {
 								Periodo:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{/* {formatFecha(vrows?.FechaVisita)} */}
-								{vrows?.FechaInicio}
+								{/* {formatFecha(vrows?.FechaInicio)} fecha con hora y minutos */}
+								{/* {vrows?.FechaInicio} fecha con hora y minutos largos */}
+								{vrows?.FechaInicio
+    ? new Date(vrows.FechaInicio).toLocaleDateString("es-MX")
+    : ""} - {vrows?.FechaFin
+		? new Date(vrows.FechaFin).toLocaleDateString("es-MX")
+		: ""}
 							</Typography>
 						</Grid>
 

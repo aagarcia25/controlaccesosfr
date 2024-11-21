@@ -357,6 +357,14 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			description: "Fecha de inicio",
 			minWidth: 120,
 			flex: 0.8,
+			valueFormatter: (params) => {
+				// Formatea la fecha
+				return new Intl.DateTimeFormat("es-MX", {
+					year: "numeric",
+					month: "2-digit",
+					day: "2-digit",
+				}).format(new Date(params.value));
+			},
 		},
 		{
 			field: "FechaFin",
@@ -364,6 +372,14 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			description: "Fecha de fin",
 			minWidth: 120,
 			flex: 0.8,
+			valueFormatter: (params) => {
+				// Formatea la fecha
+				return new Intl.DateTimeFormat("es-MX", {
+					year: "numeric",
+					month: "2-digit",
+					day: "2-digit",
+				}).format(new Date(params.value));
+			},
 		},
 		{
 			field: "Telefono",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Divider, Grid, Typography, Avatar } from "@mui/material";
+import { Box, Button, Divider, Grid, Typography, Avatar, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
 import { CatalogosServices } from "../../services/catalogosServices";
@@ -13,11 +13,11 @@ import axios from "axios";
 
 
 export const DetalleEstudiante = (
-    {dataGlobal}:{dataGlobal:any}
+	{ dataGlobal }: { dataGlobal: any }
 ) => {
 	const [verarchivo, setverarchivo] = useState(false);
 	const [URLruta, setURLRuta] = useState<string>("");
-    const [id, setId] = useState("");
+	const [id, setId] = useState("");
 	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
 
 
@@ -29,29 +29,29 @@ export const DetalleEstudiante = (
 
 	const descargaQR = () => {
 		let data = {
-		  id: dataGlobal.id,
-		  CHUSER: user.Id,
+			id: dataGlobal.id,
+			CHUSER: user.Id,
 		};
-	  
-		axios.get(process.env.REACT_APP_APPLICATION_BASE_URL +'makeQrEstudiante', {
-			params:data,
+
+		axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + 'makeQrEstudiante', {
+			params: data,
 			responseType: 'blob' // aseguramos que la respuesta se maneje como un blob
 		})
-		.then((response) => {
-			console.log("dataGlobal",dataGlobal);
-			
-			// Crear un enlace para descargar el PDF
-			const blob = new Blob([response.data], { type: 'application/pdf' });
-			const link = document.createElement('a');
-			link.href = URL.createObjectURL(blob);
-			link.download = dataGlobal.row.Nombre+'.pdf'; // Nombre por defecto para el archivo descargado
-			link.click(); // Simula el clic para iniciar la descarga
-		})
-		.catch((error) => {
-			console.error('Error al descargar el archivo PDF:', error);
-		});
+			.then((response) => {
+				console.log("dataGlobal", dataGlobal);
 
-		
+				// Crear un enlace para descargar el PDF
+				const blob = new Blob([response.data], { type: 'application/pdf' });
+				const link = document.createElement('a');
+				link.href = URL.createObjectURL(blob);
+				link.download = dataGlobal.row.Nombre + '.pdf';
+				link.click(); // Simula el clic para iniciar la descarga
+			})
+			.catch((error) => {
+				console.error('Error al descargar el archivo PDF:', error);
+			});
+
+
 		// CatalogosServices.makeQrEstudiante(data).then((response) => {
 		// 	 // Crear un enlace para descargar el PDF
 		// 	 const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -63,28 +63,28 @@ export const DetalleEstudiante = (
 		// // 	if (res.STRMESSAGE) {
 		// // 	  // El backend devuelve el PDF en formato base64
 		// // 	  const base64String = res.STRMESSAGE; // Asume que STRMESSAGE es la cadena base64 del PDF
-	  
+
 		// // 	  // Crear un Blob a partir del base64
 		// // 	  const byteCharacters = atob(base64String); // Decodifica el base64
-	  
+
 		// // 	  const byteArrays = [];
 		// // 	  for (let offset = 0; offset < byteCharacters.length; offset++) {
 		// // 		const byteArray = new Uint8Array(1);
 		// // 		byteArray[0] = byteCharacters.charCodeAt(offset);
 		// // 		byteArrays.push(byteArray);
 		// // 	  }
-	  
+
 		// // 	  // Crear un Blob con los datos binarios del PDF
 		// // 	  const blob = new Blob(byteArrays, { type: 'application/pdf' });
-	  
+
 		// // 	  // Crear un enlace para la descarga del PDF
 		// // 	  const link = document.createElement('a');
 		// // 	  link.href = URL.createObjectURL(blob);
 		// // 	  link.download = 'QR_Estudiante.pdf'; // Nombre del archivo a descargar
-	  
+
 		// // 	  // Simular un clic en el enlace para descargar el archivo
 		// // 	  link.click();
-	  
+
 		// // 	  // Mostrar el mensaje de éxito
 		// // 	  Toast.fire({
 		// // 		icon: 'success',
@@ -99,118 +99,118 @@ export const DetalleEstudiante = (
 		// }).catch((error) => {
 		//   Swal.fire("¡Error!", "Hubo un problema al generar el QR.", "error");
 		// });
-	  };
-	  
-
-// 	const handleVer = (v: any) => {
-//         setverarchivo(false);
-
-//     //setOpenSlider(true);
-//     let data = {
-//       NUMOPERACION: 6,
-//       P_ROUTE: dataGlobal.row.id,
-//       TOKEN: JSON.parse(String(getToken())),
-//     };
-// console.log("dataGlobal.row.id",dataGlobal.row.id,);
-
-//     CatalogosServices.Estudiante(data).then((res) => {
-// 			console.log("res.SUCCESS",res.SUCCESS);
-//       if (res.SUCCESS) {
-	
-		
-//         var bufferArray = base64ToArrayBuffer(String(res.RESPONSE.FILE));
-//         var blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO }); //type:"application/pdf"
-//         var data = window.URL.createObjectURL(blobStore);
-//         var link = document.createElement("a");
-//         document.body.appendChild(link);
-//         link.download = "Documento.pdf";
-//         link.href = data;
-//         setURLRuta(link.href);
-//         //setOpenSlider(false);
-//         setverarchivo(true);
-//       } else {
-//         //setOpenSlider(false);
-//         Swal.fire("¡Error!", res.STRMESSAGE, "error");
-//       }
-//     });
-//   };
-const handleVer = (v: any) => {
-    setverarchivo(false);
-    console.log("dataGlobal", dataGlobal.row.id);
-
-    let data = {
-        NUMOPERACION: 6,
-        P_ROUTE: dataGlobal.row.id + "/",
-        TOKEN: JSON.parse(String(getToken())),
-    };
-
-    CatalogosServices.Estudiante(data).then((res) => {
-        console.log("ress", res);
-        let data = res.RESPONSE[0];
-        if (res.SUCCESS) {
-            // Validar si FILE no existe o está vacío
-            if (!data.FILE || data.FILE.trim() === "") {
-                return; // Salir sin hacer nada
-            }
-
-            try {
-                // Eliminar encabezado y caracteres inválidos en la cadena Base64
-                let base64String = String(data.FILE)
-                    .replace(/^data:image\/[a-zA-Z]+;base64,/, "") // Elimina encabezado Base64 si existe
-                    .replace(/\s/g, ""); // Elimina espacios en blanco
-
-                // Asegúrate de que la longitud sea múltiplo de 4
-                while (base64String.length % 4 !== 0) {
-                    base64String += "="; // Añadir "=" para completar
-                }
-
-                const bufferArray = base64ToArrayBuffer(base64String);
-                const blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO || "image/jpeg" });
-
-                const dataUrl = window.URL.createObjectURL(blobStore);
-
-                setURLRuta(dataUrl);
-                setverarchivo(true);
-            } catch (error) {
-                console.error("Error al convertir la imagen:", error);
-                Swal.fire("¡Error!", "La imagen no está correctamente codificada.", "error");
-            }
-        } else {
-            Swal.fire("¡Error!", res.STRMESSAGE, "error");
-        }
-    });
-};
+	};
 
 
-// Función para convertir Base64 a ArrayBuffer
-const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
-    let binaryString = window.atob(base64);
-    let len = binaryString.length;
-    let bytes = new Uint8Array(len);
+	// 	const handleVer = (v: any) => {
+	//         setverarchivo(false);
 
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-    }
+	//     //setOpenSlider(true);
+	//     let data = {
+	//       NUMOPERACION: 6,
+	//       P_ROUTE: dataGlobal.row.id,
+	//       TOKEN: JSON.parse(String(getToken())),
+	//     };
+	// console.log("dataGlobal.row.id",dataGlobal.row.id,);
 
-    return bytes.buffer;
-};
+	//     CatalogosServices.Estudiante(data).then((res) => {
+	// 			console.log("res.SUCCESS",res.SUCCESS);
+	//       if (res.SUCCESS) {
+
+
+	//         var bufferArray = base64ToArrayBuffer(String(res.RESPONSE.FILE));
+	//         var blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO }); //type:"application/pdf"
+	//         var data = window.URL.createObjectURL(blobStore);
+	//         var link = document.createElement("a");
+	//         document.body.appendChild(link);
+	//         link.download = "Documento.pdf";
+	//         link.href = data;
+	//         setURLRuta(link.href);
+	//         //setOpenSlider(false);
+	//         setverarchivo(true);
+	//       } else {
+	//         //setOpenSlider(false);
+	//         Swal.fire("¡Error!", res.STRMESSAGE, "error");
+	//       }
+	//     });
+	//   };
+	const handleVer = (v: any) => {
+		setverarchivo(false);
+		console.log("dataGlobal", dataGlobal.row.id);
+
+		let data = {
+			NUMOPERACION: 6,
+			P_ROUTE: dataGlobal.row.id + "/",
+			TOKEN: JSON.parse(String(getToken())),
+		};
+
+		CatalogosServices.Estudiante(data).then((res) => {
+			console.log("ress", res);
+			let data = res.RESPONSE[0];
+			if (res.SUCCESS) {
+				// Validar si FILE no existe o está vacío
+				if (!data.FILE || data.FILE.trim() === "") {
+					return; // Salir sin hacer nada
+				}
+
+				try {
+					// Eliminar encabezado y caracteres inválidos en la cadena Base64
+					let base64String = String(data.FILE)
+						.replace(/^data:image\/[a-zA-Z]+;base64,/, "") // Elimina encabezado Base64 si existe
+						.replace(/\s/g, ""); // Elimina espacios en blanco
+
+					// Asegúrate de que la longitud sea múltiplo de 4
+					while (base64String.length % 4 !== 0) {
+						base64String += "="; // Añadir "=" para completar
+					}
+
+					const bufferArray = base64ToArrayBuffer(base64String);
+					const blobStore = new Blob([bufferArray], { type: res.RESPONSE.TIPO || "image/jpeg" });
+
+					const dataUrl = window.URL.createObjectURL(blobStore);
+
+					setURLRuta(dataUrl);
+					setverarchivo(true);
+				} catch (error) {
+					console.error("Error al convertir la imagen:", error);
+					Swal.fire("¡Error!", "La imagen no está correctamente codificada.", "error");
+				}
+			} else {
+				Swal.fire("¡Error!", res.STRMESSAGE, "error");
+			}
+		});
+	};
+
+
+	// Función para convertir Base64 a ArrayBuffer
+	const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
+		let binaryString = window.atob(base64);
+		let len = binaryString.length;
+		let bytes = new Uint8Array(len);
+
+		for (let i = 0; i < len; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+
+		return bytes.buffer;
+	};
 
 
 
-  useEffect(() => {
+	useEffect(() => {
 
-    handleVer(dataGlobal.row.id);
-    console.log("dataGlobal",dataGlobal);
-console.log("URLruta",URLruta);
+		handleVer(dataGlobal.row.id);
+		console.log("dataGlobal", dataGlobal);
+		console.log("URLruta", URLruta);
 
-    // if (breadcrumbs.length === 0) {
-    //   handleFunction();
-    // }
-    // setexplorerRoute(breadcrumbs.join(""));
-  }, [
-	//breadcrumbs
-]);
-  
+		// if (breadcrumbs.length === 0) {
+		//   handleFunction();
+		// }
+		// setexplorerRoute(breadcrumbs.join(""));
+	}, [
+		//breadcrumbs
+	]);
+
 	return (
 		<Box padding={4}>
 			{/* Título */}
@@ -237,11 +237,11 @@ console.log("URLruta",URLruta);
 						src="URLruta" // Reemplaza con la URL de la imagen del estudiante
 						sx={{ width: 120, height: 120, mx: "auto" }}
 					/> */}
-					<Avatar src={URLruta} 
+					<Avatar src={URLruta}
 						alt="Foto de Estudiante"
 						sx={{ width: 120, height: 120, mx: "auto" }}
 
-						/>
+					/>
 
 				</Grid>
 				{/* Información del Estudiante */}
@@ -268,22 +268,29 @@ console.log("URLruta",URLruta);
 					md={3}
 					textAlign={{ xs: "center", sm: "right" }}
 				>
-					<Button
-  variant="contained"
-  sx={{
-    backgroundColor: "black",
-    color: "white",  // Esto debería funcionar sin problemas
-    "&:hover": {
-      backgroundColor: "grey.300",
-      color: "black",
-    },
-    px: 3,
-  }}
-  startIcon={<DownloadIcon />}
-  onClick={descargaQR}  // Asegúrate de pasar la función correctamente
->
-  DESCARGAR QR
-</Button>
+					<Tooltip title={dataGlobal.row.EstadoQR==="1"? "Descarga QR en PDF":"No se ha generado QR"}>
+						<span>
+							<Button
+						variant="contained"
+						sx={{
+							backgroundColor: "black",
+							color: "white",  // Esto debería funcionar sin problemas
+							"&:hover": {
+								backgroundColor: "grey.300",
+								color: "black",
+							},
+							px: 3,
+						}}
+						startIcon={<DownloadIcon />}
+						onClick={descargaQR}  // Asegúrate de pasar la función correctamente
+						disabled={dataGlobal.row.EstadoQR==="1"? false:true}
+					>
+						DESCARGAR QR
+					</Button>
+						</span>
+						
+					</Tooltip>
+					
 				</Grid>
 			</Grid>
 
@@ -345,13 +352,13 @@ console.log("URLruta",URLruta);
 					</Grid>
 					<Grid item xs={12} sm={6} display={"flex"}>
 						<Typography sx={{ fontWeight: "bold" }}>
-							Fecha de Vigencia (Inicio): 
+							Fecha de Vigencia (Inicio):
 						</Typography>
-						<Typography>{dataGlobal.row.FechaInicio}</Typography> 
+						<Typography>{dataGlobal.row.FechaInicio}</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6} display={"flex"}>
 						<Typography sx={{ fontWeight: "bold" }}>
-							Fecha de Vigencia (Fin): 
+							Fecha de Vigencia (Fin):
 						</Typography>
 						<Typography>{dataGlobal.row.FechaFin}</Typography>
 					</Grid>
@@ -362,7 +369,7 @@ console.log("URLruta",URLruta);
 			<Section title="Horario y Asistencia">
 				<Grid container spacing={2}>
 					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography  sx={{ fontWeight: "bold" }}>
+						<Typography sx={{ fontWeight: "bold" }}>
 							Frecuencia de Asistencia:
 						</Typography>
 						<Typography >
@@ -370,13 +377,13 @@ console.log("URLruta",URLruta);
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography  sx={{ fontWeight: "bold" }}>
+						<Typography sx={{ fontWeight: "bold" }}>
 							Horario:
 						</Typography>
 						<Typography  >10:00 - 14:00</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography   sx={{ fontWeight: "bold" }}>
+						<Typography sx={{ fontWeight: "bold" }}>
 							Inicio del Programa:
 						</Typography>
 						<Typography  >15/01/2024</Typography>
@@ -388,13 +395,13 @@ console.log("URLruta",URLruta);
 						<Typography >15/06/2024</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography   sx={{ fontWeight: "bold" }}>
+						<Typography sx={{ fontWeight: "bold" }}>
 							Cantidad de Horas:
 						</Typography>
 						<Typography  >400</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography   sx={{ fontWeight: "bold" }}>
+						<Typography sx={{ fontWeight: "bold" }}>
 							Horas Acumuladas:
 						</Typography>
 						<Typography  >400</Typography>
@@ -409,7 +416,7 @@ console.log("URLruta",URLruta);
 					sx={{
 						backgroundColor: "#A57F52",
 						color: "white",
-						"&:hover": { backgroundColor: "grey.300",color: "black"},
+						"&:hover": { backgroundColor: "grey.300", color: "black" },
 					}}
 					onClick={() => handleClose()}
 				>

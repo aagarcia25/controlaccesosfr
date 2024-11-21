@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TitleComponent from "../componentes/TitleComponent";
-import { Box, Grid, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Grid, IconButton, TextField, ToggleButton, Tooltip, Typography } from "@mui/material";
 import ButtonsAdd from "../componentes/ButtonsAdd";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import { GridColDef } from "@mui/x-data-grid";
@@ -31,6 +31,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CustomizedDate from "../componentes/CustomizedDate";
 import dayjs, { Dayjs } from "dayjs";
 import MUIXDataGridEstudiantes from "../componentes/MUIXDataGridEstudiantes";
+import QrCodeIcon from '@mui/icons-material/QrCode';
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -57,7 +58,51 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
     const [selectedRow, setSelectedRow] = useState<any>(null);
     const [newFechaFin, setNewFechaFin] = useState("");
 	const [fFin, setFFin] = useState<Dayjs | null>();
+	const [selectionModel, setSelectionModel] = useState<any[]>([]);
 
+	const noSelection = () => {
+		if (selectionModel.length >= 1) {
+		  Swal.fire({
+			icon: "info",
+			title: "Se generará un QR único para cada registro seleccionado",
+			showDenyButton: true,
+			showCancelButton: false,
+			confirmButtonText: "Confirmar",
+			denyButtonText: `Cancelar`,
+		  }).then((result) => {
+			if (result.isConfirmed) {
+			  let data = {
+				NUMOPERACION: 9,
+				CHIDs: selectionModel,
+				CHUSER: user.Id,
+			  };
+	  
+			  CatalogosServices.Estudiante(data).then((res) => {
+				if (res.SUCCESS) {
+				  Toast.fire({
+					icon: "success",
+					title: "¡QR Generados!",
+				  });
+				  consulta();
+	  
+				  // Vaciar el modelo de selección para desmarcar los checkboxes
+				  setSelectionModel([]);
+				} else {
+				  Swal.fire("¡Error!", res.STRMESSAGE, "error");
+				}
+			  });
+			} else if (result.isDenied) {
+			  Swal.fire("No se realizaron cambios", "", "info");
+			}
+		  });
+		} else {
+		  Swal.fire({
+			title: "No se han seleccionado registros",
+			icon: "warning",
+		  });
+		}
+	  };
+	  
 
     const handleOpenExtenderFecha = (row: any) => {
         setSelectedRow(row);
@@ -473,6 +518,18 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						<Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
 							<ButtonsImport handleOpen={handleUpload} agregar={true} />
 						</Box>
+						<Tooltip title={"Generar QR Seleccionados"}>
+              <ToggleButton
+                value="check"
+                className="guardar"
+                size="small"
+                onChange={() => noSelection()}
+              >
+                <IconButton color="inherit" component="label" size="small">
+                  <QrCodeIcon />
+                </IconButton>
+              </ToggleButton>
+            </Tooltip>
 					</Grid>
 					<Grid item xs={12}>
 						<Box
@@ -482,7 +539,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 								overflowX: "auto",
 							}}
 						>
-							<MUIXDataGridEstudiantes columns={columnsRel} rows={data} />
+							<MUIXDataGridEstudiantes columns={columnsRel} rows={data} setRowSelected={setSelectionModel}
+							/>
 						</Box>
 					</Grid>
 				</Grid>

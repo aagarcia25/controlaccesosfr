@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
 import { CatalogosServices } from "../../services/catalogosServices";
 import { base64ToArrayBuffer } from "../../helpers/Files";
-import { getToken } from "../../services/localStorage";
+import { getToken, getUser } from "../../services/localStorage";
 import Swal from "sweetalert2";
 import { json } from "stream/consumers";
+import { Toast } from "../../helpers/Toast";
+import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import axios from "axios";
 
 
 export const DetalleEstudiante = (
@@ -15,12 +18,89 @@ export const DetalleEstudiante = (
 	const [verarchivo, setverarchivo] = useState(false);
 	const [URLruta, setURLRuta] = useState<string>("");
     const [id, setId] = useState("");
+	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
+
 
 	const navigate = useNavigate();
 
 	const handleClose = () => {
 		navigate("/inicio/ControlEstudiantes");
 	};
+
+	const descargaQR = () => {
+		let data = {
+		  id: dataGlobal.id,
+		  CHUSER: user.Id,
+		};
+	  
+		axios.get(process.env.REACT_APP_APPLICATION_BASE_URL +'makeQrEstudiante', {
+			params:data,
+			responseType: 'blob' // aseguramos que la respuesta se maneje como un blob
+		})
+		.then((response) => {
+			console.log("dataGlobal",dataGlobal);
+			
+			// Crear un enlace para descargar el PDF
+			const blob = new Blob([response.data], { type: 'application/pdf' });
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.download = dataGlobal.row.Nombre+'.pdf'; // Nombre por defecto para el archivo descargado
+			link.click(); // Simula el clic para iniciar la descarga
+		})
+		.catch((error) => {
+			console.error('Error al descargar el archivo PDF:', error);
+		});
+
+		
+		// CatalogosServices.makeQrEstudiante(data).then((response) => {
+		// 	 // Crear un enlace para descargar el PDF
+		// 	 const blob = new Blob([response.data], { type: 'application/pdf' });
+		// 	 const link = document.createElement('a');
+		// 	 link.href = URL.createObjectURL(blob);
+		// 	 link.download = 'documento.pdf'; // Nombre por defecto para el archivo descargado
+		// 	 link.click(); // Simula el clic para iniciar la descarga
+		// //   if (res.SUCCESS) {
+		// // 	if (res.STRMESSAGE) {
+		// // 	  // El backend devuelve el PDF en formato base64
+		// // 	  const base64String = res.STRMESSAGE; // Asume que STRMESSAGE es la cadena base64 del PDF
+	  
+		// // 	  // Crear un Blob a partir del base64
+		// // 	  const byteCharacters = atob(base64String); // Decodifica el base64
+	  
+		// // 	  const byteArrays = [];
+		// // 	  for (let offset = 0; offset < byteCharacters.length; offset++) {
+		// // 		const byteArray = new Uint8Array(1);
+		// // 		byteArray[0] = byteCharacters.charCodeAt(offset);
+		// // 		byteArrays.push(byteArray);
+		// // 	  }
+	  
+		// // 	  // Crear un Blob con los datos binarios del PDF
+		// // 	  const blob = new Blob(byteArrays, { type: 'application/pdf' });
+	  
+		// // 	  // Crear un enlace para la descarga del PDF
+		// // 	  const link = document.createElement('a');
+		// // 	  link.href = URL.createObjectURL(blob);
+		// // 	  link.download = 'QR_Estudiante.pdf'; // Nombre del archivo a descargar
+	  
+		// // 	  // Simular un clic en el enlace para descargar el archivo
+		// // 	  link.click();
+	  
+		// // 	  // Mostrar el mensaje de éxito
+		// // 	  Toast.fire({
+		// // 		icon: 'success',
+		// // 		title: '¡QR Generado y descargado!',
+		// // 	  });
+		// // 	} else {
+		// // 	  Swal.fire("¡Error!", "No se pudo generar el QR", "error");
+		// // 	}
+		// //   } else {
+		// // 	Swal.fire("¡Error!", res.STRMESSAGE, "error");
+		// //   }
+		// }).catch((error) => {
+		//   Swal.fire("¡Error!", "Hubo un problema al generar el QR.", "error");
+		// });
+	  };
+	  
 
 // 	const handleVer = (v: any) => {
 //         setverarchivo(false);
@@ -189,17 +269,21 @@ console.log("URLruta",URLruta);
 					textAlign={{ xs: "center", sm: "right" }}
 				>
 					<Button
-						variant="contained"
-						sx={{
-							backgroundColor: "black",
-							color: "white",
-							"&:hover": { backgroundColor: "grey.300", color: "black" },
-							px: 3,
-						}}
-						startIcon={<DownloadIcon />} // Ícono de descarga de Material-UI
-					>
-						DESCARGAR QR
-					</Button>
+  variant="contained"
+  sx={{
+    backgroundColor: "black",
+    color: "white",  // Esto debería funcionar sin problemas
+    "&:hover": {
+      backgroundColor: "grey.300",
+      color: "black",
+    },
+    px: 3,
+  }}
+  startIcon={<DownloadIcon />}
+  onClick={descargaQR}  // Asegúrate de pasar la función correctamente
+>
+  DESCARGAR QR
+</Button>
 				</Grid>
 			</Grid>
 

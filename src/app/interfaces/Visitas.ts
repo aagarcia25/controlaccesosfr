@@ -62,6 +62,13 @@ export interface Estudiante {
   deleted: string;
   id: string;
   modi: string;
+  FechaEntrada: string;
+  FechaSalida: string;
+  Correo:string;
+  Frecuencia:string;
+  HorarioDesde:string;
+  HorarioHasta:string;
+
 }
 export const newEstudiante: Estudiante = {
   Escolaridad: "",
@@ -82,5 +89,11 @@ export const newEstudiante: Estudiante = {
   deleted: "",
   id: "",
   modi: "",
+  FechaEntrada: "",
+  FechaSalida: "",
+  Correo:"",
+  Frecuencia:"",
+  HorarioDesde:"",
+  HorarioHasta:"",
 
 };

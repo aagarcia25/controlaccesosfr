@@ -16,7 +16,7 @@ export const EstudiantesEscaneo = (
 	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
 	let params = useParams();
 	const navigate = useNavigate();
-	const [vrows, setVrows] = useState<Estudiante >(newEstudiante);
+	const [vrows, setVrows] = useState<Estudiante>(newEstudiante);
 	const [URLruta, setURLRuta] = useState<string>("");
 	const [verarchivo, setverarchivo] = useState(false);
 
@@ -28,17 +28,17 @@ export const EstudiantesEscaneo = (
 
 	const handleentrada = () => {
 		let data = {
-			NUMOPERACION: 13,
+			NUMOPERACION: 10,
 			CHID: params.id,
 			CHUSER: user.Id,
 		};
 
-		CatalogosServices.visita_index(data).then((res) => {
+		CatalogosServices.Estudiante(data).then((res) => {
 			if (res.SUCCESS) {
 				Swal.fire({
 					title: "!Exito!",
 					icon: "success",
-					html: "Se Registro la Fecha de Ingreso",
+					html: "Se Registro la Entrada",
 					showDenyButton: false,
 					showCancelButton: false,
 					confirmButtonText: "Aceptar",
@@ -54,46 +54,49 @@ export const EstudiantesEscaneo = (
 		});
 	};
 
-	// const handlesalida = () => {
-	//   let data = {
-	//     NUMOPERACION: 14,
-	//     CHID: params.id,
-	//     CHUSER: user.Id,
-	//   };
+	const handlesalida = () => {
+		let data = {
+			NUMOPERACION: 11,
+			CHID: params.id,
+			CHUSER: user.Id,
+		};
 
-	//   CatalogosServices.visita_index(data).then((res) => {
-	//     if (res.SUCCESS) {
-	//       Swal.fire({
-	//         title: "!Exito!",
-	//         icon: "success",
-	//         html: "Se Registro la Fecha de Salida, el QR ya no es Valido",
-	//         showDenyButton: false,
-	//         showCancelButton: false,
-	//         confirmButtonText: "Aceptar",
-	//         background: "EBEBEB",
-	//       }).then((result) => {
-	//         if (result.isConfirmed) {
-	//           navigate("/");
-	//         }
-	//       });
-	//     } else {
-	//       Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-	//     }
-	//   });
-	// };
+		CatalogosServices.Estudiante(data).then((res) => {
+			if (res.SUCCESS) {
+				Swal.fire({
+					title: "!Exito!",
+					icon: "success",
+					html: "Se Registro la Salida",
+					showDenyButton: false,
+					showCancelButton: false,
+					confirmButtonText: "Aceptar",
+					background: "EBEBEB",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						navigate("/");
+					}
+				});
+			} else {
+				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+			}
+		});
+	};
 
 	const handleSend = () => {
 		let data = {
-			NUMOPERACION: 4,
+			NUMOPERACION: 7,
 			CHID: params.id,
 		};
 
 		CatalogosServices.Estudiante(data).then((res) => {
-			console.log("res", res);
+			console.log("res4s", res);
 
 			if (res.SUCCESS) {
-				if (res.RESPONSE[0]) {
-					setVrows(res.RESPONSE[0]);
+				if (res.RESPONSE) {
+					//let aux= res.RESPONSE.find((Estudiante: Estudiante) =>Estudiante.id===data.CHID)
+					//setVrows(aux||newEstudiante);
+					setVrows(res.RESPONSE.datos);
+
 					setopen(false);
 				} else {
 					Swal.fire({
@@ -128,15 +131,15 @@ export const EstudiantesEscaneo = (
 		};
 
 		CatalogosServices.Estudiante(data).then((resultado) => {
-			console.log("resultado", resultado);
+			// console.log("resultado", resultado);
 
 			if (resultado.SUCCESS) {
 				if (resultado.RESPONSE && resultado.RESPONSE.datos) {
 					handleSend();
 
 					setVrows(resultado.RESPONSE.datos); // Guarda los datos del estudiante
-					
-					setopen(false); // Cierra el estado de "escaneo"
+
+					//setopen(false); // Cierra el estado de "escaneo"
 				} else {
 					Swal.fire({
 						title: "QR no Valido",
@@ -167,14 +170,16 @@ export const EstudiantesEscaneo = (
 
 		let data = {
 			NUMOPERACION: 6,
-			P_ROUTE: vrows.id  + "/",
+			P_ROUTE: vrows.id + "/",
 			TOKEN: JSON.parse(String(getToken())),
 		};
-console.log("vrows.id", vrows.id);
+		// console.log("vrows.id", vrows.id);
 
 		CatalogosServices.Estudiante(data).then((res) => {
-			console.log("ress", res);
+
+			// console.log("ress", res);
 			let data = res.RESPONSE[0];
+
 			if (res.SUCCESS) {
 				// Validar si FILE no existe o está vacío
 				if (!data.FILE || data.FILE.trim() === "") {
@@ -198,8 +203,11 @@ console.log("vrows.id", vrows.id);
 					const dataUrl = window.URL.createObjectURL(blobStore);
 
 					setURLRuta(dataUrl);
-					setverarchivo(true);
+					setverarchivo(true); setopen(false); // Cierra el estado de "escaneo"
+
 				} catch (error) {
+					setopen(false); // Cierra el estado de "escaneo"
+
 					console.error("Error al convertir la imagen:", error);
 					Swal.fire("¡Error!", "La imagen no está correctamente codificada.", "error");
 				}
@@ -224,17 +232,20 @@ console.log("vrows.id", vrows.id);
 	};
 
 	useEffect(() => {
-		console.log("vrows", vrows);
+		// console.log("vrows", vrows);
 		//console.log("dataGlobal", dataGlobal);
-		handleEscaneo()
-		
-
-		;
+		handleEscaneo();
 	}, []);
-	useEffect(()=>{
-		if(vrows.id!="")
-		handleVer(vrows.id);
-	},[vrows])
+
+
+	useEffect(() => {
+		if (vrows.id != "")
+			handleVer(vrows.id);
+		// console.log("FechaEntrada", vrows);
+		// console.log("FechaSalida", vrows?.FechaSalida);
+
+
+	}, [vrows])
 
 	return (
 		<>
@@ -327,7 +338,7 @@ console.log("vrows.id", vrows.id);
 								Unidad Administrativa:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{vrows?.UnidadAdministrativa}  
+								{vrows?.UnidadAdministrativa}
 							</Typography>
 						</Grid>
 
@@ -341,7 +352,7 @@ console.log("vrows.id", vrows.id);
 								Persona Responsable:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{vrows?.PersonaResponsable}  
+								{vrows?.PersonaResponsable}
 							</Typography>
 						</Grid>
 					</Grid>
@@ -357,7 +368,7 @@ console.log("vrows.id", vrows.id);
 								Correo :
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{/* {vrows?.EmailNotificacion} */} 
+								{vrows?.Correo}
 							</Typography>
 						</Grid>
 
@@ -374,10 +385,10 @@ console.log("vrows.id", vrows.id);
 								{/* {formatFecha(vrows?.FechaInicio)} fecha con hora y minutos */}
 								{/* {vrows?.FechaInicio} fecha con hora y minutos largos */}
 								{vrows?.FechaInicio
-    ? new Date(vrows.FechaInicio).toLocaleDateString("es-MX")
-    : ""} - {vrows?.FechaFin
-		? new Date(vrows.FechaFin).toLocaleDateString("es-MX")
-		: ""}
+									? new Date(vrows.FechaInicio).toLocaleDateString("es-MX")
+									: ""} - {vrows?.FechaFin
+										? new Date(vrows.FechaFin).toLocaleDateString("es-MX")
+										: ""}
 							</Typography>
 						</Grid>
 
@@ -410,8 +421,8 @@ console.log("vrows.id", vrows.id);
 								Horario:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{/* {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr} */} 
-							 
+								{/* {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr} */}
+
 							</Typography>
 						</Grid>
 
@@ -426,7 +437,7 @@ console.log("vrows.id", vrows.id);
 								Horas Acumuladas:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{/* {vrows?.entidadreceptor} */}  
+								{/* {vrows?.entidadreceptor} */}
 							</Typography>
 						</Grid>
 					</Grid>
@@ -444,20 +455,20 @@ console.log("vrows.id", vrows.id);
 								gap: "20px", // Espaciado entre botones
 							}}
 						>
-							{/* {vrows?.FechaEntrada ? (
+							{vrows.FechaEntrada !="" && vrows.FechaEntrada !==null ?(
 								<>
 									<Button
-										 
-										onClick={() => handlesalida()} 
+
+										onClick={() => handlesalida()}
 										sx={{
-											backgroundColor:"#000000",
+											backgroundColor: "#000000",
 											color: "white",
-                      padding: { xs: "12px 22px", md: "15px 25px" },
-                      fontSize: { xs: "20px", md: "22px" },
-                      borderRadius: "10px",
-                      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+											padding: { xs: "12px 22px", md: "15px 25px" },
+											fontSize: { xs: "20px", md: "22px" },
+											borderRadius: "10px",
+											boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
 											"&:hover": {
-												backgroundColor:"#D3D3D3",
+												backgroundColor: "#D3D3D3",
 											},
 										}}
 									>
@@ -466,16 +477,16 @@ console.log("vrows.id", vrows.id);
 								</>
 							) : (
 								<Button
-									 
+
 									onClick={() => handleentrada()}
 									variant="contained"
 									sx={{
 										backgroundColor: "#000000",
 										color: "white",
-                    padding: { xs: "12px 22px", md: "15px 25px" },
-                    fontSize: { xs: "20px", md: "22px" },
-                    borderRadius: "10px",
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+										padding: { xs: "12px 22px", md: "15px 25px" },
+										fontSize: { xs: "20px", md: "22px" },
+										borderRadius: "10px",
+										boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
 										"&:hover": {
 											backgroundColor: "#D3D3D3",
 										},
@@ -483,22 +494,22 @@ console.log("vrows.id", vrows.id);
 								>
 									{"Registrar Entrada"}
 								</Button>
-							)} */}
+							)}
 
 							<Button
-							 
-								onClick={() => handlesalir()} 
-                sx={{
-                  backgroundColor: "#A57F52",
-                  color: "white",
-                  padding: { xs: "12px 22px", md: "15px 25px" },
-                  fontSize: { xs: "20px", md: "22px" },
-                  borderRadius: "10px",
-                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                  "&:hover": {
-                    backgroundColor:"#D3D3D3", // Hover gris
-                  },
-                }}
+
+								onClick={() => handlesalir()}
+								sx={{
+									backgroundColor: "#A57F52",
+									color: "white",
+									padding: { xs: "12px 22px", md: "15px 25px" },
+									fontSize: { xs: "20px", md: "22px" },
+									borderRadius: "10px",
+									boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+									"&:hover": {
+										backgroundColor: "#D3D3D3", // Hover gris
+									},
+								}}
 							>
 								{"Salir"}
 							</Button>

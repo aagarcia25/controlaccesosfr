@@ -10,6 +10,7 @@ import { json } from "stream/consumers";
 import { Toast } from "../../helpers/Toast";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import axios from "axios";
+import { formatFecha } from "../../helpers/FormatDate";
 
 
 export const DetalleEstudiante = (
@@ -258,8 +259,7 @@ export const DetalleEstudiante = (
 						Horas Acumuladas: 400
 					</Typography>
 					<Typography sx={{ color: "#555" }}>
-						Periodo: {dataGlobal.row.FechaInicio} - {dataGlobal.row.FechaFin}
-					</Typography>
+					Periodo: {formatFecha(dataGlobal.row.FechaInicio)} - {formatFecha(dataGlobal.row.FechaFin)}					</Typography>
 				</Grid>
 				<Grid
 					item
@@ -354,13 +354,13 @@ export const DetalleEstudiante = (
 						<Typography sx={{ fontWeight: "bold" }}>
 							Fecha de Vigencia (Inicio):
 						</Typography>
-						<Typography>{dataGlobal.row.FechaInicio}</Typography>
+						<Typography>{formatFecha(dataGlobal.row.FechaInicio)}</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6} display={"flex"}>
 						<Typography sx={{ fontWeight: "bold" }}>
 							Fecha de Vigencia (Fin):
 						</Typography>
-						<Typography>{dataGlobal.row.FechaFin}</Typography>
+						<Typography>{formatFecha(dataGlobal.row.FechaFin)}</Typography>
 					</Grid>
 				</Grid>
 			</Section>

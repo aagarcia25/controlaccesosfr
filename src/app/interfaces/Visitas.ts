@@ -68,6 +68,7 @@ export interface Estudiante {
   Frecuencia:string;
   HorarioDesde:string;
   HorarioHasta:string;
+  HorasTotales:string;
 
 }
 export const newEstudiante: Estudiante = {
@@ -95,5 +96,5 @@ export const newEstudiante: Estudiante = {
   Frecuencia:"",
   HorarioDesde:"",
   HorarioHasta:"",
-
+  HorasTotales:"",
 };

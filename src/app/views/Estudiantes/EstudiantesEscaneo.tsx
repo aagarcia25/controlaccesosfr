@@ -421,7 +421,7 @@ export const EstudiantesEscaneo = (
 								Horario:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{/* {vrows?.Duracion} Horas / {vrows?.pisoreceptorrr} */}
+								{vrows?.HorarioDesde} - {vrows?.HorarioHasta} hrs
 
 							</Typography>
 						</Grid>
@@ -437,7 +437,7 @@ export const EstudiantesEscaneo = (
 								Horas Acumuladas:
 							</Typography>
 							<Typography sx={{ fontSize: { xs: "20px", md: "22px" } }}>
-								{/* {vrows?.entidadreceptor} */}
+								{vrows?.HorasTotales}
 							</Typography>
 						</Grid>
 					</Grid>

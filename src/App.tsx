@@ -151,7 +151,7 @@ function App() {
       bloqueoStatus === undefined
     ) {
       const decoded: UserLogin = jwt_decode(String(jwt));
-      if ((decoded.exp - Date.now() / 1000) / 60 > 44) {
+      if ((decoded.exp - Date.now() / 1000) / 60 > 5) {
         setToken(jwt);
         setRfToken(refjwt);
         setIdApp(idapp);
@@ -185,7 +185,7 @@ function App() {
       getRfToken()
     ) {
       const decoded: UserLogin = jwt_decode(String(getToken()));
-      if ((decoded.exp - Date.now() / 1000) / 60 > 44.5) {
+      if ((decoded.exp - Date.now() / 1000) / 60 > 5) {
         verificatoken(true);
       } else {
         handleOnIdle();

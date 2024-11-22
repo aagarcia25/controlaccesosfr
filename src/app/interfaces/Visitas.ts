@@ -42,3 +42,59 @@ export interface agenda {
   color?: string;
   estatus?: string;
 }
+
+export interface Estudiante {
+  Escolaridad: string;
+  EstadoQR: string;
+  FechaCreacion: string;
+  FechaFin: string;
+  FechaInicio: string;
+  InstitucionEducativa: string;
+  NoGaffete: string;
+  Nombre: string;
+  PersonaResponsable: string;
+  Sexo: string;
+  Telefono: string;
+  TipoEstudiante: string;
+  UltimaActualizacion: string;
+  UnidadAdministrativa: string;
+  creado: string;
+  deleted: string;
+  id: string;
+  modi: string;
+  FechaEntrada: string;
+  FechaSalida: string;
+  Correo:string;
+  Frecuencia:string;
+  HorarioDesde:string;
+  HorarioHasta:string;
+  HorasTotales:string;
+
+}
+export const newEstudiante: Estudiante = {
+  Escolaridad: "",
+  EstadoQR: "",
+  FechaCreacion: "",
+  FechaFin: "",
+  FechaInicio: "",
+  InstitucionEducativa: "",
+  NoGaffete: "",
+  Nombre: "",
+  PersonaResponsable: "",
+  Sexo: "",
+  Telefono: "",
+  TipoEstudiante: "",
+  UltimaActualizacion: "",
+  UnidadAdministrativa: "",
+  creado: "",
+  deleted: "",
+  id: "",
+  modi: "",
+  FechaEntrada: "",
+  FechaSalida: "",
+  Correo:"",
+  Frecuencia:"",
+  HorarioDesde:"",
+  HorarioHasta:"",
+  HorasTotales:"",
+};

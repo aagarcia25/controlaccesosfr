@@ -116,6 +116,9 @@ export const VisistasEscaneo = () => {
       CHUSER: user.Id,
     };
     CatalogosServices.visita_index(data).then((resultado) => {
+      console.log("resultado",resultado);
+      console.log("data",data);
+
       if (resultado.SUCCESS) {
         if (resultado.RESPONSE.length > 0) {
           handleSend();

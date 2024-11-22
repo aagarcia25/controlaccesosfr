@@ -135,6 +135,7 @@ export const EstudiantesEscaneo = (
 					handleSend();
 
 					setVrows(resultado.RESPONSE.datos); // Guarda los datos del estudiante
+					
 					setopen(false); // Cierra el estado de "escaneo"
 				} else {
 					Swal.fire({
@@ -169,6 +170,7 @@ export const EstudiantesEscaneo = (
 			P_ROUTE: vrows.id  + "/",
 			TOKEN: JSON.parse(String(getToken())),
 		};
+console.log("vrows.id", vrows.id);
 
 		CatalogosServices.Estudiante(data).then((res) => {
 			console.log("ress", res);
@@ -224,11 +226,15 @@ export const EstudiantesEscaneo = (
 	useEffect(() => {
 		console.log("vrows", vrows);
 		//console.log("dataGlobal", dataGlobal);
+		handleEscaneo()
+		
 
-		handleVer(vrows.id);
-
-		handleEscaneo();
+		;
 	}, []);
+	useEffect(()=>{
+		if(vrows.id!="")
+		handleVer(vrows.id);
+	},[vrows])
 
 	return (
 		<>

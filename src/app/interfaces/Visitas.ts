@@ -82,4 +82,5 @@ export const newEstudiante: Estudiante = {
   deleted: "",
   id: "",
   modi: "",
+
 };

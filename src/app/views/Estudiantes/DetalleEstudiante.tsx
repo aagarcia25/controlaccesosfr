@@ -250,15 +250,15 @@ export const DetalleEstudiante = (
 					{" "}
 					{/* Reduce el marginLeft para acercar el texto a la imagen */}
 					<Typography
-						variant="h6"
+						 variant="h5"
 						sx={{ fontWeight: "bold", color: "#A57F52" }}
 					>
 						{dataGlobal.row.Nombre}
 					</Typography>
-					<Typography sx={{ color: "#333" }}>
+					<Typography sx={{ color: "#333", fontSize: "1.4rem" }}>
 						Horas Acumuladas: 400
 					</Typography>
-					<Typography sx={{ color: "#555" }}>
+					<Typography sx={{ color: "#333", fontSize: "1.4rem" }}>
 					Periodo: {formatFecha(dataGlobal.row.FechaInicio)} - {formatFecha(dataGlobal.row.FechaFin)}					</Typography>
 				</Grid>
 				<Grid
@@ -298,22 +298,22 @@ export const DetalleEstudiante = (
 			<Section title="Información Básica">
 				<Grid container spacing={2}>
 					<Grid item xs={12} sm={6}>
-						<Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							<strong>Tipo de Estudiante:</strong> {dataGlobal.row.TipoEstudiante}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
-						<Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							<strong>Número de Gafete:</strong> {dataGlobal.row.NoGaffete}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
-						<Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							<strong>Teléfono:</strong> {dataGlobal.row.Telefono}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={6}>
-						<Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							<strong>Género:</strong> {dataGlobal.row.Sexo}
 						</Typography>
 					</Grid>
@@ -324,17 +324,12 @@ export const DetalleEstudiante = (
 			<Section title="Información Académica">
 				<Grid container spacing={2}>
 					<Grid item xs={12} sm={6}>
-						<Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							<strong>Escolaridad:</strong> {dataGlobal.row.Escolaridad}
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6}>
-						<Typography>
-							<strong>Persona Responsable:</strong> {dataGlobal.row.PersonaResponsable}
-						</Typography>
-					</Grid>
 					<Grid item xs={12} sm={12}>
-						<Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							<strong>Instituto Educativo:</strong> {dataGlobal.row.InstitucionEducativa}
 						</Typography>
 					</Grid>
@@ -344,85 +339,60 @@ export const DetalleEstudiante = (
 			{/* Sección de Información Administrativa */}
 			<Section title="Información Administrativa">
 				<Grid container spacing={2}>
-					<Grid item xs={12} sm={12} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Unidad Administrativa:
+					<Grid item xs={12} sm={12} display={"flex"} >
+						<Typography sx={{ fontWeight: "bold",fontSize: "1.3rem"  }} paddingRight={1}>
+							Unidad Administrativa: 
 						</Typography>
-						<Typography>Despacho del Tesorero</Typography>
+						<Typography  sx={{ fontSize: "1.3rem" }}> Despacho del Tesorero</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Fecha de Vigencia (Inicio):
+					<Grid item xs={12} sm={12}>
+						<Typography sx={{ fontSize: "1.3rem" }}>
+							<strong>Persona Responsable:</strong> {dataGlobal.row.PersonaResponsable}
 						</Typography>
-						<Typography>{formatFecha(dataGlobal.row.FechaInicio)}</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Fecha de Vigencia (Fin):
-						</Typography>
-						<Typography>{formatFecha(dataGlobal.row.FechaFin)}</Typography>
-					</Grid>
+ 
 				</Grid>
 			</Section>
 
 			{/* Sección de Horario y Asistencia */}
 			<Section title="Horario y Asistencia">
 				<Grid container spacing={2}>
-					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Frecuencia de Asistencia:
+					<Grid item xs={12} sm={12} md={12} display={"flex"}>
+						<Typography sx={{ fontWeight: "bold",fontSize: "1.3rem"  }} paddingRight={1}>
+							Frecuencia de Asistencia: 
 						</Typography>
-						<Typography >
+						<Typography sx={{ fontSize: "1.3rem" }}>
 							Lunes, Miércoles, Viernes
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
+					<Grid item xs={12} sm={12} md={12} display={"flex"}>
+						<Typography sx={{ fontWeight: "bold",fontSize: "1.3rem"  }} paddingRight={1}>
 							Horario:
 						</Typography>
-						<Typography  >10:00 - 14:00</Typography>
+						<Typography sx={{ fontSize: "1.3rem" }} > 10:00 - 14:00</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Inicio del Programa:
-						</Typography>
-						<Typography  >15/01/2024</Typography>
-					</Grid>
-					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Fin del Programa:
-						</Typography>
-						<Typography >15/06/2024</Typography>
-					</Grid>
-					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Cantidad de Horas:
-						</Typography>
-						<Typography  >400</Typography>
-					</Grid>
-					<Grid item xs={12} sm={6} md={6} display={"flex"}>
-						<Typography sx={{ fontWeight: "bold" }}>
-							Horas Acumuladas:
-						</Typography>
-						<Typography  >400</Typography>
-					</Grid>
+ 
 				</Grid>
 			</Section>
 
 			{/* Botón de Cerrar */}
-			<Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+			<Grid item xs={12} sm={12} sx={{ display: "flex", justifyContent: "flex-end"}}>
 				<Button
 					variant="contained"
 					sx={{
 						backgroundColor: "#A57F52",
 						color: "white",
+						fontSize: "1.2rem", // Aumenta el tamaño del texto del botón
+						padding: "10px 10px", // Aumenta el tamaño del botón
+						width: { xs: "100%", sm: "auto" }, // 100% del ancho en móviles
+						maxWidth: "500px", // Define un ancho máximo para pantallas más grandes
 						"&:hover": { backgroundColor: "grey.300", color: "black" },
 					}}
 					onClick={() => handleClose()}
 				>
 					CERRAR
 				</Button>
-			</Box>
+			</Grid>
 		</Box>
 	);
 };
@@ -443,7 +413,7 @@ const Section = ({
 			sx={{ mb: 1, marginTop: 2 }}
 		>
 			<Grid item xs={12} sm="auto" >
-				<Typography variant="body1" sx={{ fontWeight: "bold", color: "#A57F52", }}>
+				<Typography variant="body1" sx={{ fontWeight: "bold", color: "#A57F52", fontSize: "1.5rem"  }}>
 					• {title}
 				</Typography>
 			</Grid>

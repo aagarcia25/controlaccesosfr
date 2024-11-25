@@ -533,26 +533,36 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						md={4}
 						lg={3}
 						display="flex"
-						alignItems="center"
+						alignItems="center" 
 					>
-						<Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
-							<ButtonsAdd handleOpen={handleOpen} agregar={true} />
+						<Box sx={{ padding: "0px 8px" }}>
+							<ButtonsAdd
+								handleOpen={handleOpen}
+								agregar={true}
+							/>
 						</Box>
-						<Box sx={{ transform: "scale(0.8)", margin: 0, padding: 0 }}>
+						<Box sx={{ padding: "4px 8px" }}>
 							<ButtonsImport handleOpen={handleUpload} agregar={true} />
 						</Box>
 						<Tooltip title={"Generar QR Seleccionados"}>
-              <ToggleButton
-                value="check"
-                className="guardar"
-                size="small"
-                onChange={() => noSelection()}
-              >
-                <IconButton color="inherit" component="label" size="small">
-                  <QrCodeIcon />
-                </IconButton>
-              </ToggleButton>
-            </Tooltip>
+							<ToggleButton
+								value="check"
+								className="guardar"
+								size="small"
+								onChange={() => noSelection()}
+								sx={{
+									padding: "8px", // Ajusta el tamaño del botón 
+								  }}
+							>
+								<IconButton
+									color="inherit"
+									component="label"
+									size="small"
+								>
+									<QrCodeIcon />
+								</IconButton>
+							</ToggleButton>
+						</Tooltip>
 					</Grid>
 					<Grid item xs={12}>
 						<Box
@@ -562,7 +572,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 								overflowX: "auto",
 							}}
 						>
-							<MUIXDataGridEstudiantes columns={columnsRel} rows={data} setRowSelected={setSelectionModel}
+							<MUIXDataGridEstudiantes
+								columns={columnsRel}
+								rows={data}
+								setRowSelected={setSelectionModel}
 							/>
 						</Box>
 					</Grid>
@@ -614,10 +627,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 							Fecha de Fin Actual: {selectedRow?.FechaFin || "N/A"}
 						</Typography>
 						<CustomizedDate
-								value={fFin}
-								label={"Fecha de Vigencia (Inicio)"}
-								onchange={handleFilterChangeFFin}
-							/>
+							value={fFin}
+							label={"Fecha de Vigencia (Inicio)"}
+							onchange={handleFilterChangeFFin}
+						/>
 					</DialogContent>
 
 					<DialogActions sx={{ justifyContent: "center", gap: 2, pb: 3 }}>
@@ -638,7 +651,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 							sx={{
 								backgroundColor: "black",
 								color: "white",
-								"&:hover": { backgroundColor: "grey.300", color: "black" },
+								"&:hover": {
+									backgroundColor: "grey.300",
+									color: "black",
+								},
 							}}
 						>
 							Confirmar

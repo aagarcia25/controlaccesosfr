@@ -23,6 +23,13 @@ import {
 	LocalizationProvider,
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { getUser } from "../../services/localStorage";
+import Swal from "sweetalert2";
+import { CatalogosServices } from "../../services/catalogosServices";
+import { Toast } from "../../helpers/Toast";
+import { set } from "date-fns";
+import axios from "axios";
 
 export const EstudiantesModal = ({
 	tipo,
@@ -33,11 +40,13 @@ export const EstudiantesModal = ({
 	dt: any;
 	handleClose: Function;
 }) => {
+	const [id, setId] = useState("");
 	const [show, setShow] = useState(false);
 	const [tipoEstudiante, setTipoEstudiante] = useState("");
 	const [ListTipoEstudiante, setListTipoEstudiante] = useState<SelectValues[]>(
 		[]
 	);
+	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
 	const [genero, setGenero] = useState("");
 	const [ListGenero, setListGenero] = useState<SelectValues[]>([]);
 	const [unidadAdmin, setUnidadAdmin] = useState("");
@@ -47,12 +56,14 @@ export const EstudiantesModal = ({
 	const [telefono, setTelefono] = useState("");
 	const [email, setemail] = useState("");
 	const [escolaridad, setEscolaridad] = useState("");
+	const [ListEscolaridad, setListEscolaridad] = useState<SelectValues[]>([]);
 	const [instituto, setInstituto] = useState("");
+	const [ListInstituto, setListInstituto] = useState<SelectValues[]>([]);
 	const [responsable, setResponsable] = useState("");
 	const [fInicio, setFInicio] = useState<Dayjs | null>();
 	const [fFin, setFFin] = useState<Dayjs | null>();
-	const [inicioPrograma, setInicioPrograma] = useState<Dayjs | null>(null);
-	const [finPrograma, setFinPrograma] = useState<Dayjs | null>(null);
+	//const [inicioPrograma, setInicioPrograma] = useState<Dayjs | null>(null);
+	//const [finPrograma, setFinPrograma] = useState<Dayjs | null>(null);
 	const [horarioInicio, setHorarioInicio] = useState<Dayjs | null>(null);
 	const [horarioFin, setHorarioFin] = useState<Dayjs | null>(null);
 	const [frecuenciaAsistencia, setFrecuenciaAsistencia] = useState({
@@ -72,6 +83,13 @@ export const EstudiantesModal = ({
 	const handleFilterChangeUnidadAdmin = (v: string) => {
 		setUnidadAdmin(v);
 	};
+	const handleFilterChangeInstituto = (v: string) => {
+		setInstituto(v);
+	};
+	const handleFilterChangeEscolaridad = (v: string) => {
+		setEscolaridad(v);
+	};
+	
 	const handleFilterChangeFInicio = (v: any) => {
 		setFInicio(v);
 	};
@@ -85,11 +103,14 @@ export const EstudiantesModal = ({
 		}));
 	};
 
+
 	const loadFilter = (operacion: number, P_ID?: string) => {
 		setShow(true);
 		let data = { NUMOPERACION: operacion, P_ID: P_ID };
 		ShareService.SelectIndex(data).then((res) => {
 			if (operacion === 12) {
+				console.log("12");
+				
 				setListGenero(res.RESPONSE);
 				setShow(false);
 			} else if (operacion === 13) {
@@ -101,14 +122,130 @@ export const EstudiantesModal = ({
 			}
 		});
 	};
+	
+	  
+	const loadCatEscolaridad = async () => {
+		try {
+			const response = await axios.get(process.env.REACT_APP_APPLICATION_BASE_URL+'catalogo/Cat_Escolaridad');
+			if (response.data.SUCCESS) {
+				// Mapeamos los datos al formato esperado por SelectValues
+				const formattedData = response.data.RESPONSE.map((item: any) => ({
+					value: item.id,
+					label: item.Nombre,
+				}));
+				setListEscolaridad(formattedData);
+			} else {
+				console.error("Error en la respuesta: ", response.data.STRMESSAGE);
+			}
+		} catch (error) {
+			console.error("Error al obtener los datos: ", error);
+		}
+	};
+
+	const loadCatInstituto = async () => {
+		try {
+			const response = await axios.get(process.env.REACT_APP_APPLICATION_BASE_URL+'catalogo/Cat_Institucion_Educativa');
+			if (response.data.SUCCESS) {
+				// Mapeamos los datos al formato esperado por SelectValues
+				const formattedData = response.data.RESPONSE.map((item: any) => ({
+					value: item.id,
+					label: item.Nombre,
+				}));
+				setListInstituto(formattedData);
+			} else {
+				console.error("Error en la respuesta: ", response.data.STRMESSAGE);
+			}
+		} catch (error) {
+			console.error("Error al obtener los datos: ", error);
+		}
+	};
+	
+	
+	const handleRegister = () => {
+		if (
+		  !nombre ||
+		  !genero ||
+		  //!unidadAdmin ||
+		  !fInicio ||
+		  !fFin||
+		  !telefono||
+		  !tipoEstudiante||
+		  !escolaridad||
+		  !instituto||
+		  !responsable
+		  
+		) {
+		  Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
+		} else {
+		  let data = {
+			NUMOPERACION: tipo,
+			CHID: id,
+			CHUSER: user.Id,
+			TipoEstudiante: tipoEstudiante,
+			Nombre: nombre,
+			IdEntidad: unidadAdmin,
+			FechaInicio: fInicio,
+			FechaFin:fFin,
+			Telefono: telefono,
+			Sexo: genero,
+			Escolaridad: escolaridad,
+			InstitucionEducativa: instituto,
+			PersonaResponsable: responsable,
+			NoGaffete: NoGaffete,
+			Correo: email,
+			HorarioDesde: horarioInicio ? horarioInicio.format("HH:mm:ss") : null,
+			HorarioHasta: horarioFin ? horarioFin.format("HH:mm:ss") : null,
+
+		  };
+	
+		  if (tipo == 1) {
+			agregar(data);
+		  } else if (tipo === 2) {
+			editar(data);
+	
+		  }
+		}
+	  };
+
+	  const agregar = (data: any) => {
+		CatalogosServices.Estudiante(data).then((res) => {
+		  if (res.SUCCESS) {
+			Toast.fire({
+			  icon: "success",
+			  title: "¡Registro Agregado!",
+			});
+			handleClose();
+		  } else {
+			Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+		  }
+		});
+	  };
+	
+	  const editar = (data: any) => {
+		CatalogosServices.Estudiante(data).then((res) => {
+		  if (res.SUCCESS) {
+			Toast.fire({
+			  icon: "success",
+			  title: "¡Registro Editado!",
+			});
+			handleClose();
+		  } else {
+			Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+		  }
+		});
+	  };
 
 	useEffect(() => {
 		loadFilter(12);
 		loadFilter(13);
 		loadFilter(11);
+		loadCatEscolaridad();
+		loadCatInstituto();
 
 		if (Object.keys(dt).length === 0) {
 		} else {
+			setId(dt?.row?.id);
+
 			//setId(dt?.row?.id);}
 			setTipoEstudiante(dt?.row?.TipoEstudiante);
 			setGenero(dt?.row?.Sexo);
@@ -120,6 +257,10 @@ export const EstudiantesModal = ({
 			setEscolaridad(dt?.row?.Escolaridad);
 			setInstituto(dt?.row?.InstitucionEducativa);
 			setResponsable(dt?.row?.PersonaResponsable);
+			setFrecuenciaAsistencia(dt.row.Frequencia);
+			setHorarioInicio(dt.row.HorarioDesde)
+			setHorarioFin(dt.row.HorarioHasta)
+
 
 			if (fInicio !== null) {
 				setFInicio(dayjs(dt?.row?.FechaInicio, "DD-MM-YYYY"));
@@ -293,43 +434,27 @@ export const EstudiantesModal = ({
 					{/* Contenido de Información Académica */}
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6} md={4}>
-							<Typography sx={{ fontFamily: "sans-serif" }}>
-								Escolaridad
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+								Escolaridad:
 							</Typography>
-							<TextField
-								required
-								size="small"
-								id="escolaridad" 
+							<SelectFrag
 								value={escolaridad}
-								type="text"
-								fullWidth
-								variant="outlined"
-								onChange={(v) => setEscolaridad(v.target.value)}
-								// error={escolaridad === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								options={ListEscolaridad}
+								onInputChange={handleFilterChangeEscolaridad}
+								placeholder={"Seleccione.."}
 								disabled={false}
 							/>
 						</Grid>
 
 						<Grid item xs={12} sm={6} md={4}>
-							<Typography sx={{ fontFamily: "sans-serif" }}>
-								Instituto Educativo
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+								Instituto Educativo:
 							</Typography>
-							<TextField
-								required
-								size="small"
-								id="instituto" 
+							<SelectFrag
 								value={instituto}
-								type="text"
-								fullWidth
-								variant="outlined"
-								onChange={(v) => setInstituto(v.target.value)}
-								// error={instituto === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								options={ListInstituto}
+								onInputChange={handleFilterChangeInstituto}
+								placeholder={"Seleccione.."}
 								disabled={false}
 							/>
 						</Grid>
@@ -496,7 +621,7 @@ export const EstudiantesModal = ({
 
 							{/* Inicio Programa */}
 							<Grid item xs={12} sm={6} md={4}>
-								<Typography variant="body2">Inicio programa</Typography>
+								{/* <Typography variant="body2">Inicio programa</Typography>
 								<DatePicker
 									value={inicioPrograma}
 									onChange={(newDate) => setInicioPrograma(newDate)}
@@ -507,12 +632,12 @@ export const EstudiantesModal = ({
 											size: "small",
 										},
 									}}
-								/>
+								/> */}
 							</Grid>
 
 							{/* Fin Programa */}
 							<Grid item xs={12} sm={6} md={4}>
-								<Typography variant="body2">Fin programa</Typography>
+								{/* <Typography variant="body2">Fin programa</Typography>
 								<DatePicker
 									value={finPrograma}
 									onChange={(newDate) => setFinPrograma(newDate)}
@@ -523,13 +648,13 @@ export const EstudiantesModal = ({
 											size: "small",
 										},
 									}}
-								/>
+								/> */}
 							</Grid>
 						</Grid>
 					</LocalizationProvider>
 
 					{/*  Contenido de Información de Horas*/}
-					<Grid
+					{/* <Grid
 						container
 						alignItems="center"
 						spacing={1}
@@ -543,11 +668,11 @@ export const EstudiantesModal = ({
 						<Grid item xs>
 							<Divider sx={{ borderColor: "#B0B0B0" }} />
 						</Grid>
-					</Grid>
+					</Grid> */}
 
 					<Grid container spacing={2}>
 						{/* Cantidad de Horas */}
-						<Grid item xs={12} sm={6} md={4}>
+						{/* <Grid item xs={12} sm={6} md={4}>
 							<Typography sx={{ fontFamily: "sans-serif" }}>
 								Cantidad de Horas
 							</Typography>
@@ -578,7 +703,7 @@ export const EstudiantesModal = ({
 								value="400"
 								disabled
 							/>
-						</Grid>
+						</Grid> */}
 
 						<Grid
 							container
@@ -613,7 +738,7 @@ export const EstudiantesModal = ({
 										color: "white",
 										"&:hover": { backgroundColor: "grey.300",color: "black", },
 									}}
-									// onClick={() => handleRegister()} // Añade la acción deseada para el botón de registrar
+									onClick={() => handleRegister()} // Añade la acción deseada para el botón de registrar
 								>
 									REGISTRAR
 								</Button>

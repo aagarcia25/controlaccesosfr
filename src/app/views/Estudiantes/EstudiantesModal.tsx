@@ -307,8 +307,8 @@ export const EstudiantesModal = ({
 			setInstituto(dt?.row?.IdInstitucionEducativa);
 			setResponsable(dt?.row?.PersonaResponsable);
 			setFrecuenciaAsistencia(dt.row.Frecuencia);
-			setHorarioDesde(dt.row.HorarioDesde)
-			setHorarioHasta(dt.row.HorarioHasta)
+			setHorarioDesde(dt.row.HorarioDesde ? dayjs(dt.row.HorarioDesde, "HH:mm:ss") : null);
+        setHorarioHasta(dt.row.HorarioHasta ? dayjs(dt.row.HorarioHasta, "HH:mm:ss") : null);
 
 
 
@@ -321,8 +321,11 @@ export const EstudiantesModal = ({
 			//     setFVencimiento(dayjs(dt?.row?.FVencimiento,'DD-MM-YYYY'));
 			//     setSwitchValue(true);
 			//   }
+			// if (fFin !== null) {
+			// 	setFFin(dayjs(dt?.row?.FechaFin, "DD-MM-YYYY"));
+			// }
 			if (fFin !== null) {
-				setFFin(dayjs(dt?.row?.FechaFin, "DD-MM-YYYY"));
+				setFFin(dayjs(dt?.row?.FechaFin)); // Almacena un objeto Dayjs
 			}
 			//   if (Prorroga !== null && Prorroga !== undefined) {
 			//     setProrroga(dayjs(dt?.row?.Prorroga,'DD-MM-YYYY'));
@@ -384,9 +387,9 @@ export const EstudiantesModal = ({
 								variant="outlined"
 								onChange={(v) => setNoGaffete(v.target.value)}
 								// error={NoGaffete === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								// InputProps={{
+								// 	readOnly: tipo === 1 ? false : true,
+								// }}
 								disabled={false}
 							/>
 						</Grid>
@@ -405,9 +408,9 @@ export const EstudiantesModal = ({
 								variant="outlined"
 								onChange={(v) => setNombre(v.target.value)}
 								// error={nombre === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								// InputProps={{
+								// 	readOnly: tipo === 1 ? false : true,
+								// }}
 								disabled={false}
 							/>
 						</Grid>
@@ -426,9 +429,9 @@ export const EstudiantesModal = ({
 								variant="outlined"
 								onChange={(v) => setemail(v.target.value)}
 								// error={email === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								// InputProps={{
+								// 	readOnly: tipo === 1 ? false : true,
+								// }}
 								disabled={false}
 							/>
 						</Grid>
@@ -447,9 +450,9 @@ export const EstudiantesModal = ({
 								variant="outlined"
 								onChange={(v) => setTelefono(v.target.value)}
 								// error={telefono === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								// InputProps={{
+								// 	readOnly: tipo === 1 ? false : true,
+								// }}
 								disabled={false}
 							/>
 						</Grid>
@@ -527,9 +530,9 @@ export const EstudiantesModal = ({
 								variant="outlined"
 								onChange={(v) => setResponsable(v.target.value)}
 								// error={responsable === "" ? true : false}
-								InputProps={{
-									readOnly: tipo === 1 ? false : true,
-								}}
+								// InputProps={{
+								// 	readOnly: tipo === 1 ? false : true,
+								// }}
 								disabled={false}
 							/>
 						</Grid>
@@ -568,7 +571,7 @@ export const EstudiantesModal = ({
 
 						<Grid item xs={12} sm={6} md={4}>
 							<CustomizedDate
-								value={fFin}
+								value={fInicio}
 								label={"Fecha de Vigencia (Inicio)"}
 								onchange={handleFilterChangeFInicio}
 							/>
@@ -576,7 +579,7 @@ export const EstudiantesModal = ({
 
 						<Grid item xs={12} sm={6} md={4}>
 							<CustomizedDate
-								value={fInicio}
+								value={fFin}
 								label={"Fecha de Vigencia (Fin)"}
 								onchange={handleFilterChangeFFin}
 							/>

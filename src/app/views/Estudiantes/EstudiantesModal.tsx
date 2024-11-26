@@ -30,6 +30,10 @@ import { CatalogosServices } from "../../services/catalogosServices";
 import { Toast } from "../../helpers/Toast";
 import { set } from "date-fns";
 import axios from "axios";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const EstudiantesModal = ({
 	tipo,
@@ -203,12 +207,14 @@ export const EstudiantesModal = ({
 		  Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
 		} else {
 		  // Convertir horarios al formato compatible con MySQL
-		  const horarioDesdeFormatted = horarioDesde
-			? horarioDesde.format("YYYY-MM-DD HH:mm:ss")
-			: null;
-		  const horarioHastaFormatted = horarioHasta
-			? horarioHasta.format("YYYY-MM-DD HH:mm:ss")
-			: null;
+		//   const horarioDesdeFormatted = horarioDesde
+		// 	? horarioDesde.format("YYYY-MM-DD HH:mm:ss")
+		// 	: null;
+		//   const horarioHastaFormatted = horarioHasta
+		// 	? horarioHasta.format("YYYY-MM-DD HH:mm:ss")
+		// 	: null;
+
+		
 	  
 		  // Crear la cadena de días seleccionados
 		  const frecuenciaSeleccionada = Object.keys(frecuenciaAsistencia)
@@ -232,8 +238,8 @@ export const EstudiantesModal = ({
 			PersonaResponsable: responsable,
 			NoGaffete: NoGaffete,
 			Correo: email,
-			HorarioDesde: horarioDesdeFormatted,
-			HorarioHasta: horarioHastaFormatted,
+			HorarioDesde: horarioDesde ? horarioDesde.format("YYYY-MM-DD HH:mm:ss") : null,
+    HorarioHasta: horarioHasta ? horarioHasta.format("YYYY-MM-DD HH:mm:ss") : null,
 			frecuenciaAsistencia: frecuenciaSeleccionada,  // Añadir la cadena con los días seleccionados
 		  };
 	  
@@ -306,10 +312,32 @@ export const EstudiantesModal = ({
 			//setListInstituto(dt?.row?.Escolaridad);
 			setInstituto(dt?.row?.IdInstitucionEducativa);
 			setResponsable(dt?.row?.PersonaResponsable);
-			setFrecuenciaAsistencia(dt.row.Frecuencia);
-			setHorarioDesde(dt.row.HorarioDesde ? dayjs(dt.row.HorarioDesde, "HH:mm:ss") : null);
-        setHorarioHasta(dt.row.HorarioHasta ? dayjs(dt.row.HorarioHasta, "HH:mm:ss") : null);
+			//setFrecuenciaAsistencia(dt.row.Frecuencia);
+			console.log("HorarioDesde en base de datos:", dt.row.HorarioDesde);
+        console.log(
+            "HorarioDesde interpretado:",
+            dt.row.HorarioDesde ? dayjs(dt.row.HorarioDesde, "HH:mm:ss").format("HH:mm:ss") : null
+        );
 
+        setHorarioDesde(()=>{
+			let hora 
+			if(dt.row.HorarioDesde)
+				 hora = dt.row.HorarioDesde.split(" ")[1];
+			return dayjs(hora, "HH:mm:ss")||null; 
+		}
+			// dt.row.HorarioDesde
+			// 	? dayjs.utc(dt.row.HorarioDesde).tz("America/Mexico_City")
+			// 	: null
+		);
+		
+        setHorarioHasta(()=>{
+			let hora 
+			if(dt.row.HorarioHasta)
+			 hora = dt.row.HorarioHasta.split(" ")[1];
+			return dayjs(hora, "HH:mm:ss")||null; 
+		}
+            // dt.row.HorarioHasta ? dayjs(dt.row.HorarioHasta, "HH:mm:ss") : null
+        );
 
 
 			if (fInicio !== null) {
@@ -331,6 +359,19 @@ export const EstudiantesModal = ({
 			//     setProrroga(dayjs(dt?.row?.Prorroga,'DD-MM-YYYY'));
 			//     setSwitchValue(true);
 			//   }
+		}
+	}, [dt]);
+	useEffect(() => {
+		if (Object.keys(dt).length !== 0) {
+			const frecuencia = dt.row.Frecuencia
+				? dt.row.Frecuencia.split(",").reduce((acc: typeof frecuenciaAsistencia, day: string) => {
+					  acc[day as keyof typeof frecuenciaAsistencia] = true; // Asegúrate de que el día exista en las claves
+					  return acc;
+				  }, { lunes: false, martes: false, miercoles: false, jueves: false, viernes: false })
+				: { lunes: false, martes: false, miercoles: false, jueves: false, viernes: false };
+	
+			setFrecuenciaAsistencia(frecuencia);
+			console.log("Frecuencia cargada:", frecuencia);
 		}
 	}, [dt]);
 	useEffect(() => {

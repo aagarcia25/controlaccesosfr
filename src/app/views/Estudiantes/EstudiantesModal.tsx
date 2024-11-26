@@ -64,15 +64,15 @@ export const EstudiantesModal = ({
 	const [fFin, setFFin] = useState<Dayjs | null>();
 	//const [inicioPrograma, setInicioPrograma] = useState<Dayjs | null>(null);
 	//const [finPrograma, setFinPrograma] = useState<Dayjs | null>(null);
-	const [horarioInicio, setHorarioInicio] = useState<Dayjs | null>(null);
-	const [horarioFin, setHorarioFin] = useState<Dayjs | null>(null);
-	const [frecuenciaAsistencia, setFrecuenciaAsistencia] = useState({
-		lunes: false,
-		martes: false,
-		miercoles: false,
-		jueves: false,
-		viernes: false,
-	});
+	const [horarioDesde, setHorarioDesde] = useState<Dayjs | null>(null);
+	const [horarioHasta, setHorarioHasta] = useState<Dayjs | null>(null);
+	// const [frecuenciaAsistencia, setFrecuenciaAsistencia] = useState({
+	// 	lunes: false,
+	// 	martes: false,
+	// 	miercoles: false,
+	// 	jueves: false,
+	// 	viernes: false,
+	// });
 
 	const handleFilterChangeTipoEstudiante = (v: string) => {
 		setTipoEstudiante(v);
@@ -96,12 +96,12 @@ export const EstudiantesModal = ({
 	const handleFilterChangeFFin = (v: any) => {
 		setFFin(v);
 	};
-	const handleFrecuenciaChange = (day: keyof typeof frecuenciaAsistencia) => {
-		setFrecuenciaAsistencia((prev) => ({
-			...prev,
-			[day]: !prev[day],
-		}));
-	};
+	// const handleFrecuenciaChange = (day: keyof typeof frecuenciaAsistencia) => {
+	// 	setFrecuenciaAsistencia((prev) => ({
+	// 		...prev,
+	// 		[day]: !prev[day],
+	// 	}));
+	// };
 
 
 	const loadFilter = (operacion: number, P_ID?: string) => {
@@ -161,31 +161,66 @@ export const EstudiantesModal = ({
 	};
 	
 	
-	const handleRegister = () => {
+	const [frecuenciaAsistencia, setFrecuenciaAsistencia] = useState<{
+		lunes: boolean;
+		martes: boolean;
+		miercoles: boolean;
+		jueves: boolean;
+		viernes: boolean;
+	  }>({
+		lunes: false,
+		martes: false,
+		miercoles: false,
+		jueves: false,
+		viernes: false,
+	  });
+	  
+	  // Función para manejar el cambio de la frecuencia
+	  const handleFrecuenciaChange = (day: keyof typeof frecuenciaAsistencia) => {
+		setFrecuenciaAsistencia({
+		  ...frecuenciaAsistencia,
+		  [day]: !frecuenciaAsistencia[day], // Cambiar el valor de la propiedad correspondiente
+		});
+	  };
+	  
+	  // Código para registrar los datos
+	  const handleRegister = () => {
 		if (
 		  !nombre ||
 		  !genero ||
-		  //!unidadAdmin ||
 		  !fInicio ||
-		  !fFin||
-		  !telefono||
-		  !tipoEstudiante||
-		  !escolaridad||
-		  !instituto||
+		  !fFin ||
+		  !telefono ||
+		  !tipoEstudiante ||
+		  !escolaridad ||
+		  !instituto ||
 		  !responsable
-		  
 		) {
 		  Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
 		} else {
+		  // Convertir horarios al formato compatible con MySQL
+		  const horarioDesdeFormatted = horarioDesde
+			? horarioDesde.format("YYYY-MM-DD HH:mm:ss")
+			: null;
+		  const horarioHastaFormatted = horarioHasta
+			? horarioHasta.format("YYYY-MM-DD HH:mm:ss")
+			: null;
+	  
+		  // Crear la cadena de días seleccionados
+		  const frecuenciaSeleccionada = Object.keys(frecuenciaAsistencia)
+			.filter((day) => frecuenciaAsistencia[day as keyof typeof frecuenciaAsistencia])  // Filtra los días marcados como 'true'
+			.join(","); // Une los días con coma
+	  console.log("frecuenciaAsistencia",frecuenciaAsistencia);
+	  
 		  let data = {
 			NUMOPERACION: tipo,
 			CHID: id,
 			CHUSER: user.Id,
 			TipoEstudiante: tipoEstudiante,
 			Nombre: nombre,
-			IdEntidad: unidadAdmin,
+			UnidadAdministrativa: unidadAdmin,
 			FechaInicio: fInicio,
-			FechaFin:fFin,
+			FechaFin: fFin,
 			Telefono: telefono,
 			Sexo: genero,
 			Escolaridad: escolaridad,
@@ -193,19 +228,24 @@ export const EstudiantesModal = ({
 			PersonaResponsable: responsable,
 			NoGaffete: NoGaffete,
 			Correo: email,
-			HorarioDesde: horarioInicio ? horarioInicio.format("HH:mm:ss") : null,
-			HorarioHasta: horarioFin ? horarioFin.format("HH:mm:ss") : null,
-
+			HorarioDesde: horarioDesdeFormatted,
+			HorarioHasta: horarioHastaFormatted,
+			frecuenciaAsistencia: frecuenciaSeleccionada,  // Añadir la cadena con los días seleccionados
 		  };
-	
+	  
 		  if (tipo == 1) {
+			console.log("frecuenciaSeleccionada",frecuenciaSeleccionada);
+			
 			agregar(data);
 		  } else if (tipo === 2) {
 			editar(data);
-	
 		  }
 		}
 	  };
+	  
+	  
+	  
+	  
 
 	  const agregar = (data: any) => {
 		CatalogosServices.Estudiante(data).then((res) => {
@@ -236,6 +276,9 @@ export const EstudiantesModal = ({
 	  };
 
 	useEffect(() => {
+		console.log("frecuenciaAsistencia",frecuenciaAsistencia);
+		console.log("dt",dt);
+		
 		loadFilter(12);
 		loadFilter(13);
 		loadFilter(11);
@@ -253,18 +296,23 @@ export const EstudiantesModal = ({
 			setNoGaffete(dt?.row?.NoGaffete);
 			setNombre(dt?.row?.Nombre);
 			setTelefono(dt?.row?.Telefono);
-			setemail(dt?.row?.email);
-			setEscolaridad(dt?.row?.Escolaridad);
+			setemail(dt?.row?.Correo);
+			setEscolaridad(dt?.row?.IdEscolaridad);
+			//setListEscolaridad(dt?.row?.Escolaridad);
+			//setListInstituto(dt?.row?.Escolaridad);
 			setInstituto(dt?.row?.InstitucionEducativa);
 			setResponsable(dt?.row?.PersonaResponsable);
-			setFrecuenciaAsistencia(dt.row.Frequencia);
-			setHorarioInicio(dt.row.HorarioDesde)
-			setHorarioFin(dt.row.HorarioHasta)
+			setFrecuenciaAsistencia(dt.row.Frecuencia);
+			setHorarioDesde(dt.row.HorarioDesde)
+			setHorarioHasta(dt.row.HorarioHasta)
+
 
 
 			if (fInicio !== null) {
-				setFInicio(dayjs(dt?.row?.FechaInicio, "DD-MM-YYYY"));
+				setFInicio(dayjs(dt?.row?.FechaInicio)); // Almacena un objeto Dayjs
 			}
+			
+			
 			//   if (fFin !== null && FVencimiento !== undefined) {
 			//     setFVencimiento(dayjs(dt?.row?.FVencimiento,'DD-MM-YYYY'));
 			//     setSwitchValue(true);
@@ -279,8 +327,10 @@ export const EstudiantesModal = ({
 		}
 	}, [dt]);
 	useEffect(() => {
+		console.log("frecuenciaAsistencia",frecuenciaAsistencia);
+		console.log("");
 		console.log("dt", dt);
-	}, []);
+	}, [frecuenciaAsistencia]);
 	return (
 		<>
 			<ModalForm
@@ -515,16 +565,16 @@ export const EstudiantesModal = ({
 						<Grid item xs={12} sm={6} md={4}>
 							<CustomizedDate
 								value={fFin}
-								label={"Fecha de Vigencia (Fin)"}
-								onchange={handleFilterChangeFFin}
+								label={"Fecha de Vigencia (Inicio)"}
+								onchange={handleFilterChangeFInicio}
 							/>
 						</Grid>
 
 						<Grid item xs={12} sm={6} md={4}>
 							<CustomizedDate
 								value={fInicio}
-								label={"Fecha de Vigencia (Inicio)"}
-								onchange={handleFilterChangeFInicio}
+								label={"Fecha de Vigencia (Fin)"}
+								onchange={handleFilterChangeFFin}
 							/>
 						</Grid>
 					</Grid>
@@ -591,8 +641,8 @@ export const EstudiantesModal = ({
 									Horario (Inicio)
 								</Typography>
 								<TimePicker
-									value={horarioInicio}
-									onChange={(newTime) => setHorarioInicio(newTime)}
+									value={horarioDesde}
+									onChange={(newTime) => setHorarioDesde(newTime)}
 									slotProps={{
 										textField: {
 											fullWidth: true,
@@ -607,8 +657,8 @@ export const EstudiantesModal = ({
 							<Grid item xs={12} sm={6} md={4}>
 								<Typography variant="body2">Horario (Fin)</Typography>
 								<TimePicker
-									value={horarioFin}
-									onChange={(newTime) => setHorarioFin(newTime)}
+									value={horarioHasta}
+									onChange={(newTime) => setHorarioHasta(newTime)}
 									slotProps={{
 										textField: {
 											fullWidth: true,

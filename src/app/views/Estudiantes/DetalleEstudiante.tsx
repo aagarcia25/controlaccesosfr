@@ -11,6 +11,8 @@ import { Toast } from "../../helpers/Toast";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import axios from "axios";
 import { formatFecha } from "../../helpers/FormatDate";
+import { FlowFlags } from "typescript";
+import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox';
 
 
 export const DetalleEstudiante = (
@@ -263,17 +265,22 @@ export const DetalleEstudiante = (
 				</Grid>
 				<Grid
 					item
+					display="flow"
 					xs={12}
 					sm={3}
 					md={3}
-					textAlign={{ xs: "center", sm: "right" }}
+					textAlign={{ xs: "center", sm: "right" }}  
 				>
+					<Grid>
+					
 					<Tooltip title={dataGlobal.row.EstadoQR==="1"? "Descarga QR en PDF":"No se ha generado QR"}>
 						<span>
 							<Button
 						variant="contained"
 						sx={{
 							backgroundColor: "black",
+							width: { xs: "100%", sm: "auto" },
+							marginBottom: 2, // Espaciado vertical entre botones
 							color: "white",  // Esto debería funcionar sin problemas
 							"&:hover": {
 								backgroundColor: "grey.300",
@@ -290,8 +297,35 @@ export const DetalleEstudiante = (
 						</span>
 						
 					</Tooltip>
+					</Grid>
+					<Grid>
+					<Tooltip title={dataGlobal.row.EstadoQR==="1"? "Reenviar QR por Correo":"No se Reenviar QR por Correo"}>
+						<span>
+							<Button
+						variant="contained"
+						sx={{
+							backgroundColor: "black",
+							width: { xs: "100%", sm: "auto" },
+							color: "white",  // Esto debería funcionar sin problemas
+							"&:hover": {
+								backgroundColor: "grey.300",
+								color: "black",
+							},
+							px: 3,
+						}}
+						startIcon={<ForwardToInboxIcon />}
+						onClick={descargaQR}  // Asegúrate de pasar la función correctamente
+						disabled={dataGlobal.row.EstadoQR==="1"? false:true}
+					>
+						REENVIAR QR 
+					</Button>
+						</span>
+						
+					</Tooltip>
+					</Grid>
 					
 				</Grid>
+ 
 			</Grid>
 
 			{/* Sección de Información Básica */}

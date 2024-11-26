@@ -282,6 +282,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		CatalogosServices.Estudiante(data).then((res) => {
 			if (res.SUCCESS) {
 				setData(res.RESPONSE);
+				console.log("res.RESPONSE",res.RESPONSE);
+				
 				setOpenSlider(false);
 			} else {
 				setOpenSlider(false);

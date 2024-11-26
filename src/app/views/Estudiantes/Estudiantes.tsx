@@ -1,6 +1,16 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import TitleComponent from "../componentes/TitleComponent";
-import { Box, Grid, IconButton, TextField, ToggleButton, Tooltip, Typography } from "@mui/material";
+import {
+	Box,
+	Grid,
+	IconButton,
+	Menu,
+	MenuItem,
+	TextField,
+	ToggleButton,
+	Tooltip,
+	Typography,
+} from "@mui/material";
 import ButtonsAdd from "../componentes/ButtonsAdd";
 import MUIXDataGridSimple from "../componentes/MUIXDataGridSimple";
 import { GridColDef } from "@mui/x-data-grid";
@@ -31,7 +41,8 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CustomizedDate from "../componentes/CustomizedDate";
 import dayjs, { Dayjs } from "dayjs";
 import MUIXDataGridEstudiantes from "../componentes/MUIXDataGridEstudiantes";
-import QrCodeIcon from '@mui/icons-material/QrCode';
+import QrCodeIcon from "@mui/icons-material/QrCode";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -79,29 +90,16 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 
 					CatalogosServices.Estudiante(data).then((res) => {
 						if (res.SUCCESS) {
-							// Mostrar mensaje de éxito
 							Toast.fire({
 								icon: "success",
-								title: res.STRMESSAGE.success,
+								title: "¡QR Generados!",
 							});
-
-							// Si hay warnings, mostrar una alerta adicional
-							if (res.STRMESSAGE.warnings) {
-								const studentNames = res.STRMESSAGE.warnings.students.join(", ");
-								Swal.fire({
-									icon: "warning",
-									title: "Advertencia",
-									html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
-								});
-							}
-
-							// Refrescar la tabla y limpiar selección
 							consulta();
+
+							// Vaciar el modelo de selección para desmarcar los checkboxes
 							setSelectionModel([]);
 						} else {
-							// Mostrar errores críticos
-							const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
-							Swal.fire("¡Error!", errorDetails, "error");
+							Swal.fire("¡Error!", res.STRMESSAGE, "error");
 						}
 					});
 				} else if (result.isDenied) {
@@ -115,8 +113,6 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			});
 		}
 	};
-
-
 
 	const handleOpenExtenderFecha = (row: any) => {
 		setSelectedRow(row);
@@ -144,7 +140,6 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	};
 
 	const handleConfirmarFecha = () => {
-
 		let data = {
 			CHID: selectedRow?.id,
 			NUMOPERACION: 8,
@@ -152,7 +147,6 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			FechaFin: fFin,
 		};
 		extenderFechaFin(data);
-
 	};
 
 	const handleOpen = (v: any) => {
@@ -288,6 +282,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		CatalogosServices.Estudiante(data).then((res) => {
 			if (res.SUCCESS) {
 				setData(res.RESPONSE);
+				console.log("res.RESPONSE",res.RESPONSE);
+				
 				setOpenSlider(false);
 			} else {
 				setOpenSlider(false);
@@ -485,16 +481,35 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		},
 	];
 
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
 	const handleFilterChangeFFin = (v: any) => {
 		setFFin(v);
+	};
+
+	// Función para exportar en un formato
+	const handleExport = (format: "PDF" | "PNG") => {
+		handleMenuClose();
+		console.log(`Exportando en formato ${format}`);
+		// Aquí puedes añadir la lógica de exportación
 	};
 
 	const handleClose = () => {
 		setOpen(false);
 		consulta();
 	};
-	const handleOpenUploadFoto = (v: any) => {
 
+	// Función para abrir el menú
+	const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	// Función para cerrar el menú
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleOpenUploadFoto = (v: any) => {
 		console.log("row", v.row.id);
 
 		setId(v.row.id || "");
@@ -503,8 +518,6 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		//}else{
 		setOpenModal(true);
 		//}
-
-
 	};
 
 	useEffect(() => {
@@ -521,18 +534,13 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			console.log("fFin", fFin);
 			console.log("row");
 
-
 			if (Object.keys.length === 0) {
-
-			}
-			else {
+			} else {
 				console.log("SelectedRow", selectedRow);
 
 				setFFin(dayjs(selectedRow?.FechaFin));
-
 			}
 		}
-
 	}, [openExtenderFechaModal]);
 
 	return (
@@ -550,33 +558,73 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						alignItems="center"
 					>
 						<Box sx={{ padding: "0px 8px" }}>
-							<ButtonsAdd
-								handleOpen={handleOpen}
-								agregar={true}
-							/>
+							<ButtonsAdd handleOpen={handleOpen} agregar={true} />
 						</Box>
 						<Box sx={{ padding: "4px 8px" }}>
 							<ButtonsImport handleOpen={handleUpload} agregar={true} />
 						</Box>
-						<Tooltip title={"Generar QR Seleccionados"}>
-							<ToggleButton
-								value="check"
-								className="guardar"
-								size="small"
-								onChange={() => noSelection()}
-								sx={{
-									padding: "8px", // Ajusta el tamaño del botón 
-								}}
-							>
-								<IconButton
-									color="inherit"
-									component="label"
+						<Box sx={{ padding: "4px 8px" }}>
+							<Tooltip title={"Generar QR Seleccionados"}>
+								<ToggleButton
+									value="check"
+									className="guardar"
 									size="small"
+									onChange={() => noSelection()}
+									sx={{
+										padding: "8px", // Ajusta el tamaño del botón
+									}}
 								>
-									<QrCodeIcon />
-								</IconButton>
-							</ToggleButton>
-						</Tooltip>
+									<IconButton
+										color="inherit"
+										component="label"
+										size="small"
+									>
+										<QrCodeIcon />
+									</IconButton>
+								</ToggleButton>
+							</Tooltip>
+						</Box>
+
+						<Box sx={{ padding: "4px 8px" }}>
+							<Tooltip title={"Exportar QRs"}>
+								<Button 
+									variant="contained"
+									sx={{
+										padding: "7px", // Ajusta el tamaño del botón
+										backgroundColor: "#0a1017",
+										color: "white", 
+										"&:hover": {
+											backgroundColor: "#1C1C1C",
+										  },
+									}}
+									onMouseEnter={(event) => setAnchorEl(event.currentTarget)} // Abre el menú
+								>
+									<IconButton
+										color="inherit"
+										component="label"
+										size="small"
+									>
+										<FileDownloadIcon />
+									</IconButton>
+								</Button>
+							</Tooltip>
+							<Menu
+								anchorEl={anchorEl}
+								open={Boolean(anchorEl)}
+								onClose={() => setAnchorEl(null)} // Cierra el menú al hacer clic afuera
+								MenuListProps={{
+									onMouseEnter: () => setAnchorEl(anchorEl), // Mantiene el menú abierto si el mouse está dentro
+									onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
+								  }}
+							>
+								<MenuItem onClick={() => handleExport("PDF")}>
+									Exportar como PDF
+								</MenuItem>
+								<MenuItem onClick={() => handleExport("PNG")}>
+									Exportar como PNG
+								</MenuItem>
+							</Menu>
+						</Box>
 					</Grid>
 					<Grid item xs={12}>
 						<Box

@@ -90,16 +90,29 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 
 					CatalogosServices.Estudiante(data).then((res) => {
 						if (res.SUCCESS) {
+							// Mostrar mensaje de éxito
 							Toast.fire({
 								icon: "success",
-								title: "¡QR Generados!",
+								title: res.STRMESSAGE.success,
 							});
-							consulta();
 
-							// Vaciar el modelo de selección para desmarcar los checkboxes
+							// Si hay warnings, mostrar una alerta adicional
+							if (res.STRMESSAGE.warnings) {
+								const studentNames = res.STRMESSAGE.warnings.students.join(", ");
+								Swal.fire({
+									icon: "warning",
+									title: "Advertencia",
+									html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
+								});
+							}
+
+							// Refrescar la tabla y limpiar selección
+							consulta();
 							setSelectionModel([]);
 						} else {
-							Swal.fire("¡Error!", res.STRMESSAGE, "error");
+							// Mostrar errores críticos
+							const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
+							Swal.fire("¡Error!", errorDetails, "error");
 						}
 					});
 				} else if (result.isDenied) {
@@ -282,8 +295,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		CatalogosServices.Estudiante(data).then((res) => {
 			if (res.SUCCESS) {
 				setData(res.RESPONSE);
-				console.log("res.RESPONSE",res.RESPONSE);
-				
+				console.log("res.RESPONSE", res.RESPONSE);
+
 				setOpenSlider(false);
 			} else {
 				setOpenSlider(false);
@@ -587,15 +600,15 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 
 						<Box sx={{ padding: "4px 8px" }}>
 							<Tooltip title={"Exportar QRs"}>
-								<Button 
+								<Button
 									variant="contained"
 									sx={{
 										padding: "7px", // Ajusta el tamaño del botón
 										backgroundColor: "#0a1017",
-										color: "white", 
+										color: "white",
 										"&:hover": {
 											backgroundColor: "#1C1C1C",
-										  },
+										},
 									}}
 									onMouseEnter={(event) => setAnchorEl(event.currentTarget)} // Abre el menú
 								>
@@ -615,7 +628,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 								MenuListProps={{
 									onMouseEnter: () => setAnchorEl(anchorEl), // Mantiene el menú abierto si el mouse está dentro
 									onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
-								  }}
+								}}
 							>
 								<MenuItem onClick={() => handleExport("PDF")}>
 									Exportar como PDF

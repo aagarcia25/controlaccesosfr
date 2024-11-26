@@ -55,91 +55,105 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [loading, setLoading] = useState(false);
 	const [openExtenderFechaModal, setOpenExtenderFechaModal] = useState(false); // Nuevo estado para el modal de Extender Fecha
 	const [selectedRowId, setSelectedRowId] = useState<string>("");
-    const [selectedRow, setSelectedRow] = useState<any>(null);
-    const [newFechaFin, setNewFechaFin] = useState("");
+	const [selectedRow, setSelectedRow] = useState<any>(null);
+	const [newFechaFin, setNewFechaFin] = useState("");
 	const [fFin, setFFin] = useState<Dayjs | null>();
 	const [selectionModel, setSelectionModel] = useState<any[]>([]);
 
 	const noSelection = () => {
 		if (selectionModel.length >= 1) {
-		  Swal.fire({
-			icon: "info",
-			title: "Se generará un QR único para cada registro seleccionado",
-			showDenyButton: true,
-			showCancelButton: false,
-			confirmButtonText: "Confirmar",
-			denyButtonText: `Cancelar`,
-		  }).then((result) => {
-			if (result.isConfirmed) {
-			  let data = {
-				NUMOPERACION: 9,
-				CHIDs: selectionModel,
-				CHUSER: user.Id,
-			  };
-	  
-			  CatalogosServices.Estudiante(data).then((res) => {
-				if (res.SUCCESS) {
-				  Toast.fire({
-					icon: "success",
-					title: "¡QR Generados!",
-				  });
-				  consulta();
-	  
-				  // Vaciar el modelo de selección para desmarcar los checkboxes
-				  setSelectionModel([]);
-				} else {
-				  Swal.fire("¡Error!", res.STRMESSAGE, "error");
+			Swal.fire({
+				icon: "info",
+				title: "Se generará un QR único para cada registro seleccionado",
+				showDenyButton: true,
+				showCancelButton: false,
+				confirmButtonText: "Confirmar",
+				denyButtonText: `Cancelar`,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					let data = {
+						NUMOPERACION: 9,
+						CHIDs: selectionModel,
+						CHUSER: user.Id,
+					};
+
+					CatalogosServices.Estudiante(data).then((res) => {
+						if (res.SUCCESS) {
+							// Mostrar mensaje de éxito
+							Toast.fire({
+								icon: "success",
+								title: res.STRMESSAGE.success,
+							});
+
+							// Si hay warnings, mostrar una alerta adicional
+							if (res.STRMESSAGE.warnings) {
+								const studentNames = res.STRMESSAGE.warnings.students.join(", ");
+								Swal.fire({
+									icon: "warning",
+									title: "Advertencia",
+									html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
+								});
+							}
+
+							// Refrescar la tabla y limpiar selección
+							consulta();
+							setSelectionModel([]);
+						} else {
+							// Mostrar errores críticos
+							const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
+							Swal.fire("¡Error!", errorDetails, "error");
+						}
+					});
+				} else if (result.isDenied) {
+					Swal.fire("No se realizaron cambios", "", "info");
 				}
-			  });
-			} else if (result.isDenied) {
-			  Swal.fire("No se realizaron cambios", "", "info");
-			}
-		  });
+			});
 		} else {
-		  Swal.fire({
-			title: "No se han seleccionado registros",
-			icon: "warning",
-		  });
+			Swal.fire({
+				title: "No se han seleccionado registros",
+				icon: "warning",
+			});
 		}
-	  };
-	  
+	};
 
-    const handleOpenExtenderFecha = (row: any) => {
-        setSelectedRow(row);
-        setOpenExtenderFechaModal(true);
-    };
 
-    const handleCloseExtenderFecha = () => {
-        setOpenExtenderFechaModal(false);
-        setNewFechaFin("");
-    };
+
+	const handleOpenExtenderFecha = (row: any) => {
+		setSelectedRow(row);
+		setOpenExtenderFechaModal(true);
+	};
+
+	const handleCloseExtenderFecha = () => {
+		setOpenExtenderFechaModal(false);
+		setNewFechaFin("");
+	};
 
 	const extenderFechaFin = (data: any) => {
 		CatalogosServices.Estudiante(data).then((res) => {
-		  if (res.SUCCESS) {
-			Toast.fire({
-			  icon: "success",
-			  title: "¡Fecha Extendida!",
-			});
-			setOpenExtenderFechaModal(false);
-			consulta();
-		  } else {
-			Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-		  }
+			if (res.SUCCESS) {
+				Toast.fire({
+					icon: "success",
+					title: "¡Fecha Extendida!",
+				});
+				setOpenExtenderFechaModal(false);
+				consulta();
+			} else {
+				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+			}
 		});
-	  };
+	};
 
-    const handleConfirmarFecha = () => {
-	
-			let data = {
-			  CHID: selectedRow?.id,
-			  NUMOPERACION: 8,
-			  CHUSER: user.Id,
-			  FechaFin:fFin,
-			};
-			extenderFechaFin(data);
-		
-    };
+	const handleConfirmarFecha = () => {
+
+		let data = {
+			CHID: selectedRow?.id,
+			NUMOPERACION: 8,
+			CHUSER: user.Id,
+			FechaFin: fFin,
+		};
+		extenderFechaFin(data);
+
+	};
 
 	const handleOpen = (v: any) => {
 		setTipoOperacion(1);
@@ -344,8 +358,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						color: "white",
 						fontWeight: "bold",
 						backgroundColor:
-							params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336", 
-							textAlign: "center",
+							params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336",
+						textAlign: "center",
 					}}
 				>
 					{params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
@@ -487,10 +501,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		//if(existeFoto){
 
 		//}else{
-			setOpenModal(true);
+		setOpenModal(true);
 		//}
-		
-		
+
+
 	};
 
 	useEffect(() => {
@@ -500,25 +514,25 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 
 		consulta();
 	}, []);
-	
+
 	useEffect(() => {
-		if(openExtenderFechaModal){
-			console.log("openExtenderFechaModal",openExtenderFechaModal);
-		console.log("fFin",fFin);
-		console.log("row");
-		
-		
-		if(Object.keys.length === 0){
+		if (openExtenderFechaModal) {
+			console.log("openExtenderFechaModal", openExtenderFechaModal);
+			console.log("fFin", fFin);
+			console.log("row");
 
-		}
-		else{
-			console.log("SelectedRow",selectedRow);
-			
-			setFFin(dayjs(selectedRow?.FechaFin));
 
+			if (Object.keys.length === 0) {
+
+			}
+			else {
+				console.log("SelectedRow", selectedRow);
+
+				setFFin(dayjs(selectedRow?.FechaFin));
+
+			}
 		}
-		}
-		
+
 	}, [openExtenderFechaModal]);
 
 	return (
@@ -533,7 +547,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 						md={4}
 						lg={3}
 						display="flex"
-						alignItems="center" 
+						alignItems="center"
 					>
 						<Box sx={{ padding: "0px 8px" }}>
 							<ButtonsAdd
@@ -552,7 +566,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 								onChange={() => noSelection()}
 								sx={{
 									padding: "8px", // Ajusta el tamaño del botón 
-								  }}
+								}}
 							>
 								<IconButton
 									color="inherit"

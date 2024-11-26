@@ -194,7 +194,11 @@ export const EstudiantesModal = ({
 		  !tipoEstudiante ||
 		  !escolaridad ||
 		  !instituto ||
-		  !responsable
+		  !responsable ||
+		  !escolaridad ||
+		  !unidadAdmin ||
+		  !horarioDesde ||
+		  !horarioHasta
 		) {
 		  Swal.fire("Favor de Completar los Campos", "¡Error!", "info");
 		} else {
@@ -292,7 +296,7 @@ export const EstudiantesModal = ({
 			//setId(dt?.row?.id);}
 			setTipoEstudiante(dt?.row?.TipoEstudiante);
 			setGenero(dt?.row?.Sexo);
-			setUnidadAdmin(dt?.row?.UnidadAdministrativa);
+			setUnidadAdmin(dt?.row?.IdEntidad);
 			setNoGaffete(dt?.row?.NoGaffete);
 			setNombre(dt?.row?.Nombre);
 			setTelefono(dt?.row?.Telefono);
@@ -300,7 +304,7 @@ export const EstudiantesModal = ({
 			setEscolaridad(dt?.row?.IdEscolaridad);
 			//setListEscolaridad(dt?.row?.Escolaridad);
 			//setListInstituto(dt?.row?.Escolaridad);
-			setInstituto(dt?.row?.InstitucionEducativa);
+			setInstituto(dt?.row?.IdInstitucionEducativa);
 			setResponsable(dt?.row?.PersonaResponsable);
 			setFrecuenciaAsistencia(dt.row.Frecuencia);
 			setHorarioDesde(dt.row.HorarioDesde)

@@ -127,6 +127,61 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		}
 	};
 
+	// Función para exportar en un formato
+	const handleExport = (format: "pdf" | "qr") => {
+		handleMenuClose();
+	
+		// Validar formato soportado
+		if (!["pdf", "qr"].includes(format)) {
+			console.error("Formato no soportado:", format);
+			return;
+		}
+	
+		if (selectionModel.length === 0) {
+			console.error("No se han seleccionado IDs para exportar.");
+			return;
+		}
+	
+		const data = {
+			ids: selectionModel,
+			CHUSER: user.Id, // Asegúrate de que `user.Id` esté definido
+			output_format: format,
+		};
+	
+		axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + 'makeQrEstudiante', {
+			params: data,
+			responseType: 'blob', // Asegura que recibes un blob
+		})
+			.then((response) => {
+				const contentType = response.headers['content-type']; // Detecta el tipo de archivo devuelto
+				let fileExtension = "pdf"; // Asume PDF por defecto
+	
+				if (contentType === "application/zip") {
+					fileExtension = "zip";
+				} else if (contentType === "image/png" || format === "qr") {
+					fileExtension = "png";
+				}
+	
+				const fileName = `archivo.${fileExtension}`;
+				const blob = new Blob([response.data], { type: contentType });
+	
+				// Crear un enlace para descargar
+				const link = document.createElement('a');
+				link.href = URL.createObjectURL(blob);
+				link.download = fileName;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link); // Limpia el DOM
+			})
+			.catch((error) => {
+				console.error('Error al descargar el archivo:', error);
+			});
+	};
+	
+	
+
+	
+
 	const handleOpenExtenderFecha = (row: any) => {
 		setSelectedRow(row);
 		setOpenExtenderFechaModal(true);
@@ -500,12 +555,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		setFFin(v);
 	};
 
-	// Función para exportar en un formato
-	const handleExport = (format: "PDF" | "PNG") => {
-		handleMenuClose();
-		console.log(`Exportando en formato ${format}`);
-		// Aquí puedes añadir la lógica de exportación
-	};
+	
 
 	const handleClose = () => {
 		setOpen(false);
@@ -630,10 +680,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 									onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
 								}}
 							>
-								<MenuItem onClick={() => handleExport("PDF")}>
+								<MenuItem onClick={() => handleExport("pdf")}>
 									Exportar como PDF
 								</MenuItem>
-								<MenuItem onClick={() => handleExport("PNG")}>
+								<MenuItem onClick={() => handleExport("qr")}>
 									Exportar como PNG
 								</MenuItem>
 							</Menu>

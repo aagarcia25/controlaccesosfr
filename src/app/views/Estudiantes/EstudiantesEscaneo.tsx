@@ -81,6 +81,17 @@ export const EstudiantesEscaneo = () =>
 			}
 		});
 	};
+	const isToday = (date: string | number | Date) => {
+		const today = new Date().toISOString().split("T")[0]; // Fecha de hoy (YYYY-MM-DD)
+		const entryDate = new Date(date).toISOString().split("T")[0];
+		return today === entryDate;
+	};
+	const isTodayTesting = (date: string | number | Date) => {
+		const simulatedToday = "2024-11-28"; // Fecha simulada (YYYY-MM-DD)
+		const entryDate = new Date(date).toISOString().split("T")[0];
+		return simulatedToday === entryDate;
+	};
+
 
 	const handleSend = () => {
 		let data = {
@@ -423,6 +434,7 @@ export const EstudiantesEscaneo = () =>
 						</Grid>
 					</Grid>
 
+
 					<Grid container>
 						<Grid
 							item
@@ -433,36 +445,13 @@ export const EstudiantesEscaneo = () =>
 								display: "flex",
 								flexDirection: "row",
 								justifyContent: "center",
-								gap: "20px", // Espaciado entre botones
+								gap: "20px",
 							}}
 						>
-							{vrows.FechaEntrada != "" &&
-								vrows.FechaEntrada !== null ? (
-								<>
-									<Button
-										onClick={() => handlesalida()}
-										sx={{
-											backgroundColor: "#000000",
-											color: "white",
-											padding: {
-												xs: "12px 22px",
-												md: "15px 25px",
-											},
-											fontSize: { xs: "20px", md: "22px" },
-											borderRadius: "10px",
-											boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-											"&:hover": {
-												backgroundColor: "#D3D3D3",
-											},
-										}}
-									>
-										{"Registrar Salida"}
-									</Button>
-								</>
-							) : (
+							{vrows.FechaEntrada && isToday(vrows.FechaEntrada) ? (
+								// Si hay una entrada hoy, renderizar botón para salida
 								<Button
-									onClick={() => handleentrada()}
-									variant="contained"
+									onClick={() => handlesalida()}
 									sx={{
 										backgroundColor: "#000000",
 										color: "white",
@@ -470,33 +459,30 @@ export const EstudiantesEscaneo = () =>
 										fontSize: { xs: "20px", md: "22px" },
 										borderRadius: "10px",
 										boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-										"&:hover": {
-											backgroundColor: "#D3D3D3",
-										},
+										"&:hover": { backgroundColor: "#D3D3D3" },
+									}}
+								>
+									{"Registrar Salida"}
+								</Button>
+							) : (
+								// Si no hay entrada hoy, renderizar botón para entrada
+								<Button
+									onClick={() => handleentrada()}
+									sx={{
+										backgroundColor: "#000000",
+										color: "white",
+										padding: { xs: "12px 22px", md: "15px 25px" },
+										fontSize: { xs: "20px", md: "22px" },
+										borderRadius: "10px",
+										boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+										"&:hover": { backgroundColor: "#D3D3D3" },
 									}}
 								>
 									{"Registrar Entrada"}
 								</Button>
 							)}
-
-							<Button
-								onClick={() => handlesalir()}
-								sx={{
-									backgroundColor: "#A57F52",
-									color: "white",
-									padding: { xs: "12px 22px", md: "15px 25px" },
-									fontSize: { xs: "20px", md: "22px" },
-									borderRadius: "10px",
-									boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-									"&:hover": {
-										backgroundColor: "#D3D3D3", // Hover gris
-									},
-								}}
-							>
-								{"Salir"}
-							</Button>
 						</Grid>
-					</Grid>
+					</Grid>;
 				</Grid>
 			</Grid>
 		</>

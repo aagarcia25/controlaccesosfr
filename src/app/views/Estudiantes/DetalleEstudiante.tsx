@@ -13,6 +13,7 @@ import axios from "axios";
 import { formatFecha } from "../../helpers/FormatDate";
 import { FlowFlags } from "typescript";
 import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox';
+import dayjs from 'dayjs';
 
 
 export const DetalleEstudiante = (
@@ -22,8 +23,9 @@ export const DetalleEstudiante = (
 	const [URLruta, setURLRuta] = useState<string>("");
 	const [id, setId] = useState("");
 	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
-
-
+	const formatFecha = (fecha: string | Date | dayjs.Dayjs): string => {
+		return dayjs(fecha).format('DD/MM/YYYY');
+	  };
 	const navigate = useNavigate();
 
 	const handleClose = () => {
@@ -104,6 +106,44 @@ export const DetalleEstudiante = (
 		// });
 	};
 
+	const reenviarCorreoQR = () => {
+		let data = {
+			NUMOPERACION: 9,
+			CHIDs: [dataGlobal.id],
+			reenviar: true,
+			CHUSER: user.Id,
+		};
+	
+		CatalogosServices.Estudiante(data).then((res) => {
+			if (res.SUCCESS) {
+				// Mostrar mensaje de éxito
+				Toast.fire({
+					icon: "success",
+					title: res.STRMESSAGE.success,
+				});
+
+				// Si hay warnings, mostrar una alerta adicional
+				if (res.STRMESSAGE.warnings) {
+					const studentNames = res.STRMESSAGE.warnings.students.join(", ");
+					Swal.fire({
+						icon: "warning",
+						title: "Advertencia",
+						html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
+					});
+				}
+
+				// Refrescar la tabla y limpiar selección
+				//setSelectionModel([]);
+			} else {
+				// Mostrar errores críticos
+				const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
+				Swal.fire("¡Error!", errorDetails, "error");
+			}
+		});
+	};
+	
+	
+	
 
 	// 	const handleVer = (v: any) => {
 	//         setverarchivo(false);
@@ -258,10 +298,11 @@ export const DetalleEstudiante = (
 						{dataGlobal.row.Nombre}
 					</Typography>
 					<Typography sx={{ color: "#333", fontSize: "1.4rem" }}>
-						Horas Acumuladas: 400
+						Horas Acumuladas: {dataGlobal.row.HorasTotales}
 					</Typography>
 					<Typography sx={{ color: "#333", fontSize: "1.4rem" }}>
-					Periodo: {formatFecha(dataGlobal.row.FechaInicio)} - {formatFecha(dataGlobal.row.FechaFin)}		</Typography>
+					Periodo: {formatFecha(dataGlobal.row.FechaInicio)} - {formatFecha(dataGlobal.row.FechaFin)}
+					</Typography>
 				</Grid>
 				<Grid
 					item
@@ -314,7 +355,7 @@ export const DetalleEstudiante = (
 							px: 3,
 						}}
 						startIcon={<ForwardToInboxIcon />}
-						onClick={descargaQR}  // Asegúrate de pasar la función correctamente
+						onClick={reenviarCorreoQR}  // Asegúrate de pasar la función correctamente
 						disabled={dataGlobal.row.EstadoQR==="1"? false:true}
 					>
 						REENVIAR QR 
@@ -377,7 +418,7 @@ export const DetalleEstudiante = (
 						<Typography sx={{ fontWeight: "bold",fontSize: "1.3rem"  }} paddingRight={1}>
 							Unidad Administrativa: 
 						</Typography>
-						<Typography  sx={{ fontSize: "1.3rem" }}> Despacho del Tesorero</Typography>
+						<Typography  sx={{ fontSize: "1.3rem" }}> {dataGlobal.row.UnidadAdministrativa}</Typography>
 					</Grid>
 					<Grid item xs={12} sm={12}>
 						<Typography sx={{ fontSize: "1.3rem" }}>
@@ -396,14 +437,16 @@ export const DetalleEstudiante = (
 							Frecuencia de Asistencia: 
 						</Typography>
 						<Typography sx={{ fontSize: "1.3rem" }}>
-							Lunes, Miércoles, Viernes
+						{dataGlobal.row.Frecuencia}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={12} md={12} display={"flex"}>
 						<Typography sx={{ fontWeight: "bold",fontSize: "1.3rem"  }} paddingRight={1}>
 							Horario:
 						</Typography>
-						<Typography sx={{ fontSize: "1.3rem" }} > 10:00 - 14:00</Typography>
+						<Typography sx={{ fontSize: "1.3rem" }}>
+  {dayjs(dataGlobal.row.HorarioDesde).format('HH:mm')} - {dayjs(dataGlobal.row.HorarioHasta).format('HH:mm')}
+</Typography>
 					</Grid>
  
 				</Grid>

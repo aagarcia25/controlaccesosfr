@@ -46,7 +46,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
-	const [data, setData] = useState([]);
+	const [data, setData] = useState<any[]>([]);
 	const [editar, setEditar] = useState<boolean>(true);
 	const [vrows, setVrows] = useState({});
 	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
@@ -142,14 +142,14 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			return;
 		}
 	
-		const data = {
+		const dataR = {
 			ids: selectionModel,
 			CHUSER: user.Id, // Asegúrate de que `user.Id` esté definido
 			output_format: format,
 		};
 	
 		axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + 'makeQrEstudiante', {
-			params: data,
+			params: dataR,
 			responseType: 'blob', // Asegura que recibes un blob
 		})
 			.then((response) => {
@@ -162,7 +162,24 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 					fileExtension = "png";
 				}
 	
-				const fileName = `archivo.${fileExtension}`;
+				let fileName = "";
+        if (selectionModel.length === 1) {
+			console.log("select 1",selectedRow);
+			console.log("select 2",selectionModel);
+			
+			//let obj = data.find((dato: any) => dato.id === selectionModel[0]);
+			let obj = data.find((dato: any) => dato.id === selectionModel[0]);
+
+// Verificar si obj es undefined o no tiene 'Nombre'
+			fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
+
+			
+        } else {
+            // Si hay más de uno, usa el nombre genérico
+            fileName = `archivo.${fileExtension}`;
+        }
+
+				//const fileName = `archivo.${fileExtension}`;
 				const blob = new Blob([response.data], { type: contentType });
 	
 				// Crear un enlace para descargar
@@ -478,7 +495,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			field: "FechaInicio",
 			headerName: "Fecha de inicio",
 			description: "Fecha de inicio",
-			minWidth: 120,
+			//minWidth: 120,
+			width: 100,
 			flex: 0.8,
 			valueFormatter: (params) => {
 				// Formatea la fecha
@@ -493,7 +511,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			field: "FechaFin",
 			headerName: "Fecha de fin",
 			description: "Fecha de fin",
-			minWidth: 120,
+			//minWidth: 120,
+			width: 100,
 			flex: 0.8,
 			valueFormatter: (params) => {
 				// Formatea la fecha
@@ -512,19 +531,20 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			flex: 1,
 		},
 
-		// {
-		// 	field: "Sexo",
-		// 	headerName: "Sexo",
-		// 	description: "Sexo",
-		// 	minWidth: 100,
-		// 	flex: 0.5,
-		// },
+		{
+			field: "Correo",
+			headerName: "Correo Electrónico",
+			description: "Correo Electrónico",
+			minWidth: 100,
+			flex: 0.5,
+		},
 
 		{
 			field: "NoGaffete",
 			headerName: "Número de gaffete",
 			description: "Número de gaffete",
-			minWidth: 120,
+			//minWidth: 120,
+			width: 80,
 			flex: 0.8,
 		},
 		{

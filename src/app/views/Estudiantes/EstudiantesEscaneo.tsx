@@ -7,7 +7,7 @@ import { CatalogosServices } from "../../services/catalogosServices";
 import Swal from "sweetalert2";
 import { Button, Grid, Typography, Box } from "@mui/material";
 import TitleComponent from "../componentes/TitleComponent";
-import { formatFecha } from "../../helpers/FormatDate";
+import dayjs from 'dayjs';
 
 export const EstudiantesEscaneo = () =>
 //{ dataGlobal }: { dataGlobal: any }
@@ -19,7 +19,7 @@ export const EstudiantesEscaneo = () =>
 	const [vrows, setVrows] = useState<Estudiante>(newEstudiante);
 	const [URLruta, setURLRuta] = useState<string>("");
 	const [verarchivo, setverarchivo] = useState(false);
-
+	
 	const [open, setopen] = useState(false);
 
 	const handlesalir = () => {
@@ -429,7 +429,7 @@ export const EstudiantesEscaneo = () =>
 									color: "#555",
 								}}
 							>
-								{vrows?.HorarioDesde} - {vrows?.HorarioHasta} hrs
+								{dayjs(vrows?.HorarioDesde).format('HH:mm')} - {dayjs(vrows?.HorarioHasta).format('HH:mm')} hrs
 							</Typography>
 						</Grid>
 					</Grid>
@@ -482,7 +482,7 @@ export const EstudiantesEscaneo = () =>
 								</Button>
 							)}
 						</Grid>
-					</Grid>;
+					</Grid>
 				</Grid>
 			</Grid>
 		</>

@@ -445,7 +445,7 @@ export const DetalleEstudiante = (
 							Horario:
 						</Typography>
 						<Typography sx={{ fontSize: "1.3rem" }}>
-  {dayjs(dataGlobal.row.HorarioDesde).format('HH:mm')} - {dayjs(dataGlobal.row.HorarioHasta).format('HH:mm')}
+  {dataGlobal.row.HorarioDesde} - {dataGlobal.row.HorarioHasta}
 </Typography>
 					</Grid>
  

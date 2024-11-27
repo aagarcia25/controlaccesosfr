@@ -319,25 +319,24 @@ export const EstudiantesModal = ({
             dt.row.HorarioDesde ? dayjs(dt.row.HorarioDesde, "HH:mm:ss").format("HH:mm:ss") : null
         );
 
-        setHorarioDesde(()=>{
-			let hora 
-			if(dt.row.HorarioDesde)
-				 hora = dt.row.HorarioDesde.split(" ")[1];
-			return dayjs(hora, "HH:mm:ss")||null; 
-		}
-			// dt.row.HorarioDesde
-			// 	? dayjs.utc(dt.row.HorarioDesde).tz("America/Mexico_City")
-			// 	: null
-		);
+		setHorarioDesde(dayjs(dt.row.HorarioDesde, "HH:mm:ss"));
+		setHorarioHasta(dayjs(dt.row.HorarioHasta, "HH:mm:ss"));
+        // setHorarioDesde(()=>{
+		// 	let hora 
+		// 	if(dt.row.HorarioDesde)
+		// 		 hora = dt.row.HorarioDesde.split(" ")[1];
+		// 	return dayjs(hora, "HH:mm:ss")||null; 
+		// }
+		// );
 		
-        setHorarioHasta(()=>{
-			let hora 
-			if(dt.row.HorarioHasta)
-			 hora = dt.row.HorarioHasta.split(" ")[1];
-			return dayjs(hora, "HH:mm:ss")||null; 
-		}
-            // dt.row.HorarioHasta ? dayjs(dt.row.HorarioHasta, "HH:mm:ss") : null
-        );
+        // setHorarioHasta(()=>{
+		// 	let hora 
+		// 	if(dt.row.HorarioHasta)
+		// 	 hora = dt.row.HorarioHasta.split(" ")[1];
+		// 	return dayjs(hora, "HH:mm:ss")||null; 
+		// }
+        //     // dt.row.HorarioHasta ? dayjs(dt.row.HorarioHasta, "HH:mm:ss") : null
+        // );
 
 
 			if (fInicio !== null) {

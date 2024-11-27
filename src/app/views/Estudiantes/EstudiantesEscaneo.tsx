@@ -429,7 +429,7 @@ export const EstudiantesEscaneo = () =>
 									color: "#555",
 								}}
 							>
-								{dayjs(vrows?.HorarioDesde).format('HH:mm')} - {dayjs(vrows?.HorarioHasta).format('HH:mm')} hrs
+								{vrows?.HorarioDesde} - {vrows?.HorarioHasta} hrs
 							</Typography>
 						</Grid>
 					</Grid>

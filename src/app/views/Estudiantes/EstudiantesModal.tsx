@@ -239,7 +239,7 @@ export const EstudiantesModal = ({
 			NoGaffete: NoGaffete,
 			Correo: email,
 			HorarioDesde: horarioDesde ? horarioDesde.format("YYYY-MM-DD HH:mm:ss") : null,
-    HorarioHasta: horarioHasta ? horarioHasta.format("YYYY-MM-DD HH:mm:ss") : null,
+    		HorarioHasta: horarioHasta ? horarioHasta.format("YYYY-MM-DD HH:mm:ss") : null,
 			frecuenciaAsistencia: frecuenciaSeleccionada,  // Añadir la cadena con los días seleccionados
 		  };
 	  

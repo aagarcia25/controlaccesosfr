@@ -32,7 +32,7 @@ export const DetalleEstudiante = (
 
 	const descargaQR = () => {
 		let data = {
-			id: dataGlobal.id,
+			ids: [dataGlobal.id],
 			CHUSER: user.Id,
 		};
 
@@ -261,7 +261,7 @@ export const DetalleEstudiante = (
 						Horas Acumuladas: 400
 					</Typography>
 					<Typography sx={{ color: "#333", fontSize: "1.4rem" }}>
-					Periodo: {formatFecha(dataGlobal.row.FechaInicio)} - {formatFecha(dataGlobal.row.FechaFin)}					</Typography>
+					Periodo: {formatFecha(dataGlobal.row.FechaInicio)} - {formatFecha(dataGlobal.row.FechaFin)}		</Typography>
 				</Grid>
 				<Grid
 					item

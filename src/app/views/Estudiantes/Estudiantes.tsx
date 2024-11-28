@@ -129,9 +129,11 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 
 	// Función para exportar en un formato
 	const handleExport = (format: "pdf" | "qr") => {
+		
 		handleMenuClose();
-	
-		// Validar formato soportado
+		if (selectionModel.length >= 1){
+			
+			// Validar formato soportado
 		if (!["pdf", "qr"].includes(format)) {
 			console.error("Formato no soportado:", format);
 			return;
@@ -193,6 +195,14 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			.catch((error) => {
 				console.error('Error al descargar el archivo:', error);
 			});
+		}else {
+			Swal.fire({
+				title: "No se han seleccionado registros",
+				icon: "warning",
+			});
+		}
+	
+		
 	};
 	
 	
@@ -452,14 +462,14 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			headerName: "Tipo de estudiante",
 			description: "Tipo de estudiante",
 			minWidth: 130,
-			flex: 1,
+			flex: 0.8,
 		},
 		{
 			field: "Nombre",
 			headerName: "Nombre de estudiante",
 			description: "Nombre de estudiante",
 			minWidth: 200,
-			flex: 1,
+			flex: 1.1,
 		},
 
 		{
@@ -467,7 +477,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			headerName: "Teléfono",
 			description: "Teléfono",
 			minWidth: 120,
-			flex: 1,
+			flex: 0.5,
 		},
 
 		{
@@ -475,7 +485,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			headerName: "Unidad administrativa",
 			description: "Unidad administrativa",
 			minWidth: 170,
-			flex: 1,
+			flex: 1.2,
 		},
 		{
 			field: "PersonaResponsable",
@@ -497,7 +507,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			description: "Fecha de inicio",
 			//minWidth: 120,
 			width: 100,
-			flex: 0.8,
+			flex: 0.5,
 			valueFormatter: (params) => {
 				// Formatea la fecha
 				return new Intl.DateTimeFormat("es-MX", {
@@ -513,7 +523,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			description: "Fecha de fin",
 			//minWidth: 120,
 			width: 100,
-			flex: 0.8,
+			flex: 0.5,
 			valueFormatter: (params) => {
 				// Formatea la fecha
 				return new Intl.DateTimeFormat("es-MX", {
@@ -536,7 +546,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			headerName: "Correo Electrónico",
 			description: "Correo Electrónico",
 			minWidth: 100,
-			flex: 0.5,
+			flex: 0.8,
 		},
 
 		{
@@ -545,7 +555,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 			description: "Número de gaffete",
 			//minWidth: 120,
 			width: 80,
-			flex: 0.8,
+			flex: 0.5,
 		},
 		{
 			field: "ExtenderFecha",

@@ -72,7 +72,9 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [selectionModel, setSelectionModel] = useState<any[]>([]);
 
 	const noSelection = () => {
-		if (selectionModel.length >= 1) {
+		if(selectionModel.length >4){
+			Swal.fire("Seleccione máximo 4 registros", "", "info");
+		}else if (selectionModel.length >= 1) {
 			Swal.fire({
 				icon: "info",
 				title: "Se generará un QR único para cada registro seleccionado",

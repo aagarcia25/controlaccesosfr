@@ -280,11 +280,17 @@ export const DetalleEstudiante = (
 						src="URLruta" // Reemplaza con la URL de la imagen del estudiante
 						sx={{ width: 120, height: 120, mx: "auto" }}
 					/> */}
-					<Avatar src={URLruta}
-						alt="Foto de Estudiante"
-						sx={{ width: 120, height: 120, mx: "auto" }}
+					<Avatar
+  src={URLruta}
+  alt="Foto de Estudiante"
+  sx={{
+    width: 120,
+    height: 120,
+    mx: "auto",
+    borderRadius: 0, // Esto hace que la imagen sea cuadrada
+  }}
+/>
 
-					/>
 
 				</Grid>
 				{/* Información del Estudiante */}

@@ -2,6 +2,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import TitleComponent from "../componentes/TitleComponent";
 import {
 	Box,
+	Collapse,
 	Grid,
 	IconButton,
 	Menu,
@@ -43,6 +44,16 @@ import dayjs, { Dayjs } from "dayjs";
 import MUIXDataGridEstudiantes from "../componentes/MUIXDataGridEstudiantes";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import SelectFrag from "../componentes/SelectFrag";
+import SelectValues from "../../interfaces/Share";
+import { ShareService } from "../../services/ShareService";
+import SendIcon from "@mui/icons-material/Send";
+import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
+import ButtonsShare from "../componentes/ButtonsShare";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -70,11 +81,31 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [newFechaFin, setNewFechaFin] = useState("");
 	const [fFin, setFFin] = useState<Dayjs | null>();
 	const [selectionModel, setSelectionModel] = useState<any[]>([]);
+	const [showfilter, setshowfilter] = useState<boolean>(false);
+	const [idUnidadAdministrativa, setIdUnidadAdministrativa] = useState("");
+	const [ListIdUnidadAdministrativa, setListIdUnidadAdministrativa] = useState<SelectValues[]>([]);
+	const [idEstudiante, setIdEstudiante] = useState("");
+	const [ListIdEstudiante, setListIdEstudiante] = useState<SelectValues[]>([]);
+	const [fInicioFiltro, setFInicioFiltro] = useState<Dayjs | null>();
+	const [fFinFiltro, setFFinFiltro] = useState<Dayjs | null>();
+
 
 	const noSelection = () => {
+		let obj = data.find((dato: any) => dato.id === selectionModel[0]);
+
+// Verificar si obj es undefined o no tiene 'Nombre'
+			//fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
 		if(selectionModel.length >4){
 			Swal.fire("Seleccione máximo 4 registros", "", "info");
 		}else if (selectionModel.length >= 1) {
+console.log("entre alñ min 4");
+console.log("EstadoQr1",obj.EstadoQR);
+
+			if(obj.EstadoQR==="0"){
+
+					//console.log("entre al if1",obj.EstadoQR);
+				
+			
 			Swal.fire({
 				icon: "info",
 				title: "Se generará un QR único para cada registro seleccionado",
@@ -121,6 +152,58 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 					Swal.fire("No se realizaron cambios", "", "info");
 				}
 			});
+			}else if (obj?.EstadoQR === "1"){
+				console.log("entre al if de qr generado");
+				
+				Swal.fire({
+					icon: "info",
+					title: "Los QR que ya se generaron antes solo se reenviarán por correo de nuevo",
+					showDenyButton: true,
+					showCancelButton: false,
+					confirmButtonText: "Confirmar",
+					denyButtonText: `Cancelar`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						let data = {
+							NUMOPERACION: 9,
+							CHIDs: selectionModel,
+							CHUSER: user.Id,
+						};
+	
+						CatalogosServices.Estudiante(data).then((res) => {
+							if (res.SUCCESS) {
+								// Mostrar mensaje de éxito
+								Toast.fire({
+									icon: "success",
+									title: res.STRMESSAGE.success,
+								});
+	
+								// Si hay warnings, mostrar una alerta adicional
+								if (res.STRMESSAGE.warnings) {
+									const studentNames = res.STRMESSAGE.warnings.students.join(", ");
+									Swal.fire({
+										icon: "warning",
+										title: "Advertencia",
+										html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
+									});
+								}
+	
+								// Refrescar la tabla y limpiar selección
+								consulta();
+								setSelectionModel([]);
+							} else {
+								// Mostrar errores críticos
+								const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
+								Swal.fire("¡Error!", errorDetails, "error");
+							}
+						});
+					} else if (result.isDenied) {
+						Swal.fire("No se realizaron cambios", "", "info");
+					}
+				});
+			}
+			
+			
 		} else {
 			Swal.fire({
 				title: "No se han seleccionado registros",
@@ -587,6 +670,49 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		setFFin(v);
 	};
 
+	const handleFilterChangeUnidadAdministrativa = (v: string) => {
+		setIdUnidadAdministrativa(v);
+		//loadFilter(21, v);
+	};
+
+	const handleFilterChangeEstudiante = (v: string) => {
+		setIdEstudiante(v);
+		//loadFilter(21, v);
+	};
+
+	const handleFilterChangeFInicioFiltro = (v: any) => {
+		setFInicioFiltro(v);
+	};
+
+	const handleFilterChangeFFinFiltro = (v: any) => {
+		setFFinFiltro(v);
+	};
+
+	const loadFilter = (operacion: number, id?: string) => {
+		let data = { NUMOPERACION: operacion, P_ID: id };
+		ShareService.SelectIndex(data).then((res) => {
+		  if (operacion === 5) {
+			//  setCatInforme(res.RESPONSE);
+		  } else if (operacion === 14) {
+			setListIdEstudiante(res.RESPONSE);
+		  } else if (operacion === 11) {
+			setListIdUnidadAdministrativa(res.RESPONSE);
+		  } 
+		});
+	};
+	const clearFilter = () => {
+		setIdEstudiante("");
+		setIdUnidadAdministrativa("");
+		
+	};
+
+	const verfiltros = () => {
+		if (showfilter) {
+		  setshowfilter(false);
+		} else {
+		  setshowfilter(true);
+		}
+	  };
 	
 
 	const handleClose = () => {
@@ -624,6 +750,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	}, []);
 
 	useEffect(() => {
+		loadFilter(11);
+		loadFilter(14);
+
+
 		if (openExtenderFechaModal) {
 			console.log("openExtenderFechaModal", openExtenderFechaModal);
 			console.log("fFin", fFin);
@@ -642,6 +772,104 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 		<>
 			<Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
 				<TitleComponent title={"Estudiantes"} show={openSlider} />
+				<Collapse in={showfilter} timeout="auto" unmountOnExit>
+            <Grid
+              container
+              item
+              spacing={1}
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ padding: "1%" }}
+            >
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Typography sx={{ fontFamily: "sans-serif" }}>
+                  Unidad Administrativa:
+                </Typography>
+                <SelectFrag
+                  value={idUnidadAdministrativa}
+                  options={ListIdUnidadAdministrativa}
+                  onInputChange={handleFilterChangeUnidadAdministrativa}
+                  placeholder={"Seleccione.."}
+                  disabled={false}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Typography sx={{ fontFamily: "sans-serif" }}>
+                  Estudiante:
+                </Typography>
+                <SelectFrag
+                  value={idEstudiante}
+                  options={ListIdEstudiante}
+                  onInputChange={handleFilterChangeEstudiante}
+                  placeholder={"Seleccione.."}
+                  disabled={false}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+							<CustomizedDate
+								value={fInicioFiltro}
+								label={"Fecha de Vigencia (Inicio)"}
+								onchange={handleFilterChangeFInicioFiltro}
+							/>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+			  <CustomizedDate
+								value={fFinFiltro}
+								label={"Fecha de Vigencia (Fin)"}
+								onchange={handleFilterChangeFFinFiltro}
+							/>
+              </Grid>
+            </Grid>
+            
+            <Grid
+              container
+              item
+              spacing={1}
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ padding: "1%" }}
+            >
+              <Grid item xs={12} sm={6} md={4} lg={2}>
+                <Tooltip title="Buscar">
+                  <Button
+                    onClick={consulta}
+                    variant="contained"
+                    color="secondary"
+                    endIcon={<SendIcon sx={{ color: "white" }} />}
+                  >
+                    <Typography sx={{ color: "white" }}> Buscar </Typography>
+                  </Button>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={2}>
+                <Tooltip title="Limpiar Filtros">
+                  <Button
+                    onClick={clearFilter}
+                    variant="contained"
+                    color="secondary"
+                    endIcon={<CleaningServicesIcon sx={{ color: "white" }} />}
+                  >
+                    <Typography sx={{ color: "white" }}>
+                      Limpiar Filtros
+                    </Typography>
+                  </Button>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={2}>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={6}></Grid>
+            </Grid>
+          </Collapse>
 				<Grid container spacing={2}>
 					<Grid
 						item
@@ -686,8 +914,9 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 									variant="contained"
 									sx={{
 										padding: "7px", // Ajusta el tamaño del botón
-										backgroundColor: "#0a1017",
+										backgroundColor: "#15212f",
 										color: "white",
+										minWidth: "40px",
 										"&:hover": {
 											backgroundColor: "#1C1C1C",
 										},
@@ -720,6 +949,13 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 								</MenuItem>
 							</Menu>
 						</Box>
+						<ButtonsShare
+            title={showfilter ? "Ocultar Reporte" : "Generar Reporte"}
+            handleFunction={verfiltros}
+            show={true}
+            icon={showfilter ? <PlaylistRemoveIcon /> : <FormatListBulletedIcon />}
+            row={undefined}
+          />
 					</Grid>
 					<Grid item xs={12}>
 						<Box

@@ -54,6 +54,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import { base64ToArrayBuffer } from "../../helpers/Files";
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -260,12 +261,11 @@ console.log("EstadoQr1",obj.EstadoQR);
 // Verificar si obj es undefined o no tiene 'Nombre'
 			fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
 
-			
+
         } else {
             // Si hay más de uno, usa el nombre genérico
             fileName = `archivo.${fileExtension}`;
         }
-
 				//const fileName = `archivo.${fileExtension}`;
 				const blob = new Blob([response.data], { type: contentType });
 	
@@ -286,12 +286,8 @@ console.log("EstadoQr1",obj.EstadoQR);
 				icon: "warning",
 			});
 		}
-	
 		
 	};
-	
-	
-
 	
 
 	const handleOpenExtenderFecha = (row: any) => {
@@ -665,6 +661,53 @@ console.log("EstadoQr1",obj.EstadoQR);
 	];
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+/////////////////////////////////////////////////////////////////
+///////////// Reportes con Filtro ///////////////////////////////
+
+const GenerarReporteEstudiantes = (v: any) => {
+    
+    //setOpenSlider(true);
+    console.log(v);
+  
+
+    try {
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: process.env.REACT_APP_APPLICATION_BASE_URL + "ReporteGeneralEstudiantes",
+        headers: {
+          "Content-Type": "application/json",
+          responseType: "blob",
+        },
+        data: {},
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          var bufferArray = base64ToArrayBuffer(
+            String(response.data.RESPONSE.response64)
+          );
+          var blobStore = new Blob([bufferArray], {
+            type: "application/*",
+          });
+
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blobStore);
+          link.download =
+            "Informe de estudiantes." + response.data.RESPONSE.extencion;
+          link.click();
+          //setOpenSlider(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          //setOpenSlider(false);
+        });
+    } catch (err: any) {
+      //setOpenSlider(false);
+      console.log(err);
+    }
+  };
 
 	const handleFilterChangeFFin = (v: any) => {
 		setFFin(v);
@@ -713,6 +756,8 @@ console.log("EstadoQr1",obj.EstadoQR);
 		  setshowfilter(true);
 		}
 	  };
+////////////////////////////////////////////////////////////////////
+///////////// Fin Reportes con Filtro //////////////////////////////
 	
 
 	const handleClose = () => {
@@ -842,7 +887,7 @@ console.log("EstadoQr1",obj.EstadoQR);
               <Grid item xs={12} sm={6} md={4} lg={2}>
                 <Tooltip title="Buscar">
                   <Button
-                    onClick={consulta}
+                    onClick={GenerarReporteEstudiantes}
                     variant="contained"
                     color="secondary"
                     endIcon={<SendIcon sx={{ color: "white" }} />}

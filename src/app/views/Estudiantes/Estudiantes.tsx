@@ -664,50 +664,44 @@ console.log("EstadoQr1",obj.EstadoQR);
 /////////////////////////////////////////////////////////////////
 ///////////// Reportes con Filtro ///////////////////////////////
 
-const GenerarReporteEstudiantes = (v: any) => {
-    
-    //setOpenSlider(true);
-    console.log(v);
-  
+const GenerarReporteEstudiantes = () => {
+    const data = {
+        idUnidadAdministrativa:idUnidadAdministrativa === "false" ? "" : idUnidadAdministrativa,
+        idEstudiante:idEstudiante === "false" ? "" :idEstudiante,
+		fInicioFiltro: fInicioFiltro ? fInicioFiltro.format("YYYY-MM-DD") : "", // Convierte Dayjs a string
+		fFinFiltro: fFinFiltro ? fFinFiltro.format("YYYY-MM-DD") : "", // Convierte Dayjs a string
+    };
 
     try {
-      let config = {
-        method: "post",
-        maxBodyLength: Infinity,
-        url: process.env.REACT_APP_APPLICATION_BASE_URL + "ReporteGeneralEstudiantes",
-        headers: {
-          "Content-Type": "application/json",
-          responseType: "blob",
-        },
-        data: {},
-      };
+        const config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: process.env.REACT_APP_APPLICATION_BASE_URL + "ReporteGeneralEstudiantes",
+            headers: {
+                "Content-Type": "application/json",
+                responseType: "blob",
+            },
+            data: data, // Envía los filtros aquí
+        };
 
-      axios
-        .request(config)
-        .then((response) => {
-          var bufferArray = base64ToArrayBuffer(
-            String(response.data.RESPONSE.response64)
-          );
-          var blobStore = new Blob([bufferArray], {
-            type: "application/*",
-          });
+        axios
+            .request(config)
+            .then((response) => {
+                const bufferArray = base64ToArrayBuffer(String(response.data.RESPONSE.response64));
+                const blobStore = new Blob([bufferArray], { type: "application/*" });
 
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blobStore);
-          link.download =
-            "Informe de estudiantes." + response.data.RESPONSE.extencion;
-          link.click();
-          //setOpenSlider(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          //setOpenSlider(false);
-        });
-    } catch (err: any) {
-      //setOpenSlider(false);
-      console.log(err);
+                const link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blobStore);
+                link.download = "Informe de estudiantes." + response.data.RESPONSE.extencion;
+                link.click();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    } catch (err) {
+        console.log(err);
     }
-  };
+};
 
 	const handleFilterChangeFFin = (v: any) => {
 		setFFin(v);
@@ -738,7 +732,7 @@ const GenerarReporteEstudiantes = (v: any) => {
 			//  setCatInforme(res.RESPONSE);
 		  } else if (operacion === 14) {
 			setListIdEstudiante(res.RESPONSE);
-		  } else if (operacion === 11) {
+		  } else if (operacion === 15) {
 			setListIdUnidadAdministrativa(res.RESPONSE);
 		  } 
 		});
@@ -746,6 +740,9 @@ const GenerarReporteEstudiantes = (v: any) => {
 	const clearFilter = () => {
 		setIdEstudiante("");
 		setIdUnidadAdministrativa("");
+		setFFinFiltro(null);
+		setFInicioFiltro(null);
+
 		
 	};
 
@@ -795,8 +792,8 @@ const GenerarReporteEstudiantes = (v: any) => {
 	}, []);
 
 	useEffect(() => {
-		loadFilter(11);
 		loadFilter(14);
+		loadFilter(15);
 
 
 		if (openExtenderFechaModal) {
@@ -858,14 +855,14 @@ const GenerarReporteEstudiantes = (v: any) => {
               <Grid item xs={12} sm={6} md={4} lg={3}>
 							<CustomizedDate
 								value={fInicioFiltro}
-								label={"Fecha de Vigencia (Inicio)"}
+								label={"Desde"}
 								onchange={handleFilterChangeFInicioFiltro}
 							/>
               </Grid>
               <Grid item xs={12} sm={6} md={4} lg={3}>
 			  <CustomizedDate
 								value={fFinFiltro}
-								label={"Fecha de Vigencia (Fin)"}
+								label={"Hasta"}
 								onchange={handleFilterChangeFFinFiltro}
 							/>
               </Grid>
@@ -892,7 +889,7 @@ const GenerarReporteEstudiantes = (v: any) => {
                     color="secondary"
                     endIcon={<SendIcon sx={{ color: "white" }} />}
                   >
-                    <Typography sx={{ color: "white" }}> Buscar </Typography>
+                    <Typography sx={{ color: "white" }}> Descargar Reporte </Typography>
                   </Button>
                 </Tooltip>
               </Grid>

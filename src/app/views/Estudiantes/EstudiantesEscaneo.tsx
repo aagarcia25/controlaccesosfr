@@ -19,7 +19,7 @@ export const EstudiantesEscaneo = () =>
 	const [vrows, setVrows] = useState<Estudiante>(newEstudiante);
 	const [URLruta, setURLRuta] = useState<string>("");
 	const [verarchivo, setverarchivo] = useState(false);
-	
+
 	const [open, setopen] = useState(false);
 
 	const handlesalir = () => {
@@ -49,7 +49,17 @@ export const EstudiantesEscaneo = () =>
 					}
 				});
 			} else {
-				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+				Swal.fire({
+					title: "Información",
+					icon: "info",
+					html: res.STRMESSAGE, // Mensaje detallado del backend
+					confirmButtonText: "Volver al escáner", // Acción clara
+					background: "EBEBEB",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						navigate("/inicio/es"); // Redirige al escáner
+					}
+				});
 			}
 		});
 	};
@@ -77,14 +87,30 @@ export const EstudiantesEscaneo = () =>
 					}
 				});
 			} else {
-				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+				Swal.fire({
+					title: "Información",
+					icon: "info",
+					html: res.STRMESSAGE, // Mensaje detallado del backend
+					confirmButtonText: "Volver al escáner", // Acción clara
+					background: "EBEBEB",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						navigate("/inicio/es"); // Redirige al escáner
+					}
+				});
 			}
+
 		});
 	};
 	const isToday = (date: string | number | Date) => {
-		const today = new Date().toISOString().split("T")[0]; // Fecha de hoy (YYYY-MM-DD)
-		const entryDate = new Date(date).toISOString().split("T")[0];
-		return today === entryDate;
+		const today = new Date();
+		const entryDate = new Date(date);
+
+		// Normalizar ambas fechas al inicio del día
+		const todayNormalized = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+		const entryDateNormalized = new Date(entryDate.getFullYear(), entryDate.getMonth(), entryDate.getDate());
+
+		return todayNormalized.getTime() === entryDateNormalized.getTime();
 	};
 	const isTodayTesting = (date: string | number | Date) => {
 		const simulatedToday = "2024-11-28"; // Fecha simulada (YYYY-MM-DD)

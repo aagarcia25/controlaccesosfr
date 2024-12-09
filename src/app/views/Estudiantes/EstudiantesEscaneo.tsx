@@ -49,7 +49,17 @@ export const EstudiantesEscaneo = () =>
 					}
 				});
 			} else {
-				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+				Swal.fire({
+					title: "Información",
+					icon: "info",
+					html: res.STRMESSAGE, // Mensaje detallado del backend
+					confirmButtonText: "Volver al escáner", // Acción clara
+					background: "EBEBEB",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						navigate("/inicio/es"); // Redirige al escáner
+					}
+				});
 			}
 		});
 	};
@@ -77,8 +87,19 @@ export const EstudiantesEscaneo = () =>
 					}
 				});
 			} else {
-				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+				Swal.fire({
+					title: "Información",
+					icon: "info",
+					html: res.STRMESSAGE, // Mensaje detallado del backend
+					confirmButtonText: "Volver al escáner", // Acción clara
+					background: "EBEBEB",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						navigate("/inicio/es"); // Redirige al escáner
+					}
+				});
 			}
+
 		});
 	};
 	const isToday = (date: string | number | Date) => {

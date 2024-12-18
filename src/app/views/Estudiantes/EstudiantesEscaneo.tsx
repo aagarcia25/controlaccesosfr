@@ -364,7 +364,8 @@ export const EstudiantesEscaneo = () =>
 								width: "200px",
 								height: "200px",
 								borderRadius: "10px",
-								objectFit: "cover",
+								objectFit: "cover", // Asegura que la imagen llene el contenedor
+								objectPosition: "top", // Muestra la parte superior de la imagen
 								border: "2px solid #ccc",
 								marginBottom: "20px",
 							}}

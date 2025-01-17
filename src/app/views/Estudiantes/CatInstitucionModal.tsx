@@ -113,7 +113,14 @@ return(<>
 				handleClose={handleClose}
 			>
 				<Progress open={show}></Progress>
-				<Box margin={2} padding={2}>
+				<Box 
+					margin={2} 
+					padding={2}
+				    sx={{
+						maxWidth: "70%", // Define el ancho máximo del modal
+						width: "90%", // Se adapta a pantallas más pequeñas
+						margin: "auto", // Centra el modal en la pantalla
+					  }}>
 					{/* Información Básica */}
 					<Grid container alignItems="center" spacing={1} sx={{ mb: 3 }}>
 						<Grid item xs={12} sm="auto">
@@ -128,17 +135,9 @@ return(<>
 
 					{/* Aquí va el contenido de la sección de Información Básica */}
 					<Grid container spacing={3}>
-						<Grid item xs={12} sm={6} md={4}>
-							
-						</Grid>
-
-						<Grid item xs={12} sm={6} md={4}>
-							
-						</Grid>
-
 						<Grid item xs={12} sm={12} md={12}>
 							<Typography sx={{ fontFamily: "sans-serif" }}>
-								Nombre de Institución:
+								Nombre de Institución:  
 							</Typography>
 							<TextField
 								required

@@ -79,18 +79,17 @@ const VisitasGeneral = () => {
       width: 170,
     },
     {
-      field: "Express",
+      field: "Generado",
       headerName: "Generado",
       description: "ExpresGenerados",
       width: 120,
-      renderCell: (v: any) => {
-        return (
-          <>
-            {v.row.Express == 1 ? "Generado por Recepción" : "Generado con QR"}
-          </>
-        );
+      valueGetter: (params: any) =>
+        params.row.Express == 1 ? "Generado por Recepción" : "Generado con QR",
+      renderCell: (params: any) => {
+        return <>{params.value}</>;
       },
     },
+    
      {
       field: "Indefinido",
       headerName: "Vigencia",
@@ -225,12 +224,10 @@ const VisitasGeneral = () => {
       headerName: "Finalizado",
       description: "Finalizado",
       width: 120,
-      renderCell: (v: any) => {
-        return (
-          <>
-            {v.row.Finalizado == 1 ? "Finalizado" : "En Espera de Validación"}
-          </>
-        );
+      valueGetter: (params: any) =>
+        params.row.Finalizado == 1 ? "Finalizado" : "En Espera de Validación",
+      renderCell: (params: any) => {
+        return <>{params.value}</>;
       },
     },
     {
@@ -238,10 +235,13 @@ const VisitasGeneral = () => {
       headerName: "Cancelado",
       description: "Cancelado",
       width: 120,
-      renderCell: (v: any) => {
-        return <>{v.row.Cancelado == 1 ? "Cancelado por Sistema" : ""}</>;
+      valueGetter: (params: any) =>
+        params.row.Cancelado == 1 ? "Cancelado por Sistema" : "",
+      renderCell: (params: any) => {
+        return <>{params.value}</>;
       },
-    },
+    }
+    ,
     
   ];
 

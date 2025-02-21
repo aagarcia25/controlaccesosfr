@@ -28,6 +28,9 @@ export class CatalogosServices {
   public static async Estudiante(data: any) {
     return await post("Estudiante", data);
   }
+  public static async PersonalIndex(data: any) {
+    return await post("PersonalIndex", data);
+  }
   public static async migraData(data: any) {
     return await postDocument("migraData", data);
   }

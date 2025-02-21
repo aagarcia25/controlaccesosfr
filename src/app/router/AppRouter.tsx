@@ -22,6 +22,7 @@ import { AuthRouter } from "./AuthRouter";
 import { Estudiantes } from "../views/Estudiantes/Estudiantes";
 import DetalleEstudiante from "../views/Estudiantes/DetalleEstudiante";
 import { EstudiantesEscaneo } from "../views/Estudiantes/EstudiantesEscaneo";
+import { Personal } from "../views/Personal/Personal";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
@@ -143,6 +144,14 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           element={log ? <EstudiantesEscaneo /> : <AuthRouter />}
         />
         {/* FIN SECCION DE ESTUDIANTES */}
+        {/* SECCION DE PERSONAL */}
+        <Route
+          path="/inicio/ControlPersonal"
+          element={log ? <Personal  /> : <AuthRouter />}
+        />
+        
+        
+        {/* FIN SECCION DE PERSONAL */}
 
       </Routes>
 

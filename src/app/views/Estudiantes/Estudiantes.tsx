@@ -464,6 +464,8 @@ console.log("EstadoQr1",obj.EstadoQR);
 		};
 
 		CatalogosServices.Estudiante(data).then((res) => {
+			console.log("res",res);
+			console.log("data",data);
 			if (res.SUCCESS) {
 				setData(res.RESPONSE);
 				console.log("res.RESPONSE", res.RESPONSE);
@@ -818,7 +820,7 @@ const GenerarReporteEstudiantes = () => {
 
 	useEffect(() => {
 		permisos.map((item: PERMISO) => {
-			// Aquí podrías realizar alguna validación de permisos si es necesario
+			// Aquí va la validación de permisos 
 		});
 
 		consulta();

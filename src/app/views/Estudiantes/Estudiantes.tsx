@@ -55,6 +55,10 @@ import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { base64ToArrayBuffer } from "../../helpers/Files";
+import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
+import { CatInstitucion } from "./CatInstitucion";
+import { CatEscolaridad } from "./CatEscolaridad";
 
 export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [open, setOpen] = useState(false);
@@ -73,6 +77,10 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [tipoOperacion, setTipoOperacion] = useState(0);
 
 	// Nuevo estado para el modal de subir foto
+	
+	const [openCatInstitucion, setOpenCatInstitucion] = useState(false);
+	const [openCatEscolaridad, setOpenCatEscolaridad] = useState(false);
+
 	const [openModal, setOpenModal] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
 	const [loading, setLoading] = useState(false);
@@ -456,6 +464,8 @@ console.log("EstadoQr1",obj.EstadoQR);
 		};
 
 		CatalogosServices.Estudiante(data).then((res) => {
+			console.log("res",res);
+			console.log("data",data);
 			if (res.SUCCESS) {
 				setData(res.RESPONSE);
 				console.log("res.RESPONSE", res.RESPONSE);
@@ -466,6 +476,22 @@ console.log("EstadoQr1",obj.EstadoQR);
 				Swal.fire("¡Error!", res.STRMESSAGE, "error");
 			}
 		});
+	};
+
+	
+	const handleCatInstitucion = (v: any) => {
+		//setTipoOperacion(1);
+		//setModo("Agregar Registro");
+		setOpenCatInstitucion(true);
+		//setVrows("");
+	};
+	
+	
+	const handleCatEscolaridad = (v: any) => {
+		//setTipoOperacion(1);
+		//setModo("Agregar Registro");
+		setOpenCatEscolaridad(true);
+		//setVrows("");
 	};
 
 	const columnsRel: GridColDef[] = [
@@ -661,6 +687,8 @@ console.log("EstadoQr1",obj.EstadoQR);
 	];
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [anchorElSettings, setAnchorElSettings] = useState<null | HTMLElement>(null);
+
 /////////////////////////////////////////////////////////////////
 ///////////// Reportes con Filtro ///////////////////////////////
 
@@ -759,8 +787,15 @@ const GenerarReporteEstudiantes = () => {
 
 	const handleClose = () => {
 		setOpen(false);
+		setOpenCatInstitucion(false);
+		setOpenCatEscolaridad(false);
 		consulta();
+
 	};
+	// const handleCloseInstitucion = () => {
+	// 	setOpen(false);
+	// 	consulta();
+	// };
 
 	// Función para abrir el menú
 	const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -785,7 +820,7 @@ const GenerarReporteEstudiantes = () => {
 
 	useEffect(() => {
 		permisos.map((item: PERMISO) => {
-			// Aquí podrías realizar alguna validación de permisos si es necesario
+			// Aquí va la validación de permisos 
 		});
 
 		consulta();
@@ -910,111 +945,186 @@ const GenerarReporteEstudiantes = () => {
               <Grid item xs={12} sm={6} md={4} lg={2}>
               </Grid>
               <Grid item xs={12} sm={6} md={4} lg={6}></Grid>
-            </Grid>
-          </Collapse>
-				<Grid container spacing={2}>
-					<Grid
-						item
-						xs={12}
-						sm={6}
-						md={4}
-						lg={3}
-						display="flex"
-						alignItems="center"
-					>
-						<Box sx={{ padding: "0px 8px" }}>
-							<ButtonsAdd handleOpen={handleOpen} agregar={true} />
-						</Box>
-						<Box sx={{ padding: "4px 8px" }}>
-							<ButtonsImport handleOpen={handleUpload} agregar={true} />
-						</Box>
-						<Box sx={{ padding: "4px 8px" }}>
-							<Tooltip title={"Generar QR Seleccionados"}>
-								<ToggleButton
-									value="check"
-									className="guardar"
-									size="small"
-									onChange={() => noSelection()}
-									sx={{
-										padding: "8px", // Ajusta el tamaño del botón
-									}}
-								>
-									<IconButton
-										color="inherit"
-										component="label"
-										size="small"
-									>
-										<QrCodeIcon />
-									</IconButton>
-								</ToggleButton>
-							</Tooltip>
-						</Box>
+           		 </Grid>
+         		 </Collapse>
+				  <Grid container spacing={2}>
+  {/* Botones principales */}
+  <Grid
+    item
+    xs={12}
+    sm={6}
+    md={4}
+    lg={3}
+    display="flex"
+    alignItems="center"
+  >
+    <Box sx={{ padding: "0px 8px" }}>
+      <ButtonsAdd handleOpen={handleOpen} agregar={true} />
+    </Box>
+    <Box sx={{ padding: "4px 8px" }}>
+      <ButtonsImport handleOpen={handleUpload} agregar={true} />
+    </Box>
+    <Box sx={{ padding: "4px 8px" }}>
+      <Tooltip title={"Generar QR Seleccionados"}>
+        <ToggleButton
+          value="check"
+          className="guardar"
+          size="small"
+          onChange={() => noSelection()}
+          sx={{
+            padding: "8px", // Ajusta el tamaño del botón
+          }}
+        >
+          <IconButton
+            color="inherit"
+            component="label"
+            size="small"
+          >
+            <QrCodeIcon />
+          </IconButton>
+        </ToggleButton>
+      </Tooltip>
+    </Box>
+    <Box sx={{ padding: "4px 8px" }}>
+      <Tooltip title={"Exportar QRs"}>
+        <Button
+          variant="contained"
+          sx={{
+            padding: "7px", // Ajusta el tamaño del botón
+            backgroundColor: "#15212f",
+            color: "white",
+            minWidth: "40px",
+            "&:hover": {
+              backgroundColor: "#1C1C1C",
+            },
+          }}
+          onMouseEnter={(event) => setAnchorEl(event.currentTarget)} // Abre el menú
+        >
+          <IconButton
+            color="inherit"
+            component="label"
+            size="small"
+          >
+            <FileDownloadIcon />
+          </IconButton>
+        </Button>
+      </Tooltip>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)} // Cierra el menú al hacer clic afuera
+        MenuListProps={{
+          onMouseEnter: () => setAnchorEl(anchorEl), // Mantiene el menú abierto si el mouse está dentro
+          onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
+        }}
+      >
+        <MenuItem onClick={() => handleExport("pdf")}>
+          Exportar como PDF
+        </MenuItem>
+        <MenuItem onClick={() => handleExport("qr")}>
+          Exportar como PNG
+        </MenuItem>
+      </Menu>
+    </Box>
+    <ButtonsShare
+      title={showfilter ? "Ocultar Reporte" : "Generar Reporte"}
+      handleFunction={verfiltros}
+      show={true}
+      icon={showfilter ? <PlaylistRemoveIcon /> : <FormatListBulletedIcon />}
+      row={undefined}
+    />
+  </Grid>
+  
+ {/* Nuevo botón de configuración */}
+<Grid
+  item
+  xs={12}
+  sm={6}
+  md={8}
+  lg={9}
+  display="flex"
+  justifyContent="flex-end"
+  alignItems="center"
+>
+<Tooltip title={"Catálogos"}>
+        <Button
+          variant="contained"
+          sx={{
+            padding: "7px", // Ajusta el tamaño del botón
+            backgroundColor: "#15212f",
+            color: "white",
+            minWidth: "40px",
+            "&:hover": {
+              backgroundColor: "#1C1C1C",
+            },
+          }}
+          onMouseEnter={(event) => setAnchorElSettings(event.currentTarget)} // Abre el menú
+        >
+          <IconButton
+            color="inherit"
+            component="label"
+            size="small"
+          >
+            <SettingsIcon />
+          </IconButton>
+        </Button>
+      </Tooltip>
+      <Menu
+        anchorEl={anchorElSettings}
+        open={Boolean(anchorElSettings)}
+        onClose={() => setAnchorElSettings(null)} // Cierra el menú al hacer clic afuera
+        MenuListProps={{
+          onMouseEnter: () => setAnchorElSettings(anchorElSettings), // Mantiene el menú abierto si el mouse está dentro
+          onMouseLeave: () => setAnchorElSettings(null), // Cierra el menú si el mouse sale
+        }}
+      >
+        <MenuItem onClick={() => handleCatInstitucion("pdf")}>
+          Catálogo de Institución
+        </MenuItem>
+        <MenuItem onClick={() => handleCatEscolaridad("qr")}>
+		  Catálogo de Escolaridad
+        </MenuItem>
+      </Menu>
+</Grid>
 
-						<Box sx={{ padding: "4px 8px" }}>
-							<Tooltip title={"Exportar QRs"}>
-								<Button
-									variant="contained"
-									sx={{
-										padding: "7px", // Ajusta el tamaño del botón
-										backgroundColor: "#15212f",
-										color: "white",
-										minWidth: "40px",
-										"&:hover": {
-											backgroundColor: "#1C1C1C",
-										},
-									}}
-									onMouseEnter={(event) => setAnchorEl(event.currentTarget)} // Abre el menú
-								>
-									<IconButton
-										color="inherit"
-										component="label"
-										size="small"
-									>
-										<FileDownloadIcon />
-									</IconButton>
-								</Button>
-							</Tooltip>
-							<Menu
-								anchorEl={anchorEl}
-								open={Boolean(anchorEl)}
-								onClose={() => setAnchorEl(null)} // Cierra el menú al hacer clic afuera
-								MenuListProps={{
-									onMouseEnter: () => setAnchorEl(anchorEl), // Mantiene el menú abierto si el mouse está dentro
-									onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
-								}}
-							>
-								<MenuItem onClick={() => handleExport("pdf")}>
-									Exportar como PDF
-								</MenuItem>
-								<MenuItem onClick={() => handleExport("qr")}>
-									Exportar como PNG
-								</MenuItem>
-							</Menu>
-						</Box>
-						<ButtonsShare
-            title={showfilter ? "Ocultar Reporte" : "Generar Reporte"}
-            handleFunction={verfiltros}
-            show={true}
-            icon={showfilter ? <PlaylistRemoveIcon /> : <FormatListBulletedIcon />}
-            row={undefined}
-          />
-					</Grid>
-					<Grid item xs={12}>
-						<Box
-							sx={{
-								height: { xs: 300, sm: 400, md: 500 },
-								width: "100%",
-								overflowX: "auto",
-							}}
-						>
-							<MUIXDataGridEstudiantes
-								columns={columnsRel}
-								rows={data}
-								setRowSelected={setSelectionModel}
-							/>
-						</Box>
-					</Grid>
-				</Grid>
+
+  {/* Tabla */}
+  <Grid item xs={12}>
+    <Box
+      sx={{
+        height: { xs: 300, sm: 400, md: 500 },
+        width: "100%",
+        overflowX: "auto",
+      }}
+    >
+      <MUIXDataGridEstudiantes
+        columns={columnsRel}
+        rows={data}
+        setRowSelected={setSelectionModel}
+      />
+    </Box>
+  </Grid>
+</Grid>
+
+				{openCatInstitucion ? (
+					<CatInstitucion
+						//tipo={tipoOperacion}
+						handleClose={handleClose}
+						//dt={vrows}
+					/>
+				) : (
+					""
+				)}
+				{openCatEscolaridad ? (
+					<CatEscolaridad
+						//tipo={tipoOperacion}
+						handleClose={handleClose}
+						//dt={vrows}
+					/>
+				) : (
+					""
+				)}
+
 				{open ? (
 					<EstudiantesModal
 						tipo={tipoOperacion}

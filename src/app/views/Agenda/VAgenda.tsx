@@ -6,10 +6,10 @@ import Swal from "sweetalert2";
 import { Toast } from "../../helpers/Toast";
 import { localizer } from "../../helpers/calendarLocalizer";
 import { getMessagesES } from "../../helpers/getMessages";
-import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { PERMISO, USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { agenda } from "../../interfaces/Visitas";
 import { CatalogosServices } from "../../services/catalogosServices";
-import { getMenus, getRoles, getUser } from "../../services/localStorage";
+import { getMenus, getPermisos, getRoles, getUser } from "../../services/localStorage";
 import TitleComponent from "../componentes/TitleComponent";
 import { Iroles, menus } from "../../interfaces/menu";
 import { Grid } from "@mui/material";
@@ -37,6 +37,9 @@ interface EventData {
 
 const VAgenda = () => {
   const navigate = useNavigate();
+    const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
+    const [admiGeneral, setAdmiGeneral] = useState<boolean>(false);
+
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [open, setopen] = useState(false);
   const [listAgenda, setlistAgenda] = useState<agenda[]>([]);
@@ -59,6 +62,17 @@ const VAgenda = () => {
     }
     return false;
   }
+
+  function verificarrol(list: Iroles[]): boolean {
+    for (const rol of list) {
+      if (rol.ControlInterno === "ADMINSICA") {
+        console.log("es admi general");
+        
+      }
+    }
+    return false;
+  }
+
 
   const onSelectEvent = (v: any) => {
     console.log(v);
@@ -83,8 +97,11 @@ const VAgenda = () => {
 
   const handleSend = () => {
     setopen(true);
+    console.log("admiGeneralhandlesend",admiGeneral);
+    
     let data = {
-      NUMOPERACION: 7,
+      //NUMOPERACION: 7,
+      NUMOPERACION: admiGeneral ? 25 : 7,
       CHID: user.Id,
       IDENTIDAD: user.IdEntidad,
       ROL: verificarEscanearEnMenus(list),
@@ -120,8 +137,24 @@ const VAgenda = () => {
   };
 
   useEffect(() => {
-    handleSend();
+    //verificarrol()
+
+    list.map((item: Iroles) => {
+      if (String(item.ControlInterno) === "ADMINSICA") {
+        setAdmiGeneral(true);
+        console.log("admiGeneral222",admiGeneral);
+        
+      console.log("entre al if del usefect");
+      
+      }
+    });
+
   }, []);
+
+
+  useEffect(() => {
+    handleSend();
+  }, [admiGeneral]);
   return (
     <div style={{ height: 500, width: "100%" }}>
       <TitleComponent title={"Agenda de Visitas"} show={open} />

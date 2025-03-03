@@ -67,6 +67,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [vrows, setVrows] = useState({});
 	const user: USUARIORESPONSE = JSON.parse(String(getUser()));
 	const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
+	const [reporte, setReporte] = useState<boolean>(false);
 	const [agregar, setAgregar] = useState<boolean>(false);
 	const [show, setShow] = useState(false);
 	const [id, setId] = useState("");
@@ -845,11 +846,140 @@ const GenerarReporteEstudiantes = () => {
 		}
 	}, [openExtenderFechaModal]);
 
+	useEffect(() => {
+		permisos.map((item: PERMISO) => {
+		  if (String(item.menu) === "Estudiantes") {
+			if (String(item.ControlInterno) === "REPORTE") {
+				setReporte(true);
+				console.log("tengo reporte");
+				
+			}
+		  }
+		});
+	  }, []);
+
 	return (
 		<>
 			<Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
 				<TitleComponent title={"Estudiantes"} show={openSlider} />
-				<Collapse in={showfilter} timeout="auto" unmountOnExit>
+				{reporte ? <>
+					{/* <Collapse in={showfilter} timeout="auto" unmountOnExit> */}
+					<Grid
+					  container
+					  item
+					  spacing={1}
+					  xs={12}
+					  sm={12}
+					  md={12}
+					  lg={12}
+					  direction="row"
+					  justifyContent="center"
+					  alignItems="center"
+					  sx={{ padding: "1%" }}
+					>
+					  <Grid item xs={12} sm={6} md={4} lg={3}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+						  Unidad Administrativa:
+						</Typography>
+						<SelectFrag
+						  value={idUnidadAdministrativa}
+						  options={ListIdUnidadAdministrativa}
+						  onInputChange={handleFilterChangeUnidadAdministrativa}
+						  placeholder={"Seleccione.."}
+						  disabled={false}
+						/>
+					  </Grid>
+					  <Grid item xs={12} sm={6} md={4} lg={3}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+						  Estudiante:
+						</Typography>
+						<SelectFrag
+						  value={idEstudiante}
+						  options={ListIdEstudiante}
+						  onInputChange={handleFilterChangeEstudiante}
+						  placeholder={"Seleccione.."}
+						  disabled={false}
+						/>
+					  </Grid>
+					  <Grid item xs={12} sm={6} md={4} lg={3}>
+									<CustomizedDate
+										value={fInicioFiltro}
+										label={"Desde"}
+										onchange={handleFilterChangeFInicioFiltro}
+									/>
+					  </Grid>
+					  <Grid item xs={12} sm={6} md={4} lg={3}>
+					  <CustomizedDate
+										value={fFinFiltro}
+										label={"Hasta"}
+										onchange={handleFilterChangeFFinFiltro}
+									/>
+					  </Grid>
+					</Grid>
+					
+					<Grid
+					  container
+					  item
+					  spacing={1}
+					  xs={12}
+					  sm={12}
+					  md={12}
+					  lg={12}
+					  direction="row"
+					  justifyContent="center"
+					  alignItems="center"
+					  sx={{ padding: "1%" }}
+					>
+					  <Grid item xs={12} sm={6} md={4} lg={2}>
+						<Tooltip title="Buscar">
+						  <Button
+							onClick={GenerarReporteEstudiantes}
+							variant="contained"
+							color="secondary"
+							endIcon={<SendIcon sx={{ color: "white" }} />}
+						  >
+							<Typography sx={{ color: "white" }}> Descargar Reporte </Typography>
+						  </Button>
+						</Tooltip>
+					  </Grid>
+					  <Grid item xs={12} sm={6} md={4} lg={2}>
+						<Tooltip title="Limpiar Filtros">
+						  <Button
+							onClick={clearFilter}
+							variant="contained"
+							color="secondary"
+							endIcon={<CleaningServicesIcon sx={{ color: "white" }} />}
+						  >
+							<Typography sx={{ color: "white" }}>
+							  Limpiar Filtros
+							</Typography>
+						  </Button>
+						</Tooltip>
+					  </Grid>
+					  <Grid item xs={12} sm={6} md={4} lg={2}>
+					  </Grid>
+					  <Grid item xs={12} sm={6} md={4} lg={6}></Grid>
+							</Grid>
+						  {/* </Collapse> */}
+						  <Grid
+						item
+						xs={12}
+						sm={6}
+						md={4}
+						lg={3}
+						display="flex"
+						alignItems="center"
+					>
+						{/* <ButtonsShare
+							title={showfilter ? "Ocultar Reporte" : "Generar Reporte"}
+							handleFunction={verfiltros}
+							show={true}
+							icon={showfilter ? <PlaylistRemoveIcon /> : <FormatListBulletedIcon />}
+							row={undefined}
+						/> */}
+					</Grid>
+				</>:<>
+					<Collapse in={showfilter} timeout="auto" unmountOnExit>
             <Grid
               container
               item
@@ -947,8 +1077,10 @@ const GenerarReporteEstudiantes = () => {
               <Grid item xs={12} sm={6} md={4} lg={6}></Grid>
            		 </Grid>
          		 </Collapse>
-				  <Grid container spacing={2}>
+
+				 <Grid container spacing={2}>
   {/* Botones principales */}
+ 
   <Grid
     item
     xs={12}
@@ -1036,7 +1168,7 @@ const GenerarReporteEstudiantes = () => {
   </Grid>
   
  {/* Nuevo botón de configuración */}
-<Grid
+	{/* <Grid
   item
   xs={12}
   sm={6}
@@ -1045,8 +1177,8 @@ const GenerarReporteEstudiantes = () => {
   display="flex"
   justifyContent="flex-end"
   alignItems="center"
->
-<Tooltip title={"Catálogos"}>
+	>
+	<Tooltip title={"Catálogos"}>
         <Button
           variant="contained"
           sx={{
@@ -1085,7 +1217,7 @@ const GenerarReporteEstudiantes = () => {
 		  Catálogo de Escolaridad
         </MenuItem>
       </Menu>
-</Grid>
+	</Grid> */}
 
 
   {/* Tabla */}
@@ -1106,7 +1238,7 @@ const GenerarReporteEstudiantes = () => {
   </Grid>
 </Grid>
 
-				{openCatInstitucion ? (
+{openCatInstitucion ? (
 					<CatInstitucion
 						//tipo={tipoOperacion}
 						handleClose={handleClose}
@@ -1329,6 +1461,11 @@ const GenerarReporteEstudiantes = () => {
 						</Button>
 					</DialogActions>
 				</Dialog>
+				</>}
+				
+
+
+				
 			</Box>
 		</>
 	);

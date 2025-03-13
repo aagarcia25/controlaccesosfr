@@ -38,13 +38,14 @@ interface EventData {
 const VAgenda = () => {
   const navigate = useNavigate();
     const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
-    const [admiGeneral, setAdmiGeneral] = useState<boolean>(false);
+    const [agendaCompleta, setAgendaCompleta] = useState<boolean>(false);
 
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [open, setopen] = useState(false);
   const [listAgenda, setlistAgenda] = useState<agenda[]>([]);
   const list: Iroles[] = JSON.parse(String(getRoles()));
   const listMenus: menus[] = JSON.parse(String(getMenus()));
+  
   function verificarEscanearEnMenus(menusList: Iroles[]): boolean {
     for (const menu of menusList) {
       if (menu.ControlInterno === "ESCANEAR") {
@@ -97,11 +98,11 @@ const VAgenda = () => {
 
   const handleSend = () => {
     setopen(true);
-    console.log("admiGeneralhandlesend",admiGeneral);
+    console.log("agendaCompleta handle",agendaCompleta);
     
     let data = {
       //NUMOPERACION: 7,
-      NUMOPERACION: admiGeneral ? 25 : 7,
+      NUMOPERACION: agendaCompleta ? 25 : 7,
       CHID: user.Id,
       IDENTIDAD: user.IdEntidad,
       ROL: verificarEscanearEnMenus(list),
@@ -139,12 +140,14 @@ const VAgenda = () => {
   useEffect(() => {
     //verificarrol()
 
-    list.map((item: Iroles) => {
-      if (String(item.ControlInterno) === "ADMINSICA") {
-        setAdmiGeneral(true);
-        console.log("admiGeneral222",admiGeneral);
+    permisos.map((item: PERMISO) => {
+      if (String(item.menu) === "AGENDA") {
+        if (String(item.ControlInterno)==="ALLAGENDA"){
+          setAgendaCompleta(true);
+                  console.log("agenda completa",agendaCompleta);
+                  
+        }
         
-      console.log("entre al if del usefect");
       
       }
     });
@@ -154,7 +157,7 @@ const VAgenda = () => {
 
   useEffect(() => {
     handleSend();
-  }, [admiGeneral]);
+  }, [agendaCompleta]);
   return (
     <div style={{ height: 500, width: "100%" }}>
       <TitleComponent title={"Agenda de Visitas"} show={open} />

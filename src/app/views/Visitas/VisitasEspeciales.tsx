@@ -1,28 +1,21 @@
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
-import dayjs, { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from "@mui/material";
+import SelectFrag from "../componentes/SelectFrag";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
-import { Toast } from "../../helpers/Toast";
-import SelectValues from "../../interfaces/Share";
+import { useEffect, useState } from "react";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
+import { getUser } from "../../services/localStorage";
+import SelectValues from "../../interfaces/Share";
+import dayjs, { Dayjs } from "dayjs";
 import { ShareService } from "../../services/ShareService";
 import { CatalogosServices } from "../../services/catalogosServices";
-import { getToken, getUser } from "../../services/localStorage";
-import CustomizedDate from "../componentes/CustomizedDate";
-import SelectFrag from "../componentes/SelectFrag";
+import { Toast } from "../../helpers/Toast";
+import Swal from "sweetalert2";
 import TitleComponent from "../componentes/TitleComponent";
-import axios from "axios";
+import CustomizedDate from "../componentes/CustomizedDate";
+import { verificarEntidadEspecial } from "../../services/UserServices";
 
-const Visitas = () => {
-  let params = useParams();
+export const VisitasEspeciales = ()=>{
+let params = useParams();
   const navigate = useNavigate();
   const [open, setopen] = useState(false);
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
@@ -32,6 +25,7 @@ const Visitas = () => {
   const [idvista, setidvista] = useState("");
   const [ListVisita, setListVisita] = useState<SelectValues[]>([]);
   const [idpiso, setidpiso] = useState("");
+  const [piso, setPiso] = useState("");
   const [ListPiso, setListPiso] = useState<SelectValues[]>([]);
   const [idTipo, setidTipo] = useState("");
   const [ListIdTipo, setListIdTipo] = useState<SelectValues[]>([]);
@@ -48,6 +42,8 @@ const Visitas = () => {
   const [ApellidoMReceptor, setApellidoMReceptor] = useState("");
   const [ext, setExt] = useState("");
   const [Correo, setCorreo] = useState(user.CorreoElectronico || "");
+  const [CorreoVisitante, setCorreoVisitante] = useState("");
+
   const [idEdificio, setidEdificio] = useState("");
   const [ListEdificio, setListEdificio] = useState<SelectValues[]>([]);
   const [idAcceso, setidAcceso] = useState("");
@@ -55,10 +51,10 @@ const Visitas = () => {
   const [fini, setFini] = useState<Dayjs | null>();
   const [checked, setChecked] = useState(false);
   const [Observaciones, setObservaciones] = useState("");
+console.log("visitasespeciales.tsx");
 
-
-
-
+  verificarEntidadEspecial("Piso",setidpiso,setPiso);
+  
 
 
 
@@ -107,9 +103,9 @@ const Visitas = () => {
     setidunidad(v);
   };
 
-  const handleFilteridPiso = (v: string) => {
-    setidpiso(v);
-  };
+//   const handleFilteridPiso = (v: string) => {
+//     setidpiso(v);
+//   };
 
   const handleFilteridDuracion = (v: string) => {
     setidDuracion(v);
@@ -163,7 +159,7 @@ const Visitas = () => {
         setproveedor(res.RESPONSE[0].Proveedor);
         setCorreo(res.RESPONSE[0].EmailNotificacion);
         setExt(res.RESPONSE[0].Extencion);
-        handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
+        // handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
         setidAcceso(res.RESPONSE[0].idAcceso);
         setChecked(res.RESPONSE[0].Indefinido);
         setObservaciones(res.RESPONSE[0].Observaciones);
@@ -217,14 +213,14 @@ const Visitas = () => {
       if (
         !NombreVisitante ||
         !ApellidoPVisitante ||
-        !NombreReceptor ||
-        !ApellidoPReceptor ||
+        //!NombreReceptor ||
+        //!ApellidoPReceptor ||
         !idunidad ||
         !idpiso ||
-        !idvista ||
-        !idDuracion ||
-        !idEdificio ||
-        !idAcceso
+        !idvista 
+        //!idDuracion ||
+       // !idEdificio ||
+        //!idAcceso
       ) {
         Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
         send = false;
@@ -237,14 +233,14 @@ const Visitas = () => {
         !proveedor ||
         !NombreVisitante ||
         !ApellidoPVisitante ||
-        !NombreReceptor ||
-        !ApellidoPReceptor ||
+       // !NombreReceptor ||
+        //!ApellidoPReceptor ||
         !idunidad ||
-        (!idpiso && idpiso !== "false") ||
-        !idvista ||
-        !idDuracion ||
-        !idEdificio ||
-        !idAcceso
+        (!idpiso ) ||
+        !idvista 
+        //!idDuracion ||
+        //!idEdificio ||
+        //!idAcceso
       ) {
         Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
         send = false;
@@ -261,27 +257,29 @@ const Visitas = () => {
     }
 
     let data = {
+      CorreoUsuario: Correo,
       NUMOPERACION: tipooperacion,
       CHID: id,
       CHUSER: user.Id,
       ModificadoPor: user.Id,
       FechaVisita: fini?.format("YYYY-MM-DDTHH:mm:ssZ"),
-      Duracion: idDuracion,
+      //Duracion: idDuracion,
       IdTipoAcceso: idvista,
       Proveedor: proveedor,
       NombreVisitante: NombreVisitante,
       ApellidoPVisitante: ApellidoPVisitante,
-      ApellidoMVisitante: ApellidoMVisitante,
+      //ApellidoMVisitante: ApellidoMVisitante,
       idTipoentidad: idTipo,
       idEntidad: idEntidad,
-      NombreReceptor: NombreReceptor,
-      ApellidoPReceptor: ApellidoPReceptor,
-      ApellidoMReceptor: ApellidoMReceptor,
+    //   NombreReceptor: NombreReceptor,
+    //   ApellidoPReceptor: ApellidoPReceptor,
+    //   ApellidoMReceptor: ApellidoMReceptor,
       idEntidadReceptor: idunidad,
       PisoReceptor: idpiso,
-      EmailNotificacion: Correo,
-      IdEdificio: idEdificio,
-      IdAcceso: idAcceso,
+      EmailNotificacion: CorreoVisitante,
+
+      //IdEdificio: idEdificio,
+      //IdAcceso: idAcceso,
       Extencion: ext,
       Indefinido: checked,
       Observaciones: Observaciones,
@@ -453,7 +451,7 @@ const Visitas = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
+                {/* <Typography variant="subtitle2" style={{ color: "black" }}>
                   Apellido Materno:
                 </Typography>
                 <TextField
@@ -465,7 +463,7 @@ const Visitas = () => {
                   value={ApellidoMVisitante}
                   onChange={(v) => setApellidoMVisitante(v.target.value)}
                   error={ApellidoMVisitante === "" ? true : false}
-                />
+                /> */}
               </Grid>
 
               {idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
@@ -513,7 +511,7 @@ const Visitas = () => {
             </Grid>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={12}>
+          {/* <Grid item xs={12} sm={12} md={12} lg={12}>
             <Typography sx={{ fontFamily: "sans-serif" }}>
               Persona a Visitar:
             </Typography>
@@ -561,7 +559,7 @@ const Visitas = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={4} md={4} lg={4}>
-                {/* <Typography variant="subtitle2" style={{ color: "black" }}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
                   Apellido Materno:
                 </Typography>
                 <TextField
@@ -573,10 +571,10 @@ const Visitas = () => {
                   value={ApellidoMReceptor}
                   onChange={(v) => setApellidoMReceptor(v.target.value)}
                   error={ApellidoMReceptor === "" ? true : false}
-                /> */}
+                />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sm={12} md={12} lg={12} spacing={1}>
             <Typography sx={{ fontFamily: "sans-serif" }}>
@@ -610,16 +608,16 @@ const Visitas = () => {
 
               <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Typography variant="subtitle2" style={{ color: "black" }}>
-                  *Extensión:
+                  Extensión:
                 </Typography>
                 <TextField
                   size="small"
                   fullWidth
-                  id="outlined-required"
+                  //id="outlined-required"
                   defaultValue=""
                   value={ext}
                   onChange={(v) => setExt(v.target.value)}
-                  error={ext === "" ? true : false}
+                  //error={ext === "" ? true : false}
                 />
               </Grid>
             </Grid>
@@ -659,15 +657,17 @@ const Visitas = () => {
               />
             </Grid>
             <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>
-                *Duración:
+            <Typography sx={{ fontFamily: "sans-serif" }}>
+                Correo de Visitante para Notificación:
               </Typography>
-              <SelectFrag
-                value={idDuracion}
-                options={ListDuracion}
-                onInputChange={handleFilteridDuracion}
-                placeholder={"Seleccione.."}
-                disabled={false}
+              <TextField
+                size="small"
+                fullWidth
+                id="outlined-required"
+                defaultValue=""
+                value={CorreoVisitante}
+                onChange={(v) => setCorreoVisitante(v.target.value)}
+                //error={CorreoVisitante === "" ? true : false}
               />
             </Grid>
           </Grid>
@@ -685,7 +685,7 @@ const Visitas = () => {
             alignItems="center"
           >
             <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>
+              {/* <Typography sx={{ fontFamily: "sans-serif" }}>
                 *Edificio:
               </Typography>
               <SelectFrag
@@ -694,10 +694,10 @@ const Visitas = () => {
                 onInputChange={handleFilterEdificio}
                 placeholder={"Seleccione.."}
                 disabled={false}
-              />
+              /> */}
             </Grid>
             <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>
+              {/* <Typography sx={{ fontFamily: "sans-serif" }}>
                 *Acceso:
               </Typography>
               <SelectFrag
@@ -706,18 +706,28 @@ const Visitas = () => {
                 onInputChange={handleFilterAcceso}
                 placeholder={"Seleccione.."}
                 disabled={false}
-              />
+              /> */}
             </Grid>
 
             <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>*Piso:</Typography>
+              {/* <Typography sx={{ fontFamily: "sans-serif" }}>*Piso:</Typography>
               <SelectFrag
                 value={idpiso}
                 options={ListPiso}
                 onInputChange={handleFilteridPiso}
                 placeholder={"Seleccione.."}
                 disabled={false}
-              />
+              /> */}
+              <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Piso:
+                </Typography>
+                <TextField
+                  size="small"
+                  fullWidth
+                  id="outlined-required"
+                  value={piso}
+                  
+                />
             </Grid>
           </Grid>
 
@@ -815,6 +825,4 @@ const Visitas = () => {
       </Grid>
     </>
   );
-};
-
-export default Visitas;
+}

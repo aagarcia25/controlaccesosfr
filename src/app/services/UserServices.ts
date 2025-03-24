@@ -1,9 +1,11 @@
+import axios from "axios";
 import { UserLogin } from "../interfaces/UserInfo";
 import { get, post, postRefresh, postSingle, putPass } from "./apiServiceExt";
 import { getToken, setToken } from "./localStorage";
 
 import jwt_decode from "jwt-decode";
 import Swal from "sweetalert2";
+import { log } from "node:console";
 
 export class UserServices {
   public static verify(data: any) {
@@ -73,3 +75,28 @@ export const ValidaSesion = () => {
     return "Sesion Valida";
   }
 };
+
+
+
+export const verificarEntidadEspecial = async ( bandera:"Especial"|"Piso",setState: Function,setState2:Function) => {
+  console.log("bandera",bandera);
+  
+  try {
+    const response = await axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + "verificarEntidadEspecial?CHID=" + localStorage.getItem("idEntidad") || "", {
+      headers: {
+        Authorization: getToken(), // Agregar el token en el header
+        "Content-Type": "application/json"
+      }
+    });
+    console.log("response.data.esEntidadEspecial", response.data.esEntidadEspecial);
+    if (bandera === "Especial")setState(response.data.esEntidadEspecial)
+    if (bandera === "Piso"){
+      setState(response.data.datos.idPiso)
+      setState2(response.data.datos.NombrePiso)
+    }
+      //if (bandera === "Piso" && setState2) setState2(response.data.datos.NombrePiso);
+    ///if (bandera === "Piso")setState({"id":response.data.datos.idPiso,"nombre":response.data.datos.NombrePiso} )
+
+  } catch (err) {
+  }
+}

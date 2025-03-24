@@ -23,18 +23,27 @@ import { Estudiantes } from "../views/Estudiantes/Estudiantes";
 import DetalleEstudiante from "../views/Estudiantes/DetalleEstudiante";
 import { EstudiantesEscaneo } from "../views/Estudiantes/EstudiantesEscaneo";
 import { Personal } from "../views/Personal/Personal";
+import { DetallePersonal } from "../views/Personal/DetallePersonal";
+import { VisitasEspeciales } from "../views/Visitas/VisitasEspeciales";
+import { verificarEntidadEspecial } from "../services/UserServices";
+import VisitasReedireccion from "../views/Visitas/VisitasReedireccion";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [dataGlobal,setDataGlobal]= useState<any>();
-
+  const [EntidadEspecial,setEntidadEspecial] = useState(true);
   const handleChangeImg = () => {};
   const handleCloseModal = () => {};
+  console.log("router");
+  
+  verificarEntidadEspecial("Especial",setEntidadEspecial,()=>{});
   useEffect(() => {
+    console.log("eeeeeeeeee",EntidadEspecial);
+    
     handleChangeImg();
   }, []);
-
+ 
   return (
     <Inicio user={user} imgData={String("")} imgTipo={String("")}>
       <Routes>
@@ -66,7 +75,7 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         />
         <Route
           path="/inicio/visitas"
-          element={log ? <Visitas /> : <AuthRouter />}
+          element={log ?<VisitasReedireccion EntidadEspecial={EntidadEspecial}/>: <AuthRouter />}//:<VisitasEspeciales />
         />
         <Route
           path="/inicio/VisistasEscaneo/:id"
@@ -74,13 +83,13 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         />
         <Route
           path="/inicio/visitas/:id"
-          element={log ? <Visitas /> : <AuthRouter />}
+          element={log ? <VisitasReedireccion EntidadEspecial={false} /> : <AuthRouter />}
         />
         <Route
           path="/inicio/visitasGNRL"
           element={log ? <VisitasGeneral /> : <AuthRouter />}
         />
-        <Route
+        <Route 
           path="/inicio/visitasQRSV"
           element={log ? <VisitasGeneralSinVigencia /> : <AuthRouter />}
         />
@@ -149,7 +158,10 @@ export const AppRouter = ({ login }: { login: boolean }) => {
           path="/inicio/ControlPersonal"
           element={log ? <Personal  /> : <AuthRouter />}
         />
-        
+        <Route
+          path="/inicio/DetallePersonal"
+          element={log ? <DetallePersonal  /> : <AuthRouter />}
+        />
         
         {/* FIN SECCION DE PERSONAL */}
 

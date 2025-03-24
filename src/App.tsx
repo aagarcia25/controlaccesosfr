@@ -48,6 +48,13 @@ function App() {
 
     UserServices.userAppDetail(data).then((res) => {
       if (res?.status === 200) {
+        console.log("res.data",res.data.entidades[0][0].Nombre);
+        const nombreEntidad = res.data.entidades[0][0].Nombre;
+    localStorage.setItem("nombreEntidad", nombreEntidad);
+    const idEntidadLocalStorage = res.data.entidades[0][0].Id;
+    localStorage.setItem("idEntidad", idEntidadLocalStorage);
+
+
         setUser(res.data.data);
         setRoles(res.data.roles[0]);
         setMenus(res.data.menus[0]);
@@ -68,8 +75,10 @@ function App() {
   };
 
   const verificatoken = (primerInicio: boolean) => {
-    UserServices.verify({}).then((res) => {
+    UserServices.verify({}).then((res) => {console.log("res",res.data);
+    
       if (res?.status === 200) {
+        
         buscaUsuario(res.data.data.IdUsuario);
         setBloqueoStatus(false);
         setOpenSlider(false);

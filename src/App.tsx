@@ -48,7 +48,6 @@ function App() {
 
     UserServices.userAppDetail(data).then((res) => {
       if (res?.status === 200) {
-        console.log("res.data",res.data.entidades[0][0].Nombre);
         const nombreEntidad = res.data.entidades[0][0].Nombre;
     localStorage.setItem("nombreEntidad", nombreEntidad);
     const idEntidadLocalStorage = res.data.entidades[0][0].Id;

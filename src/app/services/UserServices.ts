@@ -43,6 +43,26 @@ export class UserServices {
   public static async changepassword(data: any) {
     return await putPass("change-password", data);
   }
+
+  public static async verificarEntidadEspecial( bandera:"Especial"|"Piso",setState: Function,setState2:Function){
+  
+  
+    const response = await axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + "verificarEntidadEspecial?CHID=" + localStorage.getItem("idEntidad") || "", {
+      headers: {
+        Authorization: getToken(), // Agregar el token en el header
+        "Content-Type": "application/json"
+      }
+    });
+    if (bandera === "Especial")setState(response.data.esEntidadEspecial)
+    if (bandera === "Piso"){
+      setState(response?.data?.datos?.idPiso||"")
+      setState2(response?.data?.datos?.NombrePiso||"")
+    }
+      //if (bandera === "Piso" && setState2) setState2(response.data.datos.NombrePiso);
+    ///if (bandera === "Piso")setState({"id":response.data.datos.idPiso,"nombre":response.data.datos.NombrePiso} )
+
+
+}
 }
 
 export const ValidaSesion = () => {
@@ -78,25 +98,4 @@ export const ValidaSesion = () => {
 
 
 
-export const verificarEntidadEspecial = async ( bandera:"Especial"|"Piso",setState: Function,setState2:Function) => {
-  console.log("bandera",bandera);
-  
-  try {
-    const response = await axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + "verificarEntidadEspecial?CHID=" + localStorage.getItem("idEntidad") || "", {
-      headers: {
-        Authorization: getToken(), // Agregar el token en el header
-        "Content-Type": "application/json"
-      }
-    });
-    console.log("response.data.esEntidadEspecial", response.data.esEntidadEspecial);
-    if (bandera === "Especial")setState(response.data.esEntidadEspecial)
-    if (bandera === "Piso"){
-      setState(response.data.datos.idPiso)
-      setState2(response.data.datos.NombrePiso)
-    }
-      //if (bandera === "Piso" && setState2) setState2(response.data.datos.NombrePiso);
-    ///if (bandera === "Piso")setState({"id":response.data.datos.idPiso,"nombre":response.data.datos.NombrePiso} )
-
-  } catch (err) {
-  }
-}
+// export const 

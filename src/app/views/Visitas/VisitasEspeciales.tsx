@@ -12,7 +12,7 @@ import { Toast } from "../../helpers/Toast";
 import Swal from "sweetalert2";
 import TitleComponent from "../componentes/TitleComponent";
 import CustomizedDate from "../componentes/CustomizedDate";
-import { verificarEntidadEspecial } from "../../services/UserServices";
+import { UserServices } from "../../services/UserServices";
 
 export const VisitasEspeciales = ()=>{
 let params = useParams();
@@ -51,9 +51,8 @@ let params = useParams();
   const [fini, setFini] = useState<Dayjs | null>();
   const [checked, setChecked] = useState(false);
   const [Observaciones, setObservaciones] = useState("");
-console.log("visitasespeciales.tsx");
 
-  verificarEntidadEspecial("Piso",setidpiso,setPiso);
+  
   
 
 
@@ -84,7 +83,6 @@ console.log("visitasespeciales.tsx");
         setListUnidad(res.RESPONSE);
         setopen(false);
       } else if (operacion === 7) {
-        console.log(res.RESPONSE);
         setListEdificio(res.RESPONSE);
         if ((res.RESPONSE.length = 1)) {
           handleFilterEdificio(res.RESPONSE[0].value);
@@ -326,6 +324,7 @@ console.log("visitasespeciales.tsx");
   };
 
   useEffect(() => {
+    UserServices.verificarEntidadEspecial("Piso",setidpiso,setPiso);
     loadFilter(1);
     loadFilter(3);
     loadFilter(4);

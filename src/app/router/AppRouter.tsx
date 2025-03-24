@@ -25,22 +25,18 @@ import { EstudiantesEscaneo } from "../views/Estudiantes/EstudiantesEscaneo";
 import { Personal } from "../views/Personal/Personal";
 import { DetallePersonal } from "../views/Personal/DetallePersonal";
 import { VisitasEspeciales } from "../views/Visitas/VisitasEspeciales";
-import { verificarEntidadEspecial } from "../services/UserServices";
+import { UserServices } from "../services/UserServices";
 import VisitasReedireccion from "../views/Visitas/VisitasReedireccion";
 
 export const AppRouter = ({ login }: { login: boolean }) => {
   const log = login;
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
   const [dataGlobal,setDataGlobal]= useState<any>();
-  const [EntidadEspecial,setEntidadEspecial] = useState(true);
+  
   const handleChangeImg = () => {};
   const handleCloseModal = () => {};
   console.log("router");
-  
-  verificarEntidadEspecial("Especial",setEntidadEspecial,()=>{});
   useEffect(() => {
-    console.log("eeeeeeeeee",EntidadEspecial);
-    
     handleChangeImg();
   }, []);
  
@@ -75,7 +71,7 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         />
         <Route
           path="/inicio/visitas"
-          element={log ?<VisitasReedireccion EntidadEspecial={EntidadEspecial}/>: <AuthRouter />}//:<VisitasEspeciales />
+          element={log ?<VisitasReedireccion />: <AuthRouter />}//:<VisitasEspeciales />
         />
         <Route
           path="/inicio/VisistasEscaneo/:id"
@@ -83,7 +79,7 @@ export const AppRouter = ({ login }: { login: boolean }) => {
         />
         <Route
           path="/inicio/visitas/:id"
-          element={log ? <VisitasReedireccion EntidadEspecial={false} /> : <AuthRouter />}
+          element={log ? <VisitasReedireccion /> : <AuthRouter />}
         />
         <Route
           path="/inicio/visitasGNRL"

@@ -16,9 +16,13 @@ import { getPermisos, getUser } from "../../services/localStorage";
 import ButtonsEdit from "../componentes/ButtonsEdit";
 import { Toast } from "../../helpers/Toast";
 import ButtonsDeleted from "../componentes/ButtonsDeleted";
+import { ButtonsDetail } from "../componentes/ButtonsDetail";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useNavigate } from "react-router-dom";
 
 export const Personal = ()=>{
-  const [openSlider, setOpenSlider] = useState(false);
+  const [openSlider, setOpenSlider] = useState(true);
 	const [data, setData] = useState<any[]>([]);
 	const [selectionModel, setSelectionModel] = useState<any[]>([]);
   const [modo, setModo] = useState("");
@@ -28,9 +32,10 @@ export const Personal = ()=>{
   const permisos: PERMISO[] = JSON.parse(String(getPermisos()));
 	const [editar, setEditar] = useState<boolean>(true);
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
+	const navigate = useNavigate();
 
   
-
+  const handleOpenExtenderFecha = (row: any) =>{}
     
         const columnsRel: GridColDef[] = [
             {
@@ -46,13 +51,13 @@ export const Personal = ()=>{
                 renderCell: (v: any) => {
                     return (
                         <>
-                            {/* <ButtonsDetail
+                            <ButtonsDetail
                                 title={"Detalle del Estudiante"}
-                                handleFunction={DetalleEstudiante}
+                                handleFunction={DetallePersonal}
                                 show={true}
                                 icon={<VisibilityIcon />}
                                 row={v}
-                            ></ButtonsDetail> */}
+                            ></ButtonsDetail>
                             {editar ? (
                                 <ButtonsEdit
                                     handleAccion={handleAccion}
@@ -62,13 +67,13 @@ export const Personal = ()=>{
                             ) : (
                                 ""
                             )}
-                            {/* <ButtonsDetail
+                            <ButtonsDetail
                                 title={"Subir Foto"}
-                                handleFunction={handleOpenUploadFoto} // Abre el modal
+                                handleFunction={handleAccion} // Abre el modal
                                 show={true}
                                 icon={<AddPhotoAlternateIcon />}
                                 row={v}
-                            ></ButtonsDetail> */}
+                            ></ButtonsDetail>
                             <ButtonsDeleted
                                 handleAccion={handleAccion}
                                 row={v}
@@ -78,29 +83,29 @@ export const Personal = ()=>{
                     );
                 },
             },
-            // {
-            //     field: "EstadoQR",
-            //     headerName: "Estado QR",
-            //     minWidth: 100,
-            //     renderCell: (params: any) => (
-            //         <Box
-            //             sx={{
-            //                 display: "flex",
-            //                 justifyContent: "center", // Centrar horizontalmente
-            //                 alignItems: "center", // Centrar verticalmente
-            //                 padding: "4px 10px",
-            //                 borderRadius: "5px",
-            //                 color: "white",
-            //                 fontWeight: "bold",
-            //                 backgroundColor:
-            //                     params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336",
-            //                 textAlign: "center",
-            //             }}
-            //         >
-            //             {params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
-            //         </Box>
-            //     ),
-            // },
+            {
+                field: "EstadoQR",
+                headerName: "Estado QR",
+                minWidth: 100,
+                renderCell: (params: any) => (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center", // Centrar horizontalmente
+                            alignItems: "center", // Centrar verticalmente
+                            padding: "4px 10px",
+                            borderRadius: "5px",
+                            color: "white",
+                            fontWeight: "bold",
+                            backgroundColor:
+                                params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336",
+                            textAlign: "center",
+                        }}
+                    >
+                        {params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
+                    </Box>
+                ),
+            },
             {
                 field: "Nombre",
                 headerName: "Nombre(s)",
@@ -127,14 +132,43 @@ export const Personal = ()=>{
             },
     
             {
-                field: "entNombre",
-                headerName: "Unidad administrativa",
+                field: "CURP",
+                headerName: "Unidad administrativa / Edificio / Piso",
                 description: "Unidad administrativa",
                 width: 300,
             },
+            {
+              field: "Reasignar Acceso",
+              headerName: "Reasignar Acceso",
+              minWidth: 150,
+              renderCell: (params: any) => (
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => handleOpenExtenderFecha(params.row)}
+                  sx={{
+                    backgroundColor: "black",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "0.85rem",
+                    textTransform: "uppercase",
+                    border: "1px solid rgba(255,255,255,0.5)",
+                    "&:hover": { backgroundColor: "grey.700", color: "white" },
+                  }}
+                >
+                  REASIGNAR
+                </Button>
+              ),
+            },
+            
            
             
         ];
+
+        const DetallePersonal = (v: any) => {
+          //setDataGlobal(v);
+          navigate("/inicio/DetallePersonal");
+        };
 
         const handleOpen = (v: any) => {
           setTipoOperacion(1);
@@ -208,6 +242,8 @@ export const Personal = ()=>{
             });
         };
 
+        const noSelection = () =>{}
+
         useEffect(() => {
             permisos.map((item: PERMISO) => {
               // Aquí va la validación de permisos 
@@ -222,8 +258,8 @@ export const Personal = ()=>{
 		<>
 			<Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
 				<TitleComponent title={"Personal"} show={openSlider} />
-				{/* <Collapse in={showfilter} timeout="auto" unmountOnExit> */}
-           
+		
+
             
           
   {/* Botones principales */}
@@ -242,7 +278,7 @@ export const Personal = ()=>{
     {/* <Box sx={{ padding: "4px 8px" }}>
       <ButtonsImport handleOpen={handleUpload} agregar={true} />
     </Box> */}
-    {/* <Box sx={{ padding: "4px 8px" }}>
+    <Box sx={{ padding: "4px 8px" }}>
       <Tooltip title={"Generar QR Seleccionados"}>
         <ToggleButton
           value="check"
@@ -262,7 +298,7 @@ export const Personal = ()=>{
           </IconButton>
         </ToggleButton>
       </Tooltip>
-    </Box> */}
+    </Box>
     {/* <Box sx={{ padding: "4px 8px" }}>
       <Tooltip title={"Exportar QRs"}>
         <Button

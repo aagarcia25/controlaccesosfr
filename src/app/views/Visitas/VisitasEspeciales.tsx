@@ -355,489 +355,400 @@ export const VisitasEspeciales = ()=>{
   }, []);
 
   return (
-    <>
-      <TitleComponent title={"Generar Visita"} show={open} />
-      
-      <Typography
-        sx={{
-          fontFamily: "sans-serif",
-          textAlign: "center",
-          fontSize: "20px",
-        }}
-      >
-        Completa la información
-      </Typography>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Grid
-          container
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ padding: "2%" }}
-        >
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              *Tipo de Acceso:
-            </Typography>
-            <SelectFrag
-              value={idvista}
-              options={ListVisita}
-              onInputChange={handleFilteridvisita}
-              placeholder={"Seleccione.."}
-              disabled={false}
-            />
-          </Grid>
+		<>
+			<TitleComponent title={"Generar Visita"} show={open} />
 
-          {idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
-            <Grid item xs={12} sm={12} md={12} lg={12}>
-              <Typography variant="body1" gutterBottom>
-                *Proveedor:
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                required
-                id="outlined-required"
-                label=""
-                defaultValue=""
-                value={proveedor}
-                onChange={(v) => setproveedor(v.target.value)}
-                error={proveedor === "" ? true : false}
-              />
-            </Grid>
-          ) : (
-            ""
-          )}
+			<Typography
+				sx={{
+					fontFamily: "sans-serif",
+					textAlign: "center",
+					fontSize: "20px",
+				}}
+			>
+				Completa la información
+			</Typography>
+			<Grid
+				container
+				direction="row"
+				justifyContent="center"
+				alignItems="center"
+			>
+				<Grid
+					container
+					item
+					xs={12}
+					sm={12}
+					md={12}
+					lg={12}
+					direction="row"
+					justifyContent="center"
+					alignItems="center"
+					sx={{ padding: "5%" }}
+				>
+					{/* Tipo de Acceso */}
+					<Grid item xs={12} md={12} paddingBottom={2}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Tipo de Acceso:
+						</Typography>
+						<SelectFrag
+							value={idvista}
+							options={ListVisita}
+							onInputChange={handleFilteridvisita}
+							placeholder={"Seleccione.."}
+							disabled={false}
+						/>
+					</Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="body1" gutterBottom>
-              Visitante:
-            </Typography>
-            <Grid
-              container
-              item
-              spacing={1}
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
-                  *Nombre(s):
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={NombreVisitante}
-                  onChange={(v) => setNombreVisitante(v.target.value)}
-                  error={NombreVisitante === "" ? true : false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
-                  *Apellido Paterno:
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={ApellidoPVisitante}
-                  onChange={(v) => setApellidoPVisitante(v.target.value)}
-                  error={ApellidoPVisitante === "" ? true : false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                {/* <Typography variant="subtitle2" style={{ color: "black" }}>
-                  Apellido Materno:
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={ApellidoMVisitante}
-                  onChange={(v) => setApellidoMVisitante(v.target.value)}
-                  error={ApellidoMVisitante === "" ? true : false}
-                /> */}
-              </Grid>
+					{/* Condicional Proveedor */}
+					{idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
+						<Grid item xs={12} md={12} lg={12}  paddingBottom={3}>
+							<Typography variant="body1" gutterBottom>
+								*Proveedor:
+							</Typography>
+							<TextField
+								fullWidth
+								size="small"
+								required
+								id="outlined-required"
+								label=""
+								defaultValue=""
+								value={proveedor}
+								onChange={(v) => setproveedor(v.target.value)}
+								error={proveedor === "" ? true : false}
+							/>
+						</Grid>
+					) : (
+						""
+					)}
 
-              {idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
-                <Grid
-                  container
-                  item
-                  spacing={1}
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Grid item xs={12} sm={8} md={8} lg={8}>
-                    <Typography sx={{ fontFamily: "sans-serif" }}>
-                      *Origen:
-                    </Typography>
-                    <SelectFrag
-                      value={idTipo}
-                      options={ListIdTipo}
-                      onInputChange={handleFilteridTipo}
-                      placeholder={"Seleccione.."}
-                      disabled={false}
-                    />
-                  </Grid>
 
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Typography sx={{ fontFamily: "sans-serif" }}>
-                      *Área:
-                    </Typography>
-                    <SelectFrag
-                      value={idEntidad}
-                      options={ListEntidad}
-                      onInputChange={handleFilteridEntidad}
-                      placeholder={"Seleccione.."}
-                      disabled={false}
-                    />
-                  </Grid>
-                </Grid>
-              ) : (
-                ""
-              )}
-            </Grid>
-          </Grid>
+          {/* Nombre y Apellidos */}
+					<Grid item xs={12} >
+						<Typography variant="h6" gutterBottom>
+						Datos del Visitante:
+						</Typography>
+						<Grid
+							container
+							item
+							spacing={1}
+							xs={12}
+							sm={12}
+							md={12}
+							lg={12}
+							direction="row"
+							justifyContent="center"
+							alignItems="center"
+              paddingBottom={2}
+						>
+							<Grid item xs={12} sm={12} md={6} lg={6} >
+								<Typography
+									variant="subtitle2"
+									style={{ color: "black" }}
+								>
+									*Nombre(s):
+								</Typography>
+								<TextField
+									fullWidth
+									size="small"
+									required
+									id="outlined-required"
+									defaultValue=""
+									value={NombreVisitante}
+									onChange={(v) => setNombreVisitante(v.target.value)}
+									error={NombreVisitante === "" ? true : false}
+								/>
+							</Grid>
+							<Grid item xs={12} sm={12} md={6} lg={6} >
+								<Typography
+									variant="subtitle2"
+									style={{ color: "black" }}
+								>
+									*Apellido Paterno:
+								</Typography>
+								<TextField
+									fullWidth
+									size="small"
+									required
+									id="outlined-required"
+									defaultValue=""
+									value={ApellidoPVisitante}
+									onChange={(v) =>
+										setApellidoPVisitante(v.target.value)
+									}
+									error={ApellidoPVisitante === "" ? true : false}
+								/>
+							</Grid>
+ 
 
-          {/* <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              Persona a Visitar:
-            </Typography>
+							{idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
+								<Grid
+									container
+									item
+									spacing={1}
+									xs={12}
+									sm={12}
+									md={12}
+									lg={12}
+									direction="row"
+									justifyContent="center"
+									alignItems="center"
+                  paddingBottom={2}
+								>
+									<Grid item xs={12} sm={12} md={6} lg={6}>
+										<Typography sx={{ fontFamily: "sans-serif" }}>
+											*Origen:
+										</Typography>
+										<SelectFrag
+											value={idTipo}
+											options={ListIdTipo}
+											onInputChange={handleFilteridTipo}
+											placeholder={"Seleccione.."}
+											disabled={false}
+										/>
+									</Grid>
 
-            <Grid
-              container
-              item
-              spacing={1}
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
-                  *Nombre(s):
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={NombreReceptor}
-                  onChange={(v) => setNombreReceptor(v.target.value)}
-                  error={NombreReceptor === "" ? true : false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
-                  *Apellido Paterno:
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={ApellidoPReceptor}
-                  onChange={(v) => setApellidoPReceptor(v.target.value)}
-                  error={ApellidoPReceptor === "" ? true : false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
-                  Apellido Materno:
-                </Typography>
-                <TextField
-                  size="small"
-                  fullWidth
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={ApellidoMReceptor}
-                  onChange={(v) => setApellidoMReceptor(v.target.value)}
-                  error={ApellidoMReceptor === "" ? true : false}
-                />
-              </Grid>
-            </Grid>
-          </Grid> */}
+									<Grid item xs={12} sm={12} md={6} lg={6}>
+										<Typography sx={{ fontFamily: "sans-serif" }}>
+											*Área:
+										</Typography>
+										<SelectFrag
+											value={idEntidad}
+											options={ListEntidad}
+											onInputChange={handleFilteridEntidad}
+											placeholder={"Seleccione.."}
+											disabled={false}
+										/>
+									</Grid>
+								</Grid>
+							) : (
+								""
+							)}
+						</Grid>
+					</Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={12} spacing={1}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              Datos de Visita:
-            </Typography>
+		
+          {/* Unidad Administrativa y Extensión */}
 
-            <Grid
-              container
-              item
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              spacing={1}
-            >
-              <Grid item xs={12} sm={8} md={8} lg={8}>
-                <Typography sx={{ fontFamily: "sans-serif" }}>
-                  *Unidad Administrativa:
-                </Typography>
-                <SelectFrag
-                  value={idunidad}
-                  options={ListUnidad}
-                  onInputChange={handleFilteridunidad}
-                  placeholder={"Seleccione.."}
-                  disabled={false}
-                />
-              </Grid>
+					<Grid item xs={12} sm={12} md={12} lg={12} spacing={1}>
+						<Typography variant="h6" gutterBottom>
+							Datos de Visita:
+						</Typography>
 
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Typography variant="subtitle2" style={{ color: "black" }}>
-                  Extensión:
-                </Typography>
-                <TextField
-                  size="small"
-                  fullWidth
-                  //id="outlined-required"
-                  defaultValue=""
-                  value={ext}
-                  onChange={(v) => setExt(v.target.value)}
-                  //error={ext === "" ? true : false}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
+						<Grid
+							container
+							item
+							xs={12}
+							sm={12}
+							md={12}
+							lg={12}
+							direction="row"
+							justifyContent="center"
+							alignItems="center"
+							spacing={1}
+              paddingBottom={2}
+						>
+							<Grid item xs={12} sm={12} md={8} lg={8}>
+								<Typography sx={{ fontFamily: "sans-serif" }}>
+									*Unidad Administrativa:
+								</Typography>
+								<SelectFrag
+									value={idunidad}
+									options={ListUnidad}
+									onInputChange={handleFilteridunidad}
+									placeholder={"Seleccione.."}
+									disabled={false}
+								/>
+							</Grid>
 
-          <Grid
-            container
-            item
-            spacing={1}
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <CustomizedDate
-                value={fini}
-                label={"*Fecha Visita"}
-                onchange={handleFilterChange2}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>
-                *Correo para Notificación:
-              </Typography>
-              <TextField
-                size="small"
-                fullWidth
-                id="outlined-required"
-                defaultValue=""
-                value={Correo}
-                onChange={(v) => setCorreo(v.target.value)}
-                error={Correo === "" ? true : false}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-                Correo de Visitante para Notificación:
-              </Typography>
-              <TextField
-                size="small"
-                fullWidth
-                id="outlined-required"
-                defaultValue=""
-                value={CorreoVisitante}
-                onChange={(v) => setCorreoVisitante(v.target.value)}
-                //error={CorreoVisitante === "" ? true : false}
-              />
-            </Grid>
-          </Grid>
+							<Grid item xs={12} sm={12} md={4} lg={4}>
+								<Typography
+									variant="subtitle2"
+									style={{ color: "black" }}
+								>
+									Extensión:
+								</Typography>
+								<TextField
+									size="small"
+									fullWidth
+									//id="outlined-required"
+									defaultValue=""
+									value={ext}
+									onChange={(v) => setExt(v.target.value)}
+									//error={ext === "" ? true : false}
+								/>
+							</Grid>
+						</Grid>
+					</Grid>
 
-          <Grid
-            container
-            item
-            spacing={1}
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              {/* <Typography sx={{ fontFamily: "sans-serif" }}>
-                *Edificio:
-              </Typography>
-              <SelectFrag
-                value={idEdificio}
-                options={ListEdificio}
-                onInputChange={handleFilterEdificio}
-                placeholder={"Seleccione.."}
-                disabled={false}
-              /> */}
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              {/* <Typography sx={{ fontFamily: "sans-serif" }}>
-                *Acceso:
-              </Typography>
-              <SelectFrag
-                value={idAcceso}
-                options={ListAcceso}
-                onInputChange={handleFilterAcceso}
-                placeholder={"Seleccione.."}
-                disabled={false}
-              /> */}
-            </Grid>
+					<Grid
+						container
+						item
+						spacing={1}
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+            paddingBottom={2}
+					>
+						<Grid item xs={12} sm={12} md={4} lg={4}>
+							<CustomizedDate
+								value={fini}
+								label={"*Fecha Visita"}
+								onchange={handleFilterChange2}
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={4} lg={4}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								*Correo para Notificación:
+							</Typography>
+							<TextField
+								size="small"
+								fullWidth
+								id="outlined-required"
+								defaultValue=""
+								value={Correo}
+								onChange={(v) => setCorreo(v.target.value)}
+								error={Correo === "" ? true : false}
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={4} lg={4}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								Correo de Visitante para Notificación:
+							</Typography>
+							<TextField
+								size="small"
+								fullWidth
+								id="outlined-required"
+								defaultValue=""
+								value={CorreoVisitante}
+								onChange={(v) => setCorreoVisitante(v.target.value)}
+								//error={CorreoVisitante === "" ? true : false}
+							/>
+						</Grid>
+					</Grid>
 
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              {/* <Typography sx={{ fontFamily: "sans-serif" }}>*Piso:</Typography>
-              <SelectFrag
-                value={idpiso}
-                options={ListPiso}
-                onInputChange={handleFilteridPiso}
-                placeholder={"Seleccione.."}
-                disabled={false}
-              /> */}
-              <Typography variant="subtitle2" style={{ color: "black" }}>
-                  Piso:
-                </Typography>
-                <TextField
-                  size="small"
-                  fullWidth
-                  id="outlined-required"
-                  value={piso}
-                  
-                />
-            </Grid>
-          </Grid>
+					<Grid
+						container
+						item
+						spacing={1}
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						direction="row" 
+						alignItems="center"
+            paddingBottom={2}
+					>
+						<Grid item xs={12} sm={4} md={4} lg={4}>
+							<Typography variant="subtitle2" style={{ color: "black" }}>
+								Piso:
+							</Typography>
+							<TextField
+								size="small"
+								fullWidth
+								id="outlined-required"
+								value={piso}
+							/>
+						</Grid>
+					</Grid>
 
-          <Grid
-            container
-            item
-            spacing={1}
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-          >
-            <Grid item xs={1} sm={1} md={1} lg={1}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked}
-                    onChange={handleChange}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Sin Vigencia"
-              />
-            </Grid>
-          </Grid>
+					<Grid
+						container
+						item
+						spacing={1}
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						direction="row"
+						justifyContent="flex-start"
+						alignItems="flex-start"
+					>
+						<Grid item xs={12} sm={12} md={2} lg={2}>
+							<FormControlLabel
+								control={
+									<Checkbox
+										checked={checked}
+										onChange={handleChange}
+										inputProps={{ "aria-label": "controlled" }}
+									/>
+								}
+								label="Sin Vigencia"
+							/>
+						</Grid>
+					</Grid>
 
-          <Grid
-            container
-            item
-            spacing={1}
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={12} sm={12} md={12} lg={12}>
-              <Typography variant="subtitle2" style={{ color: "black" }}>
-                Observaciones:
-              </Typography>
-              <TextField
-                size="small"
-                fullWidth
-                multiline
-                rows={4}
-                id="outlined-required"
-                defaultValue=""
-                value={Observaciones}
-                onChange={(v) => setObservaciones(v.target.value)}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+					<Grid
+						container
+						item
+						spacing={1}
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+            paddingTop={3}
+					>
+						<Grid item xs={12} sm={12} md={12} lg={12} >
+							<Typography variant="h6" >
+								Observaciones:
+							</Typography>
+							<TextField
+								size="small"
+								fullWidth
+								multiline
+								rows={4}
+								id="outlined-required"
+								defaultValue=""
+								value={Observaciones}
+								onChange={(v) => setObservaciones(v.target.value)}
+							/>
+						</Grid>
+					</Grid>
+				</Grid>
 
-        <Grid item xs={12} sm={4} md={4} lg={4}>
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            spacing={2}
-            sx={{
-              "text-align": "center",
-            }}
-          >
-            <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-            <Grid item xs={12} sm={12} md={12} lg={3}>
-              <Button className={"guardar"} onClick={() => handleSend()}>
-                {"Generar QR"}
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={3}>
-              {idP !== undefined ? (
-                <Button className={"guardar"} onClick={() => handledeleted()}>
-                  {"Eliminar Cita"}
-                </Button>
-              ) : (
-                ""
-              )}
-            </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-            <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </>
+				<Grid item xs={12} sm={4} md={4} lg={4} paddingBottom={2}>
+					<Grid
+						container
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+						item
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						spacing={2}
+						sx={{
+							"text-align": "center",
+						}}
+					>
+						 
+						<Grid item xs={12} sm={12} md={12} lg={3}>
+							<Button className={"guardar"} onClick={() => handleSend()}>
+								{"Generar QR"}
+							</Button>
+						</Grid>
+						<Grid item xs={12} sm={12} md={12} lg={3}>
+							{idP ? (
+								<Button
+									className={"guardar"}
+									onClick={() => handledeleted()}
+								>
+									{"Eliminar Cita"}
+								</Button>
+							) : (
+								""
+							)}
+						</Grid>
+					</Grid>
+				</Grid>
+			</Grid>
+		</>
   );
 }

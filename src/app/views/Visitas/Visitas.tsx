@@ -1,11 +1,11 @@
 import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
+	Button,
+	Checkbox,
+	FormControlLabel,
+	Grid,
+	Paper,
+	TextField,
+	Typography,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
@@ -69,236 +69,324 @@ const Visitas = () => {
   const [checked, setChecked] = useState(false);
   const [Observaciones, setObservaciones] = useState("");
 
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setChecked(event.target.checked);
+	};
+
+	const loadFilter = (operacion: number, id?: string) => {
+		setopen(true);
+		let data = { NUMOPERACION: operacion, P_ID: id };
+		ShareService.SelectIndex(data).then((res) => {
+			if (operacion === 1) {
+				setListIdTipo(res.RESPONSE);
+			} else if (operacion === 2) {
+				setListEntidad(res.RESPONSE);
+				setopen(false);
+			} else if (operacion === 3) {
+				setListDuracion(res.RESPONSE);
+			} else if (operacion === 4) {
+				setListVisita(res.RESPONSE);
+			} else if (operacion === 5) {
+				setListPiso(res.RESPONSE);
+			} else if (operacion === 6) {
+				setListUnidad(res.RESPONSE);
+				setopen(false);
+			} else if (operacion === 7) {
+				setListEdificio(res.RESPONSE);
+				if ((res.RESPONSE.length = 1)) {
+					handleFilterEdificio(res.RESPONSE[0].value);
+				}
+			} else if (operacion === 8) {
+				setListAcceso(res.RESPONSE);
+				if ((res.RESPONSE.length = 1)) {
+					handleFilterAcceso(res.RESPONSE[0].value);
+				}
+				setopen(false);
+			}
+		});
+	};
+
+	const handleFilteridunidad = (v: string) => {
+		setidunidad(v);
+	};
+
+	const handleFilteridPiso = (v: string) => {
+		setidpiso(v);
+	};
+
+	const handleFilteridDuracion = (v: string) => {
+		setidDuracion(v);
+	};
+
+	const handleFilteridEntidad = (v: string) => {
+		setidEntidad(v);
+	};
 
 
+	const handleFilterEdificio = (v: string) => {
+		setidEdificio(v);
+		loadFilter(8, v);
+	};
 
+	const handleFilterAcceso = (v: string) => {
+		setidAcceso(v);
+	};
 
+	const handleedit = (id: string) => {
+		setopen(true);
+		let data = {
+			NUMOPERACION: 5,
+			CHID: id,
+		};
 
+		CatalogosServices.visita_index(data).then((res) => {
+			if (res.SUCCESS) {
+				Toast.fire({
+					icon: "success",
+					title: "¡Consulta Exitosa!",
+				});
+				setidvista(res.RESPONSE[0].IdTipoAcceso);
+				setId(res.RESPONSE[0].id);
+				handleFilterChange2(dayjs(res.RESPONSE[0].FechaVisita));
+				handleFilterEdificio(res.RESPONSE[0].idEdificio);
+				setidDuracion(res.RESPONSE[0].Duracion);
+				setNombreVisitante(res.RESPONSE[0].NombreVisitante);
+				setApellidoPVisitante(res.RESPONSE[0].ApellidoPVisitante);
+				setApellidoMVisitante(res.RESPONSE[0].ApellidoMVisitante);
+				setNombreReceptor(res.RESPONSE[0].NombreReceptor);
+				setApellidoPReceptor(res.RESPONSE[0].ApellidoPReceptor);
+				setApellidoMReceptor(res.RESPONSE[0].ApellidoMReceptor);
+				// handleFilteridTipo(res.RESPONSE[0].idTipoentidad);//error
+				setidEntidad(res.RESPONSE[0].idEntidad);
+				setidunidad(res.RESPONSE[0].IdEntidadReceptor);
+				setproveedor(res.RESPONSE[0].Proveedor);
+				setCorreo(res.RESPONSE[0].EmailNotificacion);
+				setExt(res.RESPONSE[0].Extencion);
+				handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
+				setidAcceso(res.RESPONSE[0].idAcceso);
+				setChecked(res.RESPONSE[0].Indefinido);
+				setObservaciones(res.RESPONSE[0].Observaciones);
+				setopen(false);
+			} else {
+				Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+				setopen(false);
+			}
+		});
+	};
 
+	const handledeleted = () => {
+		let data = {
+			NUMOPERACION: 3,
+			CHID: id,
+			CHUSER: user.Id,
+		};
 
+		Swal.fire({
+			title: "¿Estas Seguro Eliminar Esta Cita?",
+			icon: "question",
+			showDenyButton: false,
+			showCancelButton: false,
+			confirmButtonText: "Aceptar",
+			background: "EBEBEB",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				CatalogosServices.visita_index(data).then((res) => {
+					if (res.SUCCESS) {
+						Toast.fire({
+							icon: "success",
+							title: "¡Registro Eliminado!",
+						});
+						handleClose();
+					} else {
+						Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+					}
+				});
+			}
+		});
+	};
 
+	const clearVisitante = () => {
+		setNombreVisitante("");
+		setApellidoPVisitante("");
+		setApellidoMVisitante("");
+		setproveedor("");
+		setidTipo("");
+		setidEntidad("");
+		setidvista("");
+		setCorreo("");
+	};
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
+	const ClearAll = () => {
+		setNombreVisitante("");
+		setApellidoPVisitante("");
+		setApellidoMVisitante("");
+		setproveedor("");
+		setidTipo("");
+		setidEntidad("");
+		setidvista("");
+		setCorreo("");
+		setNombreReceptor("");
+		setApellidoPReceptor("");
+		setidunidad("");
+		setExt("");
+		setFini(null);
+		setidDuracion("");
+		setidEdificio("");
+		setidAcceso("");
+		setidpiso("");
+		setChecked(false);
+		setObservaciones("");
+	};
+  
+	const handleSend = () => {
+		let send = false;
 
-  const loadFilter = (operacion: number, id?: string) => {
-    setopen(true);
-    let data = { NUMOPERACION: operacion, P_ID: id };
-    ShareService.SelectIndex(data).then((res) => {
-      if (operacion === 1) {
-        setListIdTipo(res.RESPONSE);
-      } else if (operacion === 2) {
-        setListEntidad(res.RESPONSE);
-        setopen(false);
-      } else if (operacion === 3) {
-        setListDuracion(res.RESPONSE);
-      } else if (operacion === 4) {
-        setListVisita(res.RESPONSE);
-      } else if (operacion === 5) {
-        setListPiso(res.RESPONSE);
-      } else if (operacion === 6) {
-        setListUnidad(res.RESPONSE);
-        setopen(false);
-      } else if (operacion === 7) {
-        setListEdificio(res.RESPONSE);
-        if ((res.RESPONSE.length = 1)) {
-          handleFilterEdificio(res.RESPONSE[0].value);
-        }
-      } else if (operacion === 8) {
-        setListAcceso(res.RESPONSE);
-        if ((res.RESPONSE.length = 1)) {
-          handleFilterAcceso(res.RESPONSE[0].value);
-        }
-        setopen(false);
-      }
-    });
-  };
+		if (!idvista) {
+			Swal.fire("Indique el Tipo de Acceso", "¡Error!", "info");
+			send = false;
+		}
 
-  const handleFilteridunidad = (v: string) => {
-    setidunidad(v);
-  };
+		if (idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
+			if (
+				!NombreVisitante ||
+				!ApellidoPVisitante ||
+				!NombreReceptor ||
+				!ApellidoPReceptor ||
+				!idunidad ||
+				!idpiso ||
+				!idvista ||
+				!idDuracion ||
+				!idEdificio ||
+				!idAcceso
+			) {
+				Swal.fire(
+					"Favor de Completar los Campos con (*)",
+					"¡Error!",
+					"info"
+				);
+				send = false;
+				setopen(false);
+			} else {
+				send = true;
+			}
+		} else if (idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
+			if (
+				!proveedor ||
+				!NombreVisitante ||
+				!ApellidoPVisitante ||
+				!NombreReceptor ||
+				!ApellidoPReceptor ||
+				!idunidad ||
+				(!idpiso && idpiso !== "false") ||
+				!idvista ||
+				!idDuracion ||
+				!idEdificio ||
+				!idAcceso
+			) {
+				Swal.fire(
+					"Favor de Completar los Campos con (*)",
+					"¡Error!",
+					"info"
+				);
+				send = false;
+			} else {
+				send = true;
+			}
+		}
 
-  const handleFilteridPiso = (v: string) => {
-    setidpiso(v);
-  };
+		let tipooperacion = 0;
+		if (idP) {
+			tipooperacion = 2;
+		} else {
+			tipooperacion = 1;
+		}
 
-  const handleFilteridDuracion = (v: string) => {
-    setidDuracion(v);
-  };
+		let data = {
+			NUMOPERACION: tipooperacion,
+			CHID: id,
+			CHUSER: user.Id,
+			ModificadoPor: user.Id,
+			FechaVisita: fini?.format("YYYY-MM-DDTHH:mm:ssZ"),
+			Duracion: idDuracion,
+			IdTipoAcceso: idvista,
+			Proveedor: proveedor,
+			NombreVisitante: NombreVisitante,
+			ApellidoPVisitante: ApellidoPVisitante,
+			ApellidoMVisitante: ApellidoMVisitante,
+			idTipoentidad: idTipo,
+			idEntidad: idEntidad,
+			NombreReceptor: NombreReceptor,
+			ApellidoPReceptor: ApellidoPReceptor,
+			ApellidoMReceptor: ApellidoMReceptor,
+			idEntidadReceptor: idunidad,
+			PisoReceptor: idpiso,
+			EmailNotificacion: Correo,
+			IdEdificio: idEdificio,
+			IdAcceso: idAcceso,
+			Extencion: ext,
+			Indefinido: checked,
+			Observaciones: Observaciones,
+		};
 
-  const handleFilteridEntidad = (v: string) => {
-    setidEntidad(v);
-  };
+		if (send) {
+			setopen(true);
+			CatalogosServices.visita_index(data).then((res) => {
+				if (res.SUCCESS) {
+					Swal.fire({
+						title: "¡Visita Creada!",
+						icon: "success",
+						text: "¿Deseas crear mas visitas o ir a la agenda? ",
+						showDenyButton: true,
+						showCancelButton: false,
+						confirmButtonText: "Crear otra Visita",
+						denyButtonText: "Ir a la Agenda",background: "EBEBEB",
+					}).then((result) => {
+						if (result.isConfirmed) {
+							// CatalogosServices.visita_index(data).then((res) => {
+							//   if (res.SUCCESS) {
+							//     Toast.fire({
+							//       icon: "success",
+							//       title: "¡Registro Eliminado!",
+							//     });
+							//     handleClose();
+							//   } else {
+							//     Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+							//   }
+							// });
+							setId(res.RESPONSE.id);
+							setopen(false);
+							clearVisitante();
+						} else {
+							navigate("/inicio/agenda");
+						}
+					});
 
-  const handleFilteridTipo = (v: string) => {
-    setidTipo(v);
-    loadFilter(2, v);
-  };
+  
+						
+				} else {
+					if (res.STRMESSAGE.includes("NOREPET")) {
+						Swal.fire(
+							"Ya existe un registro con esa hora y visitante",
+							"¡Error!",
+							"info"
+						);
+					} else {
+						Swal.fire(res.STRMESSAGE, "¡Error!", "info");
+					}
 
-  const handleFilterEdificio = (v: string) => {
-    setidEdificio(v);
-    loadFilter(8, v);
-  };
+					setopen(false);
+				}
+			});
+		}
+	};
 
-  const handleFilterAcceso = (v: string) => {
-    setidAcceso(v);
-  };
+	const handleClose = () => {
+		navigate("/");
+	};
 
-  const handleedit = (id: string) => {
-    setopen(true);
-    let data = {
-      NUMOPERACION: 5,
-      CHID: id,
-    };
-
-    CatalogosServices.visita_index(data).then((res) => {
-      if (res.SUCCESS) {
-        Toast.fire({
-          icon: "success",
-          title: "¡Consulta Exitosa!",
-        });
-        setidvista(res.RESPONSE[0].IdTipoAcceso);
-        setId(res.RESPONSE[0].id);
-        handleFilterChange2(dayjs(res.RESPONSE[0].FechaVisita));
-        handleFilterEdificio(res.RESPONSE[0].idEdificio);
-        setidDuracion(res.RESPONSE[0].Duracion);
-        setNombreVisitante(res.RESPONSE[0].NombreVisitante);
-        setApellidoPVisitante(res.RESPONSE[0].ApellidoPVisitante);
-        setApellidoMVisitante(res.RESPONSE[0].ApellidoMVisitante);
-        setNombreReceptor(res.RESPONSE[0].NombreReceptor);
-        setApellidoPReceptor(res.RESPONSE[0].ApellidoPReceptor);
-        setApellidoMReceptor(res.RESPONSE[0].ApellidoMReceptor);
-        handleFilteridTipo(res.RESPONSE[0].idTipoentidad);
-        setidEntidad(res.RESPONSE[0].idEntidad);
-        setidunidad(res.RESPONSE[0].IdEntidadReceptor);
-        setproveedor(res.RESPONSE[0].Proveedor);
-        setCorreo(res.RESPONSE[0].EmailNotificacion);
-        setExt(res.RESPONSE[0].Extencion);
-        handleFilteridPiso(res.RESPONSE[0].PisoReceptor);
-        setidAcceso(res.RESPONSE[0].idAcceso);
-        setChecked(res.RESPONSE[0].Indefinido);
-        setObservaciones(res.RESPONSE[0].Observaciones);
-        setopen(false);
-      } else {
-        Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-        setopen(false);
-      }
-    });
-  };
-
-  const handledeleted = () => {
-    let data = {
-      NUMOPERACION: 3,
-      CHID: id,
-      CHUSER: user.Id,
-    };
-
-    Swal.fire({
-      title: "¿Estas Seguro Eliminar Esta Cita?",
-      icon: "question",
-      showDenyButton: false,
-      showCancelButton: false,
-      confirmButtonText: "Aceptar",
-      background: "EBEBEB",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        CatalogosServices.visita_index(data).then((res) => {
-          if (res.SUCCESS) {
-            Toast.fire({
-              icon: "success",
-              title: "¡Registro Eliminado!",
-            });
-            handleClose();
-          } else {
-            Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-          }
-        });
-      }
-    });
-  };
-
-  const clearVisitante = () => {
-    setNombreVisitante("");
-    setApellidoPVisitante("");
-    setApellidoMVisitante("");
-    setproveedor("");
-    setidTipo("");
-    setidEntidad("");
-    setidvista("");
-    setCorreo("");
-
-  }
-
-  const ClearAll = () => {
-    setNombreVisitante("");
-    setApellidoPVisitante("");
-    setApellidoMVisitante("");
-    setproveedor("");
-    setidTipo("");
-    setidEntidad("");
-    setidvista("");
-    setCorreo("");
-    setNombreReceptor("");
-    setApellidoPReceptor("");
-    setidunidad("");
-    setExt("");
-    setFini(null);
-    setidDuracion("");
-    setidEdificio("");
-    setidAcceso("");
-    setidpiso("");
-    setChecked(false);
-    setObservaciones("");
-  }
-
-  const handleSend = () => {
-    let send = false;
-
-    if (!idvista) {
-      Swal.fire("Indique el Tipo de Acceso", "¡Error!", "info");
-      send = false;
-    }
-
-    if (idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
-      if (
-        !NombreVisitante ||
-        !ApellidoPVisitante ||
-        !NombreReceptor ||
-        !ApellidoPReceptor ||
-        !idunidad ||
-        !idpiso ||
-        !idvista ||
-        !idDuracion ||
-        !idEdificio ||
-        !idAcceso
-      ) {
-        Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
-        send = false;
-        setopen(false);
-      } else {
-        send = true;
-      }
-    } else if (idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
-      if (
-        !proveedor ||
-        !NombreVisitante ||
-        !ApellidoPVisitante ||
-        !NombreReceptor ||
-        !ApellidoPReceptor ||
-        !idunidad ||
-        (!idpiso && idpiso !== "false") ||
-        !idvista ||
-        !idDuracion ||
-        !idEdificio ||
-        !idAcceso
-      ) {
-        Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
-        send = false;
-      } else {
-        send = true;
-      }
-    }
+	const handleFilteridvisita = (v: any) => {
+		setidvista(v);
+	};
 
     let tipooperacion = 0;
     if (idP!== undefined) {
@@ -306,628 +394,528 @@ const Visitas = () => {
     } else {
       tipooperacion = 1;
     }
+	const handleFilterChange2 = (v: any) => {
+		setFini(v);
+	};
 
-    let data = {
-      NUMOPERACION: tipooperacion,
-      CHID: id,
-      CHUSER: user.Id,
-      ModificadoPor: user.Id,
-      FechaVisita: fini?.format("YYYY-MM-DDTHH:mm:ssZ"),
-      Duracion: idDuracion,
-      IdTipoAcceso: idvista,
-      Proveedor: proveedor,
-      NombreVisitante: NombreVisitante,
-      ApellidoPVisitante: ApellidoPVisitante,
-      ApellidoMVisitante: ApellidoMVisitante,
-      idTipoentidad: idTipo,
-      idEntidad: idEntidad,
-      NombreReceptor: NombreReceptor,
-      ApellidoPReceptor: ApellidoPReceptor,
-      ApellidoMReceptor: ApellidoMReceptor,
-      idEntidadReceptor: idunidad,
-      PisoReceptor: idpiso,
-      EmailNotificacion: Correo,
-      IdEdificio: idEdificio,
-      IdAcceso: idAcceso,
-      Extencion: ext,
-      Indefinido: checked,
-      Observaciones: Observaciones,
-    };
+	useEffect(() => {
+		loadFilter(1);
+		loadFilter(3);
+		loadFilter(4);
+		loadFilter(5);
+		loadFilter(6, user.IdEntidad);
+		loadFilter(7, user.Id);
+		if (idP) {
+			setTimeout(() => {
+				handleedit(idP);
+			}, 2000);
+		}
+	}, []);
 
-    if (send) {
-      setopen(true);
-      CatalogosServices.visita_index(data).then((res) => {
-        if (res.SUCCESS) {
-          // Toast.fire({
-          //   icon: "success",
-          //   title: "¡Visita Creada!",
-          //   text: "¿Deseas crear mas visitas o ir a la agenda? ",
+	return (
+		<>
+			<TitleComponent title={"Generar Visita"} show={open} />
 
-          // });
+			<Typography
+				sx={{
+					fontFamily: "sans-serif",
+					textAlign: "center",
+					fontSize: "20px",
+				}}
+			>
+				Completa la información
+			</Typography>
+			<Grid
+				container
+				direction="row"
+				justifyContent="center"
+				alignItems="flex-start"
+				spacing={2}
+				sx={{
+					padding: { xs: 2, sm: 3, md: 4 },
+					marginTop: 2,
+					marginBottom: 4,
+				}}
+			>
+				<Grid item xs={12} sm={12} md={12} lg={12}>
+					<Typography variant="h6" gutterBottom>
+						Persona a Visitar:
+					</Typography>
 
-          Swal.fire({
-            title: "¡Visita Creada!",
-            icon: "success",
-            text: "¿Deseas crear mas visitas o ir a la agenda? ",
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: "Crear otra Visita",
-            denyButtonText: "Ir a la Agenda",
+					<Grid
+						container
+						item
+						spacing={2}
+						xs={12}
+						direction="row"
+						justifyContent="flex-start"
+						alignItems="flex-start"
+					>
+						<Grid item xs={12} md={6}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								*Nombre(s):
+							</Typography>
+							<TextField
+								fullWidth
+								size="small"
+								required
+								id="outlined-required"
+								defaultValue=""
+								value={NombreReceptor}
+								onChange={(v) => setNombreReceptor(v.target.value)}
+								error={NombreReceptor === "" ? true : false}
+							/>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								*Apellido Paterno:
+							</Typography>
+							<TextField
+								fullWidth
+								size="small"
+								required
+								id="outlined-required"
+								defaultValue=""
+								value={ApellidoPReceptor}
+								onChange={(v) => setApellidoPReceptor(v.target.value)}
+								error={ApellidoPReceptor === "" ? true : false}
+							/>
+						</Grid>
+					</Grid>
+				</Grid>
 
-            background: "EBEBEB",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // CatalogosServices.visita_index(data).then((res) => {
-              //   if (res.SUCCESS) {
-              //     Toast.fire({
-              //       icon: "success",
-              //       title: "¡Registro Eliminado!",
-              //     });
-              //     handleClose();
-              //   } else {
-              //     Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-              //   }
-              // });
-              setId(res.RESPONSE.id);
-              setopen(false);
-              clearVisitante();
-            } else {
-              navigate("/inicio/agenda");
+				<Grid
+					container
+					item
+					spacing={2}
+					xs={12}
+					direction="row"
+					justifyContent="flex-start"
+					alignItems="flex-start"
+				>
+					<Grid item xs={12} md={8}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Unidad Administrativa:
+						</Typography>
+						<SelectFrag
+							value={idunidad}
+							options={ListUnidad}
+							onInputChange={handleFilteridunidad}
+							placeholder={"Seleccione.."}
+							disabled={false}
+						/>
+					</Grid>
 
-            }
-          });
+					<Grid item xs={12} md={4}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Extensión:
+						</Typography>
+						<TextField
+							size="small"
+							fullWidth
+							id="outlined-required"
+							defaultValue=""
+							value={ext}
+							onChange={(v) => setExt(v.target.value)}
+							error={ext === "" ? true : false}
+						/>
+					</Grid>
+				</Grid>
 
+				<Grid
+					container
+					item
+					spacing={2}
+					xs={12}
+					direction="row"
+					justifyContent="flex-start"
+					alignItems="flex-start"
+				>
+					<Grid item xs={12} md={6}>
+						<CustomizedDate
+							value={fini}
+							label={"*Fecha Visita"}
+							onchange={handleFilterChange2}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Duración:
+						</Typography>
+						<SelectFrag
+							value={idDuracion}
+							options={ListDuracion}
+							onInputChange={handleFilteridDuracion}
+							placeholder={"Seleccione.."}
+							disabled={false}
+						/>
+					</Grid>
+				</Grid>
 
-        } else {
-          if (res.STRMESSAGE.includes("NOREPET")) {
-            Swal.fire(
-              "Ya existe un registro con esa hora y visitante",
-              "¡Error!",
-              "info"
-            );
-          } else {
-            Swal.fire(res.STRMESSAGE, "¡Error!", "info");
-          }
+				<Grid
+					container
+					item
+					spacing={2}
+					xs={12}
+					direction="row"
+					justifyContent="flex-start"
+					alignItems="flex-start"
+				>
+					<Grid item xs={12} md={4}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Edificio:
+						</Typography>
+						<SelectFrag
+							value={idEdificio}
+							options={ListEdificio}
+							onInputChange={handleFilterEdificio}
+							placeholder={"Seleccione.."}
+							disabled={false}
+						/>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Acceso:
+						</Typography>
+						<SelectFrag
+							value={idAcceso}
+							options={ListAcceso}
+							onInputChange={handleFilterAcceso}
+							placeholder={"Seleccione.."}
+							disabled={false}
+						/>
+					</Grid>
 
-          setopen(false);
-        }
-      });
-    }
-  };
+					<Grid item xs={12} md={4}>
+						<Typography sx={{ fontFamily: "sans-serif" }}>
+							*Piso:
+						</Typography>
+						<SelectFrag
+							value={idpiso}
+							options={ListPiso}
+							onInputChange={handleFilteridPiso}
+							placeholder={"Seleccione.."}
+							disabled={false}
+						/>
+					</Grid>
+				</Grid>
 
-  const handleClose = () => {
-    navigate("/");
-  };
+				<Grid
+					container
+					item
+					spacing={2}
+					xs={12}
+					direction="row"
+					justifyContent="flex-start"
+					alignItems="flex-start"
+				>
+					<Grid item xs={12}>
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={checked}
+									onChange={handleChange}
+									inputProps={{ "aria-label": "controlled" }}
+								/>
+							}
+							label="Sin Vigencia"
+						/>
+					</Grid>
+				</Grid>
 
-  const handleFilteridvisita = (v: any) => {
-    setidvista(v);
-  };
+				<Grid
+					container
+					item
+					spacing={2}
+					xs={12}
+					direction="row"
+					justifyContent="flex-start"
+					alignItems="flex-start"
+				>
+					<Grid item xs={12} sm={12} md={12} lg={12}>
+						<Typography
+							variant="subtitle2"
+							sx={{ color: "text.primary", mb: 1 }}
+						>
+							Observaciones:
+						</Typography>
+						<TextField
+							size="small"
+							fullWidth
+							multiline
+							rows={4}
+							id="outlined-required"
+							defaultValue=""
+							value={Observaciones}
+							onChange={(v) => setObservaciones(v.target.value)}
+						/>
+					</Grid>
+				</Grid>
 
-  const handleFilterChange2 = (v: any) => {
-    setFini(v);
-  };
+				<Grid item xs={12}>
+					<Paper
+						elevation={3}
+						sx={{
+							p: 3,
+							borderRadius: 2,
+							mt: 3,
+							backgroundColor: "#f5f5f5",
+						}}
+					>
+						<Grid
+							container
+							item
+							spacing={2}
+							xs={12}
+							direction="row"
+							justifyContent="flex-start"
+							alignItems="flex-start"
+						>
+							<Grid item xs={12} md={8}>
+								<Typography variant="h6" gutterBottom>
+									Datos de Visita:
+								</Typography>
+							</Grid>
+						</Grid>
 
-  useEffect(() => {
-    loadFilter(1);
-    loadFilter(3);
-    loadFilter(4);
-    loadFilter(5);
-    loadFilter(6, user.IdEntidad);
-    loadFilter(7, user.Id);
-    if (idP!== "" && idP!== undefined) {
-      setTimeout(() => {
-        handleedit(idP|| "");
-      }, 2000);
-    }
-  }, []);
+						{/* Tipo de Acceso */}
+						<Grid container spacing={2}>
+							<Grid item xs={12}>
+								<Typography sx={{ fontFamily: "sans-serif" }}>
+									*Tipo de Acceso:
+								</Typography>
+								<SelectFrag
+									value={idvista}
+									options={ListVisita}
+									onInputChange={handleFilteridvisita}
+									placeholder={"Seleccione.."}
+									disabled={false}
+								/>
+							</Grid>
 
-  return (
-    <>
-      <TitleComponent title={"Generar Visita"} show={open} />
+							{/* Condicional Proveedor */}
+							{idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
+								<Grid item xs={12}>
+									<Typography variant="body1" gutterBottom>
+										*Proveedor:
+									</Typography>
+									<TextField
+										fullWidth
+										size="small"
+										required
+										id="outlined-required"
+										label=""
+										defaultValue=""
+										value={proveedor}
+										onChange={(v) => setproveedor(v.target.value)}
+										error={proveedor === "" ? true : false}
+									/>
+								</Grid>
+							) : (
+								""
+							)}
 
-      <Typography
-        sx={{
-          fontFamily: "sans-serif",
-          textAlign: "center",
-          fontSize: "20px",
-        }}
-      >
-        Completa la información
-      </Typography>
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
+							<Grid item xs={12}>
+								<Typography variant="h6" gutterBottom>
+									Visitante:
+								</Typography>
+							</Grid>
 
+							<Grid item xs={12} md={4}>
+								<Typography
+									variant="subtitle2"
+									style={{ color: "black" }}
+								>
+									*Nombre(s):
+								</Typography>
 
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography sx={{ fontFamily: "sans-serif" }}>
-            Persona a Visitar:
-          </Typography>
+								<TextField
+									fullWidth
+									size="small"
+									required
+									id="outlined-required"
+									defaultValue=""
+									value={NombreVisitante}
+									onChange={(v) => setNombreVisitante(v.target.value)}
+									error={NombreVisitante === "" ? true : false}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<Typography
+									variant="subtitle2"
+									style={{ color: "black" }}
+								>
+									*Apellido Paterno:
+								</Typography>
+								<TextField
+									fullWidth
+									size="small"
+									required
+									id="outlined-required"
+									defaultValue=""
+									value={ApellidoPVisitante}
+									onChange={(v) =>
+										setApellidoPVisitante(v.target.value)
+									}
+									error={ApellidoPVisitante === "" ? true : false}
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<Typography
+									variant="subtitle2"
+									style={{ color: "black" }}
+								>
+									Apellido Materno:
+								</Typography>
+								<TextField
+									fullWidth
+									size="small"
+									required
+									id="outlined-required"
+									defaultValue=""
+									value={ApellidoMVisitante}
+									onChange={(v) =>
+										setApellidoMVisitante(v.target.value)
+									}
+									error={ApellidoMVisitante === "" ? true : false}
+								/>
+							</Grid>
 
-          <Grid
-            container
-            item
-            spacing={1}
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography variant="subtitle2" style={{ color: "black" }}>
-                *Nombre(s):
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                required
-                id="outlined-required"
-                defaultValue=""
-                value={NombreReceptor}
-                onChange={(v) => setNombreReceptor(v.target.value)}
-                error={NombreReceptor === "" ? true : false}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography variant="subtitle2" style={{ color: "black" }}>
-                *Apellido Paterno:
-              </Typography>
-              <TextField
-                fullWidth
-                size="small"
-                required
-                id="outlined-required"
-                defaultValue=""
-                value={ApellidoPReceptor}
-                onChange={(v) => setApellidoPReceptor(v.target.value)}
-                error={ApellidoPReceptor === "" ? true : false}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              {/* <Typography variant="subtitle2" style={{ color: "black" }}>
-                  Apellido Materno:
-                </Typography>
-                <TextField
-                  size="small"
-                  fullWidth
-                  required
-                  id="outlined-required"
-                  defaultValue=""
-                  value={ApellidoMReceptor}
-                  onChange={(v) => setApellidoMReceptor(v.target.value)}
-                  error={ApellidoMReceptor === "" ? true : false}
-                /> */}
-            </Grid>
-          </Grid>
-        </Grid>
+							{idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
+								<Grid
+									container
+									item
+									spacing={2}
+									xs={12}
+									direction="row"
+									justifyContent="flex-start"
+									alignItems="flex-start"
+								>
+									<Grid item xs={12} md={8}>
+										<Typography sx={{ fontFamily: "sans-serif" }}>
+											*Origen:
+										</Typography>
+										<SelectFrag
+											value={idTipo}
+											options={ListIdTipo}
+											onInputChange={()=>{}} //error  handleFilteridTipo
+											placeholder={"Seleccione.."}
+											disabled={false}
+										/>
+									</Grid>
 
-        <Grid item xs={12} sm={12} md={12} lg={12} spacing={1}>
+									<Grid item xs={12} md={4}>
+										<Typography sx={{ fontFamily: "sans-serif" }}>
+											*Área:
+										</Typography>
+										<SelectFrag
+											value={idEntidad}
+											options={ListEntidad}
+											onInputChange={handleFilteridEntidad}
+											placeholder={"Seleccione.."}
+											disabled={false}
+										/>
+									</Grid>
+								</Grid>
+							) : (
+								""
+							)}
 
+							<Grid
+								container
+								spacing={2}
+								direction="row"
+								justifyContent="space-between"
+								alignItems="center"
+								sx={{ px: 2, py: 2 }}
+							>
+								<Grid item xs={12} md={6}>
+									<Typography sx={{ fontFamily: "sans-serif" }}>
+										*Correo para Notificación:
+									</Typography>
+									<TextField
+										size="small"
+										fullWidth
+										id="outlined-required"
+										defaultValue=""
+										value={Correo}
+										onChange={(v) => setCorreo(v.target.value)}
+										error={Correo === "" ? true : false}
+									/>
+								</Grid>
+							</Grid>
 
-          <Grid
-            container
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-          >
-            <Grid item xs={12} sm={8} md={8} lg={8}>
-              <Typography sx={{ fontFamily: "sans-serif" }}>
-                *Unidad Administrativa:
-              </Typography>
-              <SelectFrag
-                value={idunidad}
-                options={ListUnidad}
-                onInputChange={handleFilteridunidad}
-                placeholder={"Seleccione.."}
-                disabled={false}
-              />
-            </Grid>
+							<Grid
+								container
+								spacing={2}
+								direction="row"
+								justifyContent="flex-end"
+								alignItems="center"
+								sx={{ px: 2, py: 2 }}
+							>
+								<Grid item xs={12} md={2}>
+									{idP ? (
+										<Button
+											onClick={handledeleted}
+											fullWidth
+											size="large"
+											variant="contained"
+											sx={{
+												backgroundColor: "#606060",
+												color: "#fff",
+												"&:hover": {
+													backgroundColor: "#333",
+												},
+											}}
+										>
+											{"Eliminar Cita"}
+										</Button>
+									) : (
+										""
+									)}
+								</Grid>
+								<Grid item xs={12} md={2}>
+									<Button
+										onClick={ClearAll}
+										fullWidth
+										size="large"
+										variant="contained"
+										sx={{
+											backgroundColor: "#606060",
+											color: "#fff",
+											"&:hover": {
+												backgroundColor: "#333",
+											},
+										}}
+									>
+										{"Limpiar todos los datos"}
+									</Button>
+								</Grid>
 
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Typography variant="subtitle2" style={{ color: "black" }}>
-                *Extensión:
-              </Typography>
-              <TextField
-                size="small"
-                fullWidth
-                id="outlined-required"
-                defaultValue=""
-                value={ext}
-                onChange={(v) => setExt(v.target.value)}
-                error={ext === "" ? true : false}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          item
-          spacing={1}
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <CustomizedDate
-              value={fini}
-              label={"*Fecha Visita"}
-              onchange={handleFilterChange2}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-
-          </Grid>
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              *Duración:
-            </Typography>
-            <SelectFrag
-              value={idDuracion}
-              options={ListDuracion}
-              onInputChange={handleFilteridDuracion}
-              placeholder={"Seleccione.."}
-              disabled={false}
-            />
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          item
-          spacing={1}
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              *Edificio:
-            </Typography>
-            <SelectFrag
-              value={idEdificio}
-              options={ListEdificio}
-              onInputChange={handleFilterEdificio}
-              placeholder={"Seleccione.."}
-              disabled={false}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              *Acceso:
-            </Typography>
-            <SelectFrag
-              value={idAcceso}
-              options={ListAcceso}
-              onInputChange={handleFilterAcceso}
-              placeholder={"Seleccione.."}
-              disabled={false}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <Typography sx={{ fontFamily: "sans-serif" }}>*Piso:</Typography>
-            <SelectFrag
-              value={idpiso}
-              options={ListPiso}
-              onInputChange={handleFilteridPiso}
-              placeholder={"Seleccione.."}
-              disabled={false}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          item
-          spacing={1}
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="flex-start"
-        >
-          <Grid item xs={1} sm={1} md={1} lg={1}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checked}
-                  onChange={handleChange}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
-              }
-              label="Sin Vigencia"
-            />
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          item
-          spacing={1}
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="subtitle2" style={{ color: "black" }}>
-              Observaciones:
-            </Typography>
-            <TextField
-              size="small"
-              fullWidth
-              multiline
-              rows={4}
-              id="outlined-required"
-              defaultValue=""
-              value={Observaciones}
-              onChange={(v) => setObservaciones(v.target.value)}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Paper
-            elevation={3}
-            sx={{ padding: 2, borderRadius: 2, marginTop: 2, backgroundColor: "#f5f5f5" }}
-          >
-            <Typography sx={{ fontFamily: "sans-serif" }}>
-              Datos de Visita:
-            </Typography>
-            <Grid
-              container
-              item
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ padding: "2%" }}
-            >
-              <Grid item xs={12} sm={12} md={12} lg={12}>
-                <Typography sx={{ fontFamily: "sans-serif" }}>
-                  *Tipo de Acceso:
-                </Typography>
-                <SelectFrag
-                  value={idvista}
-                  options={ListVisita}
-                  onInputChange={handleFilteridvisita}
-                  placeholder={"Seleccione.."}
-                  disabled={false}
-                />
-              </Grid>
-
-              {idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <Typography variant="body1" gutterBottom>
-                    *Proveedor:
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    required
-                    id="outlined-required"
-                    label=""
-                    defaultValue=""
-                    value={proveedor}
-                    onChange={(v) => setproveedor(v.target.value)}
-                    error={proveedor === "" ? true : false}
-                  />
-                </Grid>
-              ) : (
-                ""
-              )}
-
-              <Grid item xs={12} sm={12} md={12} lg={12}>
-                <Typography variant="body1" gutterBottom>
-                  Visitante:
-                </Typography>
-                <Grid
-                  container
-                  item
-                  spacing={1}
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Typography variant="subtitle2" style={{ color: "black" }}>
-                      *Nombre(s):
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      required
-                      id="outlined-required"
-                      defaultValue=""
-                      value={NombreVisitante}
-                      onChange={(v) => setNombreVisitante(v.target.value)}
-                      error={NombreVisitante === "" ? true : false}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Typography variant="subtitle2" style={{ color: "black" }}>
-                      *Apellido Paterno:
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      required
-                      id="outlined-required"
-                      defaultValue=""
-                      value={ApellidoPVisitante}
-                      onChange={(v) => setApellidoPVisitante(v.target.value)}
-                      error={ApellidoPVisitante === "" ? true : false}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Typography variant="subtitle2" style={{ color: "black" }}>
-                      Apellido Materno:
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      required
-                      id="outlined-required"
-                      defaultValue=""
-                      value={ApellidoMVisitante}
-                      onChange={(v) => setApellidoMVisitante(v.target.value)}
-                      error={ApellidoMVisitante === "" ? true : false}
-                    />
-                  </Grid>
-
-                  {idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
-                    <Grid
-                      container
-                      item
-                      spacing={1}
-                      xs={12}
-                      sm={12}
-                      md={12}
-                      lg={12}
-                      direction="row"
-                      justifyContent="center"
-                      alignItems="center"
-                    >
-                      <Grid item xs={12} sm={8} md={8} lg={8}>
-                        <Typography sx={{ fontFamily: "sans-serif" }}>
-                          *Origen:
-                        </Typography>
-                        <SelectFrag
-                          value={idTipo}
-                          options={ListIdTipo}
-                          onInputChange={handleFilteridTipo}
-                          placeholder={"Seleccione.."}
-                          disabled={false}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12} sm={4} md={4} lg={4}>
-                        <Typography sx={{ fontFamily: "sans-serif" }}>
-                          *Área:
-                        </Typography>
-                        <SelectFrag
-                          value={idEntidad}
-                          options={ListEntidad}
-                          onInputChange={handleFilteridEntidad}
-                          placeholder={"Seleccione.."}
-                          disabled={false}
-                        />
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} sm={4} md={4} lg={4}>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  spacing={2}
-                  sx={{
-                    "text-align": "center",
-                  }}
-                >
-                  <Grid item xs={12} sm={4} md={4} lg={6}>
-                    <Typography sx={{ fontFamily: "sans-serif" }}>
-                      *Correo para Notificación:
-                    </Typography>
-                    <TextField
-                      size="small"
-                      fullWidth
-                      id="outlined-required"
-                      defaultValue=""
-                      value={Correo}
-                      onChange={(v) => setCorreo(v.target.value)}
-                      error={Correo === "" ? true : false}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={3}>
-                    <Button className={"guardar"} onClick={() => handleSend()}>
-                      {"Generar QR"}
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={3}>
-                    {idP? (
-                      <Button className={"guardar"} onClick={() => handledeleted()}>
-                        {"Eliminar Cita"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={2}>
-                    <Button className={"guardar"} onClick={ClearAll}>
-                      {"Limpiar todos los datos"}
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={2}></Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12}>
-
-
-              </Grid>
-
-
-
-
-
-
-
-
-
-            </Grid>
-
-          </Paper>
-
-        </Grid>
-
-
-      </Grid>
-    </>
-  );
+								<Grid item xs={12} md={4}>
+									<Button
+										fullWidth
+										size="large"
+										variant="contained"
+										onClick={handleSend}
+										sx={{
+											backgroundColor: "#000",
+											color: "#fff",
+											"&:hover": {
+												backgroundColor: "#333",
+											},
+										}}
+									>
+										{"Generar QR"}
+									</Button>
+								</Grid>
+							</Grid>
+						</Grid>
+					</Paper>
+				</Grid>
+			</Grid>
+		</>
+	);
 };
 
 export default Visitas;

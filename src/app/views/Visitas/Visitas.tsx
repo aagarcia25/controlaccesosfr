@@ -122,6 +122,13 @@ const Visitas = () => {
 		setidEntidad(v);
 	};
 
+  
+	const handleFilteridTipo = (v: string) => {
+		setidTipo(v);
+    loadFilter(2, v);
+
+	};
+
 
 	const handleFilterEdificio = (v: string) => {
 		setidEdificio(v);
@@ -131,6 +138,7 @@ const Visitas = () => {
 	const handleFilterAcceso = (v: string) => {
 		setidAcceso(v);
 	};
+  
 
 	const handleedit = (id: string) => {
 		setopen(true);
@@ -156,7 +164,7 @@ const Visitas = () => {
 				setNombreReceptor(res.RESPONSE[0].NombreReceptor);
 				setApellidoPReceptor(res.RESPONSE[0].ApellidoPReceptor);
 				setApellidoMReceptor(res.RESPONSE[0].ApellidoMReceptor);
-				// handleFilteridTipo(res.RESPONSE[0].idTipoentidad);//error
+				handleFilteridTipo(res.RESPONSE[0].idTipoentidad);//error
 				setidEntidad(res.RESPONSE[0].idEntidad);
 				setidunidad(res.RESPONSE[0].IdEntidadReceptor);
 				setproveedor(res.RESPONSE[0].Proveedor);
@@ -798,7 +806,7 @@ const Visitas = () => {
 										<SelectFrag
 											value={idTipo}
 											options={ListIdTipo}
-											onInputChange={()=>{}} //error  handleFilteridTipo
+											onInputChange={handleFilteridTipo} //error  handleFilteridTipo
 											placeholder={"Seleccione.."}
 											disabled={false}
 										/>
@@ -875,7 +883,10 @@ const Visitas = () => {
 									)}
 								</Grid>
 								<Grid item xs={12} md={2}>
-									<Button
+                  {idP ? (
+                    ""
+                  ):(
+                  <Button
 										onClick={ClearAll}
 										fullWidth
 										size="large"
@@ -890,6 +901,8 @@ const Visitas = () => {
 									>
 										{"Limpiar todos los datos"}
 									</Button>
+                  )}
+									
 								</Grid>
 
 								<Grid item xs={12} md={4}>

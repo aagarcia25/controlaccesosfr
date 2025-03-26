@@ -264,7 +264,7 @@ export const VisitasEspeciales = ()=>{
     }
 
     let tipooperacion = 0;
-    if (idP !== undefined) {
+    if (idP) {
       tipooperacion = 2;
     } else {
       tipooperacion = 1;

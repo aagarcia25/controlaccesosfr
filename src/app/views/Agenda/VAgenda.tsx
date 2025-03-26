@@ -81,8 +81,10 @@ const VAgenda = () => {
       if (v.estatus === "0779435b-5718-11ee-b06d-3cd92b4d9bf4") {
         Swal.fire("Cita Finalizada, no se puede modificar", "¡Error!", "info");
       } else {
-        // if (v.color !== "#EC7063") {
+        //  if (v.color !== "#EC7063") {
         navigate("/inicio/view/" + v.id);
+        console.log("mi v",v.title);
+        
         //  } else {
         //    Swal.fire("Cita Vencida, no se puede modificar", "¡Error!", "info");
         //  }

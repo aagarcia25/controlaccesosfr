@@ -35,6 +35,7 @@ export const AppRouter = ({ login }: { login: boolean }) => {
   
   const handleChangeImg = () => {};
   const handleCloseModal = () => {};
+  
   console.log("router");
   useEffect(() => {
     handleChangeImg();

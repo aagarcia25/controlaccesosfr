@@ -1,6 +1,6 @@
 import { Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from "@mui/material";
 import SelectFrag from "../componentes/SelectFrag";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { USUARIORESPONSE } from "../../interfaces/UserInfo";
 import { getUser } from "../../services/localStorage";
@@ -13,9 +13,21 @@ import Swal from "sweetalert2";
 import TitleComponent from "../componentes/TitleComponent";
 import CustomizedDate from "../componentes/CustomizedDate";
 import { UserServices } from "../../services/UserServices";
+ 
+const useCustomParams = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
+  const id = searchParams.get("id"); // Obtiene el valor de id
+  const especial = searchParams.get("especial"); // Obtiene el valor de especial
+
+  return { id, especial };
+};
 export const VisitasEspeciales = ()=>{
-let params = useParams();
+    
+      const  idP = useCustomParams().id||"";
+      console.log("idP,idP",idP);
+      
   const navigate = useNavigate();
   const [open, setopen] = useState(false);
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
@@ -82,18 +94,20 @@ let params = useParams();
       } else if (operacion === 6) {
         setListUnidad(res.RESPONSE);
         setopen(false);
-      } else if (operacion === 7) {
-        setListEdificio(res.RESPONSE);
-        if ((res.RESPONSE.length = 1)) {
-          handleFilterEdificio(res.RESPONSE[0].value);
-        }
-      } else if (operacion === 8) {
-        setListAcceso(res.RESPONSE);
-        if ((res.RESPONSE.length = 1)) {
-          handleFilterAcceso(res.RESPONSE[0].value);
-        }
-        setopen(false);
-      }
+      } 
+      // else if (operacion === 7) {
+      //   setListEdificio(res.RESPONSE);
+      //   if ((res.RESPONSE.length = 1)) {
+      //     handleFilterEdificio(res.RESPONSE[0].value);
+      //   }
+      // } 
+      // else if (operacion === 8) {
+      //   setListAcceso(res.RESPONSE);
+      //   if ((res.RESPONSE.length = 1)) {
+      //     handleFilterAcceso(res.RESPONSE[0].value);
+      //   }
+      //   setopen(false);
+      // }
     });
   };
 
@@ -118,10 +132,10 @@ let params = useParams();
     loadFilter(2, v);
   };
 
-  const handleFilterEdificio = (v: string) => {
-    setidEdificio(v);
-    loadFilter(8, v);
-  };
+  // const handleFilterEdificio = (v: string) => {
+  //   setidEdificio(v);
+  //   loadFilter(8, v);
+  // };
 
   const handleFilterAcceso = (v: string) => {
     setidAcceso(v);
@@ -135,6 +149,8 @@ let params = useParams();
     };
 
     CatalogosServices.visita_index(data).then((res) => {
+      console.log("res pedro",res);
+      
       if (res.SUCCESS) {
         Toast.fire({
           icon: "success",
@@ -143,7 +159,7 @@ let params = useParams();
         setidvista(res.RESPONSE[0].IdTipoAcceso);
         setId(res.RESPONSE[0].id);
         handleFilterChange2(dayjs(res.RESPONSE[0].FechaVisita));
-        handleFilterEdificio(res.RESPONSE[0].idEdificio);
+        //handleFilterEdificio(res.RESPONSE[0].idEdificio);
         setidDuracion(res.RESPONSE[0].Duracion);
         setNombreVisitante(res.RESPONSE[0].NombreVisitante);
         setApellidoPVisitante(res.RESPONSE[0].ApellidoPVisitante);
@@ -166,7 +182,7 @@ let params = useParams();
         Swal.fire(res.STRMESSAGE, "¡Error!", "info");
         setopen(false);
       }
-    });
+    }).catch( () =>console.log("trone"));
   };
 
   const handledeleted = () => {
@@ -248,7 +264,7 @@ let params = useParams();
     }
 
     let tipooperacion = 0;
-    if (params.id !== undefined) {
+    if (idP !== undefined) {
       tipooperacion = 2;
     } else {
       tipooperacion = 1;
@@ -331,9 +347,9 @@ let params = useParams();
     loadFilter(5);
     loadFilter(6, user.IdEntidad);
     loadFilter(7, user.Id);
-    if (params.id !== "" && params.id !== undefined) {
+    if (idP !== "" && idP !== undefined) {
       setTimeout(() => {
-        handleedit(params.id || "");
+        handleedit(idP );
       }, 2000);
     }
   }, []);
@@ -809,7 +825,7 @@ let params = useParams();
               </Button>
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={3}>
-              {params.id !== undefined ? (
+              {idP !== undefined ? (
                 <Button className={"guardar"} onClick={() => handledeleted()}>
                   {"Eliminar Cita"}
                 </Button>

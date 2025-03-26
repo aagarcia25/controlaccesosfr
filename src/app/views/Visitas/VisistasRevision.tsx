@@ -11,6 +11,7 @@ import { formatFecha } from "../../helpers/FormatDate";
 
 export const VisistasRevision = () => {
   const navigate = useNavigate();
+  
   let params = useParams();
   const [vrows, setVrows] = useState<Visita | null>(null);
   const [open, setopen] = useState(false);
@@ -46,7 +47,8 @@ export const VisistasRevision = () => {
   };
 
   const viewedit = () => {
-    navigate("/inicio/visitas/" + params.id);
+   
+    navigate("/inicio/visitas/?id=" + params.id+"&especial="+ (vrows?.NombreReceptor ? false : true)+"&opcion=editar");
   };
 
   const handleRenviar = () => {

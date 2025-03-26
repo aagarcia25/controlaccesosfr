@@ -60,7 +60,7 @@ export class UserServices {
     }
       //if (bandera === "Piso" && setState2) setState2(response.data.datos.NombrePiso);
     ///if (bandera === "Piso")setState({"id":response.data.datos.idPiso,"nombre":response.data.datos.NombrePiso} )
-
+return(response.data.esEntidadEspecial)
 
 }
 }

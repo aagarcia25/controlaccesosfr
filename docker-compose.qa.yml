@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.qa
+      args:
+        # Si necesitas pasar variables como build args, inclúyelas aquí
+        REACT_APP_APPLICATION_ID: ${REACT_APP_APPLICATION_ID}
+        REACT_APP_APPLICATION_BASE_URL: ${REACT_APP_APPLICATION_BASE_URL}
+        REACT_APP_APPLICATION_BASE_URL_EXT: ${REACT_APP_APPLICATION_BASE_URL_EXT}
+        REACT_APP_APPLICATION_BASE_URL_LOGIN: ${REACT_APP_APPLICATION_BASE_URL_LOGIN}
+    ports:
+      - "3002:3002" # Mapea el puerto 3002 del host al contenedor
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - REACT_APP_APPLICATION_ID=${REACT_APP_APPLICATION_ID}
+      - REACT_APP_APPLICATION_BASE_URL=${REACT_APP_APPLICATION_BASE_URL}
+      - REACT_APP_APPLICATION_BASE_URL_EXT=${REACT_APP_APPLICATION_BASE_URL_EXT}
+      - REACT_APP_APPLICATION_BASE_URL_LOGIN=${REACT_APP_APPLICATION_BASE_URL_LOGIN}
+    env_file:
+      - .env.qa # Carga las variables desde el archivo .env.qa

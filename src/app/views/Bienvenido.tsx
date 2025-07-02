@@ -14,7 +14,7 @@ export default function Bienvenido({ user }: { user: any }) {
           >
             <div className="containerCarrucelBienvenido"></div>
           </Box>
-          <FavIconAvisos/>
+          {/* <FavIconAvisos/> */}
 
         </Grid>
       </Grid>

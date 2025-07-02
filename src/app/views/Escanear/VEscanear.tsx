@@ -3,13 +3,58 @@ import { useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
 import TitleComponent from "../componentes/TitleComponent";
+import { CatalogosServices } from "../../services/catalogosServices";
 
 const VEscanear = () => {
   const navigate = useNavigate();
 
+  // const handleScan = (scanData: any) => {
+  //   console.log("scanData",JSON.stringify(scanData));
+    
+  //   if (scanData && scanData !== "") {
+  //   console.log("scanData2",JSON.stringify(scanData));
+
+  //     navigate("/inicio/VisistasEscaneo/" + scanData.text);
+  //   }
+  // };
+
+  // const EsEstudiante = (v: string) =>{
+  //   let data = {
+  //     Destinatario: v,
+  //     NUMOPERACION: 7,
+  //   };
+  // }
+
   const handleScan = (scanData: any) => {
+    console.log("scanData", JSON.stringify(scanData));
+
     if (scanData && scanData !== "") {
-      navigate("/inicio/VisistasEscaneo/" + scanData.text);
+      const identificador = scanData.text;
+
+      let data = {
+        CHID: identificador,
+        NUMOPERACION: 7,
+      };
+
+      // Llamar al servicio con el objeto de datos
+      CatalogosServices.Estudiante(data).then((res) => {
+        if (res.SUCCESS) {
+          const response = res.RESPONSE; // Accede a RESPONSE
+          if (response.tabla === "Visitas") {
+            navigate(`/inicio/VisistasEscaneo/${identificador}`);
+          } else if (response.tabla === "Estudiantes") {
+            navigate(`/inicio/EstudiantesEscaneo/${identificador}`);
+          } else {
+            alert("El ID no pertenece a ninguna tabla.");
+          }
+        } else {
+          console.error("Error al consultar el servicio:", res.STRMESSAGE);
+          alert("Hubo un error al consultar el servicio.");
+        }
+      }).catch((error) => {
+        console.error("Error en la solicitud:", error);
+        alert("Error en la solicitud al servidor.");
+      });
     }
   };
 

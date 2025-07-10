@@ -132,7 +132,7 @@ function App() {
     setAcceso(false);
   };
 
-  const {} = useIdleTimer({
+  const { } = useIdleTimer({
     timeout,
     onIdle: handleOnIdle,
   });
@@ -156,7 +156,7 @@ function App() {
         setRfToken(refjwt);
         setIdApp(idapp);
         var ventana = window.self;
-        ventana.location.replace("/sica/");
+        ventana.location.replace(process.env.REACT_APP_APPLICATION_BASE_REDIRECT!);
       } else {
         Swal.fire({
           title: "Token no valido",

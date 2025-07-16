@@ -213,7 +213,9 @@ const Visitas = () => {
         !idvista ||
         !idDuracion ||
         !idEdificio ||
-        !idAcceso
+        !idAcceso ||
+        !Correo ||
+        Correo == ""
       ) {
         Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
         send = false;
@@ -233,7 +235,9 @@ const Visitas = () => {
         !idvista ||
         !idDuracion ||
         !idEdificio ||
-        !idAcceso
+        !idAcceso ||
+        !Correo ||
+        Correo == ""
       ) {
         Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
         send = false;
@@ -452,7 +456,6 @@ const Visitas = () => {
                   defaultValue=""
                   value={ApellidoMVisitante}
                   onChange={(v) => setApellidoMVisitante(v.target.value)}
-                  error={ApellidoMVisitante === "" ? true : false}
                 />
               </Grid>
 
@@ -560,7 +563,6 @@ const Visitas = () => {
                   defaultValue=""
                   value={ApellidoMReceptor}
                   onChange={(v) => setApellidoMReceptor(v.target.value)}
-                  error={ApellidoMReceptor === "" ? true : false}
                 />
               </Grid>
             </Grid>

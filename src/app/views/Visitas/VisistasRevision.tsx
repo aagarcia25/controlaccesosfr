@@ -33,7 +33,7 @@ export const VisistasRevision = () => {
         var link = document.createElement("a");
         document.body.appendChild(link);
         link.href = data;
-        link.download = "QR.pdf";
+        link.download = "QR-" + params.id + ".pdf";
         link.click();
         window.URL.revokeObjectURL(data);
         link.remove();

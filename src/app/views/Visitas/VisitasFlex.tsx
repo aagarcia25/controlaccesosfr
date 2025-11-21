@@ -1,4 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Grid,
@@ -11,6 +12,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  IconButton,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +32,7 @@ const VisitasFlex = () => {
   const navigate = useNavigate();
   const [open, setopen] = useState(false);
   const user: USUARIORESPONSE = JSON.parse(String(getUser()));
+
   const [id, setId] = useState("");
   const [idunidad, setidunidad] = useState("");
   const [ListUnidad, setListUnidad] = useState<SelectValues[]>([]);
@@ -52,7 +55,10 @@ const VisitasFlex = () => {
   const [idAcceso, setidAcceso] = useState("");
   const [ListAcceso, setListAcceso] = useState<SelectValues[]>([]);
   const [Observaciones, setObservaciones] = useState("");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Visita[]>([]);
+
+  //  Nuevo estado para manejar el texto que se busca con debounce
+  const [searchNombre, setSearchNombre] = useState("");
 
   const loadFilter = (operacion: number, id?: string) => {
     setopen(true);
@@ -64,7 +70,9 @@ const VisitasFlex = () => {
         setListEntidad(res.RESPONSE);
         setopen(false);
       } else if (operacion === 3) {
+        // reservado para futuras operaciones
       } else if (operacion === 4) {
+        // reservado para futuras operaciones
       } else if (operacion === 5) {
         setListPiso(res.RESPONSE);
       } else if (operacion === 11) {
@@ -73,12 +81,12 @@ const VisitasFlex = () => {
       } else if (operacion === 7) {
         console.log(res.RESPONSE);
         setListEdificio(res.RESPONSE);
-        if ((res.RESPONSE.length = 1)) {
+        if (res.RESPONSE.length === 1) {
           handleFilterEdificio(res.RESPONSE[0].value);
         }
       } else if (operacion === 8) {
         setListAcceso(res.RESPONSE);
-        if ((res.RESPONSE.length = 1)) {
+        if (res.RESPONSE.length === 1) {
           handleFilterAcceso(res.RESPONSE[0].value);
         }
         setopen(false);
@@ -112,7 +120,7 @@ const VisitasFlex = () => {
     setidAcceso(v);
   };
 
-  const handleRowDoubleClick = (v: any) => {
+  const handleRowDoubleClick = (v: Visita) => {
     console.log("Se dio click");
     console.log(v);
     let data = {
@@ -140,8 +148,10 @@ const VisitasFlex = () => {
       setObservaciones(res.RESPONSE[0].Observaciones);
     });
   };
+
   const cleardata = () => {
     setData([]);
+    setNombreVisitante("");
     setApellidoPVisitante("");
     setApellidoMVisitante("");
     setidEntidad("");
@@ -156,18 +166,68 @@ const VisitasFlex = () => {
     setExt("");
     setObservaciones("");
   };
+
   const handleSearch = (v: string) => {
-    if (v !== "" && v != null) {
-      let data = {
-        NUMOPERACION: 16,
-        NombreVisitante: v,
-      };
-      CatalogosServices.visita_index(data).then((res) => {
-        setData(res.RESPONSE);
-      });
-      console.log(data);
-    }
+  const term = (v || "").trim();
+  if (term === "") {
+    setData([]);
+    return;
+  }
+
+  let data = {
+    NUMOPERACION: 16,
+    NombreVisitante: term,
   };
+
+  CatalogosServices.visita_index(data).then((res) => {
+    if (res && res.RESPONSE) {
+      const getStr = (val: any) =>
+        (val === null || val === undefined ? "" : String(val)).trim();
+
+      const sorted = [...res.RESPONSE].sort((a: any, b: any) => {
+        const aNombre = getStr(a.NombreVisitante);
+        const bNombre = getStr(b.NombreVisitante);
+
+        let comp = aNombre.localeCompare(bNombre, "es");
+        if (comp !== 0) return comp;
+
+        const aApa = getStr(a.ApellidoPVisitante);
+        const bApa = getStr(b.ApellidoPVisitante);
+
+        comp = aApa.localeCompare(bApa, "es");
+        if (comp !== 0) return comp;
+
+        const aAma = getStr(a.ApellidoMVisitante);
+        const bAma = getStr(b.ApellidoMVisitante);
+
+        return aAma.localeCompare(bAma, "es");
+      });
+
+      setData(sorted);
+    } else {
+      setData([]);
+    }
+  });
+};
+
+
+
+
+  //  Debounce: solo busca cuando se deja de escribir un momento y haya mínimo 3 caracteres
+  useEffect(() => {
+    const term = searchNombre.trim();
+
+    if (term.length < 3) {
+      setData([]);
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      handleSearch(term);
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchNombre]);
 
   const handleSend = () => {
     let send = false;
@@ -296,9 +356,10 @@ const VisitasFlex = () => {
                   id="outlined-required"
                   defaultValue=""
                   value={NombreVisitante}
-                  onChange={(v) => {
-                    setNombreVisitante(v.target.value);
-                    handleSearch(v.target.value);
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNombreVisitante(value);
+                    setSearchNombre(value); // 👈 aquí se dispara el debounce
                   }}
                   error={NombreVisitante === "" ? true : false}
                 />
@@ -317,6 +378,7 @@ const VisitasFlex = () => {
                           fontSize="small"
                           color="error"
                           onClick={() => cleardata()}
+                          style={{ cursor: "pointer" }}
                         />
                       </Grid>
                       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -330,6 +392,21 @@ const VisitasFlex = () => {
                             width: 1200,
                           }}
                         >
+                          {/* BOTÓN DE CIERRE EN LA ESQUINA SUPERIOR DERECHA */}
+                          {/* <IconButton
+                            size="small"
+                            onClick={() => setData([])} // fuerza cerrar
+                            sx={{
+                              position: "absolute",
+                              top: 4,
+                              right: 4,
+                              backgroundColor: "white",
+                              boxShadow: 1,
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton> */}
+
                           <Table
                             sx={{ minWidth: 300 }}
                             size="small"
@@ -338,9 +415,44 @@ const VisitasFlex = () => {
                           >
                             <TableHead>
                               <TableRow>
-                                <TableCell>Nombre Visitante</TableCell>
+                                <TableCell
+                                  sx={{
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Nombre Visitante
+                                </TableCell>
+
+                                {/* Celda para el botón de cerrar */}
+                                <TableCell
+                                  align="right"
+                                  sx={{
+                                    width: 80,
+                                    borderBottom: "none",
+                                  }}
+                                >
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => setData([])}
+                                    sx={{
+                                      borderRadius: "10px",
+                                      border: "1px solid #e0e0e0",
+                                      backgroundColor: "#ffffff",
+                                      boxShadow: "0 1px 4px rgba(0,0,0,0.18)",
+                                      padding: "2px 6px",
+                                      "&:hover": {
+                                        backgroundColor: "#f5f5f5",
+                                        boxShadow:
+                                          "0 2px 6px rgba(0,0,0,0.25)",
+                                      },
+                                    }}
+                                  >
+                                    <CloseIcon fontSize="small" />
+                                  </IconButton>
+                                </TableCell>
                               </TableRow>
                             </TableHead>
+
                             <TableBody>
                               {data.map((item: Visita) => (
                                 <TableRow
@@ -348,6 +460,7 @@ const VisitasFlex = () => {
                                   onDoubleClick={() =>
                                     handleRowDoubleClick(item)
                                   }
+                                  style={{ cursor: "pointer" }}
                                 >
                                   <TableCell component="th" scope="row">
                                     {item.NombreVisitante}{" "}
@@ -612,6 +725,7 @@ const VisitasFlex = () => {
             justifyContent="center"
             alignItems="center"
           >
+           {/*  tercera parte */}
             <Grid item xs={3} sm={3} md={3} lg={3}>
               <Typography sx={{ fontFamily: "sans-serif" }}>
                 Correo para Notificación:
@@ -658,7 +772,7 @@ const VisitasFlex = () => {
             lg={12}
             spacing={2}
             sx={{
-              "text-align": "center",
+              textAlign: "center",
             }}
           >
             <Grid item xs={12} sm={12} md={12} lg={2}></Grid>

@@ -254,53 +254,49 @@ const Visitas = () => {
 			send = false;
 		}
 
-		if (idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
-			if (
-				!NombreVisitante ||
-				!ApellidoPVisitante ||
-				!NombreReceptor ||
-				!ApellidoPReceptor ||
-				!idunidad ||
-				!idpiso ||
-				!idvista ||
-				!idDuracion ||
-				!idEdificio ||
-				!idAcceso
-			) {
-				Swal.fire(
-					"Favor de Completar los Campos con (*)",
-					"¡Error!",
-					"info"
-				);
-				send = false;
-				setopen(false);
-			} else {
-				send = true;
-			}
-		} else if (idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
-			if (
-				!proveedor ||
-				!NombreVisitante ||
-				!ApellidoPVisitante ||
-				!NombreReceptor ||
-				!ApellidoPReceptor ||
-				!idunidad ||
-				(!idpiso && idpiso !== "false") ||
-				!idvista ||
-				!idDuracion ||
-				!idEdificio ||
-				!idAcceso
-			) {
-				Swal.fire(
-					"Favor de Completar los Campos con (*)",
-					"¡Error!",
-					"info"
-				);
-				send = false;
-			} else {
-				send = true;
-			}
-		}
+    if (idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4") {
+      if (
+        !NombreVisitante ||
+        !ApellidoPVisitante ||
+        !NombreReceptor ||
+        !ApellidoPReceptor ||
+        !idunidad ||
+        !idpiso ||
+        !idvista ||
+        !idDuracion ||
+        !idEdificio ||
+        !idAcceso ||
+        !Correo ||
+        Correo == ""
+      ) {
+        Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
+        send = false;
+        setopen(false);
+      } else {
+        send = true;
+      }
+    } else if (idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4") {
+      if (
+        !proveedor ||
+        !NombreVisitante ||
+        !ApellidoPVisitante ||
+        !NombreReceptor ||
+        !ApellidoPReceptor ||
+        !idunidad ||
+        (!idpiso && idpiso !== "false") ||
+        !idvista ||
+        !idDuracion ||
+        !idEdificio ||
+        !idAcceso ||
+        !Correo ||
+        Correo == ""
+      ) {
+        Swal.fire("Favor de Completar los Campos con (*)", "¡Error!", "info");
+        send = false;
+      } else {
+        send = true;
+      }
+    }
 
 		let tipooperacion = 0;
 		if (idP) {
@@ -420,77 +416,244 @@ const Visitas = () => {
 		}
 	}, []);
 
-	return (
-		<>
-			<TitleComponent title={"Generar Visita"} show={open} />
+  return (
+    <>
+      <TitleComponent title={"Generar Visita"} show={open} />
+      <Typography
+        sx={{
+          fontFamily: "sans-serif",
+          textAlign: "center",
+          fontSize: "20px",
+        }}
+      >
+        Completa la información
+      </Typography>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid
+          container
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ padding: "2%" }}
+        >
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography sx={{ fontFamily: "sans-serif" }}>
+              *Tipo de Acceso:
+            </Typography>
+            <SelectFrag
+              value={idvista}
+              options={ListVisita}
+              onInputChange={handleFilteridvisita}
+              placeholder={"Seleccione.."}
+              disabled={false}
+            />
+          </Grid>
 
-			<Typography
-				sx={{
-					fontFamily: "sans-serif",
-					textAlign: "center",
-					fontSize: "20px",
-				}}
-			>
-				Completa la información
-			</Typography>
-			<Grid
-				container
-				direction="row"
-				justifyContent="center"
-				alignItems="flex-start"
-				spacing={2}
-				sx={{
-					padding: { xs: 2, sm: 3, md: 4 },
-					marginTop: 2,
-					marginBottom: 4,
-				}}
-			>
-				<Grid item xs={12} sm={12} md={12} lg={12}>
-					<Typography variant="h6" gutterBottom>
-						Persona a Visitar:
-					</Typography>
+          {idvista === "fca60b42-528e-11ee-b06d-3cd92b4d9bf4" ? (
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Typography variant="body1" gutterBottom>
+                *Proveedor:
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                required
+                id="outlined-required"
+                label=""
+                defaultValue=""
+                value={proveedor}
+                onChange={(v) => setproveedor(v.target.value)}
+                error={proveedor === "" ? true : false}
+              />
+            </Grid>
+          ) : (
+            ""
+          )}
 
-					<Grid
-						container
-						item
-						spacing={2}
-						xs={12}
-						direction="row"
-						justifyContent="flex-start"
-						alignItems="flex-start"
-					>
-						<Grid item xs={12} md={6}>
-							<Typography sx={{ fontFamily: "sans-serif" }}>
-								*Nombre(s):
-							</Typography>
-							<TextField
-								fullWidth
-								size="small"
-								required
-								id="outlined-required"
-								defaultValue=""
-								value={NombreReceptor}
-								onChange={(v) => setNombreReceptor(v.target.value)}
-								error={NombreReceptor === "" ? true : false}
-							/>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<Typography sx={{ fontFamily: "sans-serif" }}>
-								*Apellido Paterno:
-							</Typography>
-							<TextField
-								fullWidth
-								size="small"
-								required
-								id="outlined-required"
-								defaultValue=""
-								value={ApellidoPReceptor}
-								onChange={(v) => setApellidoPReceptor(v.target.value)}
-								error={ApellidoPReceptor === "" ? true : false}
-							/>
-						</Grid>
-					</Grid>
-				</Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography variant="body1" gutterBottom>
+              Visitante:
+            </Typography>
+            <Grid
+              container
+              item
+              spacing={1}
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  *Nombre(s):
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  id="outlined-required"
+                  defaultValue=""
+                  value={NombreVisitante}
+                  onChange={(v) => setNombreVisitante(v.target.value)}
+                  error={NombreVisitante === "" ? true : false}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  *Apellido Paterno:
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  id="outlined-required"
+                  defaultValue=""
+                  value={ApellidoPVisitante}
+                  onChange={(v) => setApellidoPVisitante(v.target.value)}
+                  error={ApellidoPVisitante === "" ? true : false}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Apellido Materno:
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  id="outlined-required"
+                  defaultValue=""
+                  value={ApellidoMVisitante}
+                  onChange={(v) => setApellidoMVisitante(v.target.value)}
+                />
+              </Grid>
+
+              {idvista === "f751513c-528e-11ee-b06d-3cd92b4d9bf4" ? (
+                <Grid
+                  container
+                  item
+                  spacing={1}
+                  xs={12}
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={12} sm={8} md={8} lg={8}>
+                    <Typography sx={{ fontFamily: "sans-serif" }}>
+                      *Origen:
+                    </Typography>
+                    <SelectFrag
+                      value={idTipo}
+                      options={ListIdTipo}
+                      onInputChange={handleFilteridTipo}
+                      placeholder={"Seleccione.."}
+                      disabled={false}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Typography sx={{ fontFamily: "sans-serif" }}>
+                      *Área:
+                    </Typography>
+                    <SelectFrag
+                      value={idEntidad}
+                      options={ListEntidad}
+                      onInputChange={handleFilteridEntidad}
+                      placeholder={"Seleccione.."}
+                      disabled={false}
+                    />
+                  </Grid>
+                </Grid>
+              ) : (
+                ""
+              )}
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography sx={{ fontFamily: "sans-serif" }}>
+              Persona a Visitar:
+            </Typography>
+
+            <Grid
+              container
+              item
+              spacing={1}
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  *Nombre(s):
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  id="outlined-required"
+                  defaultValue=""
+                  value={NombreReceptor}
+                  onChange={(v) => setNombreReceptor(v.target.value)}
+                  error={NombreReceptor === "" ? true : false}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  *Apellido Paterno:
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  required
+                  id="outlined-required"
+                  defaultValue=""
+                  value={ApellidoPReceptor}
+                  onChange={(v) => setApellidoPReceptor(v.target.value)}
+                  error={ApellidoPReceptor === "" ? true : false}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Typography variant="subtitle2" style={{ color: "black" }}>
+                  Apellido Materno:
+                </Typography>
+                <TextField
+                  size="small"
+                  fullWidth
+                  required
+                  id="outlined-required"
+                  defaultValue=""
+                  value={ApellidoMReceptor}
+                  onChange={(v) => setApellidoMReceptor(v.target.value)}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={12} lg={12} spacing={1}>
+            <Typography sx={{ fontFamily: "sans-serif" }}>
+              Datos de Visita:
+            </Typography>
 
 				<Grid
 					container

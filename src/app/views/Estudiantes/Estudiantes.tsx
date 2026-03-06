@@ -544,7 +544,7 @@ console.log("EstadoQr1",obj.EstadoQR);
 		},
 		{
 			field: "EstadoQR",
-			headerName: "Estado QR",
+			headerName: "Estado de QR",
 			minWidth: 100,
 			renderCell: (params: any) => (
 				<Box

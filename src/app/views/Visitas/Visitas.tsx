@@ -1090,7 +1090,9 @@ const Visitas = () => {
 					</Paper>
 				</Grid>
 			</Grid>
-		</>
+			</Grid>
+		</Grid>
+	  </>
 	);
 };
 

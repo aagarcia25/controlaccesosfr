@@ -98,6 +98,8 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [ListIdEstudiante, setListIdEstudiante] = useState<SelectValues[]>([]);
 	const [fInicioFiltro, setFInicioFiltro] = useState<Dayjs | null>();
 	const [fFinFiltro, setFFinFiltro] = useState<Dayjs | null>();
+	const [loadingTabla, setLoadingTabla] = useState(false);
+	const [processingQR, setProcessingQR] = useState(false);
 
 
 	const noSelection = () => {
@@ -459,25 +461,53 @@ console.log("EstadoQr1",obj.EstadoQR);
 		}
 	};
 
-	const consulta = () => {
+	const consulta = async () => {
+	try {
+		setLoadingTabla(true);
+		setOpenSlider(true);
+
 		let data = {
 			NUMOPERACION: 4,
 		};
 
-		CatalogosServices.Estudiante(data).then((res) => {
-			console.log("res",res);
-			console.log("data",data);
-			if (res.SUCCESS) {
-				setData(res.RESPONSE);
-				console.log("res.RESPONSE", res.RESPONSE);
+		const res = await CatalogosServices.Estudiante(data);
 
-				setOpenSlider(false);
-			} else {
-				setOpenSlider(false);
-				Swal.fire("¡Error!", res.STRMESSAGE, "error");
-			}
-		});
-	};
+		console.log("res", res);
+		console.log("data", data);
+
+		if (res.SUCCESS) {
+			setData(res.RESPONSE);
+			console.log("res.RESPONSE", res.RESPONSE);
+		} else {
+			Swal.fire("¡Error!", res.STRMESSAGE, "error");
+		}
+	} catch (error) {
+		console.error(error);
+		Swal.fire("¡Error!", "No fue posible consultar estudiantes", "error");
+	} finally {
+		setLoadingTabla(false);
+		setOpenSlider(false);
+	}
+};
+	// const consulta = () => {
+	// 	let data = {
+	// 		NUMOPERACION: 4,
+	// 	};
+
+	// 	CatalogosServices.Estudiante(data).then((res) => {
+	// 		console.log("res",res);
+	// 		console.log("data",data);
+	// 		if (res.SUCCESS) {
+	// 			setData(res.RESPONSE);
+	// 			console.log("res.RESPONSE", res.RESPONSE);
+
+	// 			setOpenSlider(false);
+	// 		} else {
+	// 			setOpenSlider(false);
+	// 			Swal.fire("¡Error!", res.STRMESSAGE, "error");
+	// 		}
+	// 	});
+	// };
 
 	
 	const handleCatInstitucion = (v: any) => {
@@ -1233,6 +1263,7 @@ const GenerarReporteEstudiantes = () => {
         columns={columnsRel}
         rows={data}
         setRowSelected={setSelectionModel}
+		loading={loadingTabla}
       />
     </Box>
   </Grid>

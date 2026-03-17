@@ -78,7 +78,7 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const [tipoOperacion, setTipoOperacion] = useState(0);
 
 	// Nuevo estado para el modal de subir foto
-	
+
 	const [openCatInstitucion, setOpenCatInstitucion] = useState(false);
 	const [openCatEscolaridad, setOpenCatEscolaridad] = useState(false);
 
@@ -105,91 +105,43 @@ export const Estudiantes = ({ setDataGlobal }: { setDataGlobal: Function }) => {
 	const noSelection = () => {
 		let obj = data.find((dato: any) => dato.id === selectionModel[0]);
 
-// Verificar si obj es undefined o no tiene 'Nombre'
-			//fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
-		if(selectionModel.length >4){
+		// Verificar si obj es undefined o no tiene 'Nombre'
+		//fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
+		if (selectionModel.length > 4) {
 			Swal.fire("Seleccione máximo 4 registros", "", "info");
-		}else if (selectionModel.length >= 1) {
-console.log("entre alñ min 4");
-console.log("EstadoQr1",obj.EstadoQR);
+		} else if (selectionModel.length >= 1) {
+			console.log("entre alñ min 4");
+			console.log("EstadoQr1", obj.EstadoQR);
 
-			if(obj.EstadoQR==="0"){
+			if (obj.EstadoQR === "0") {
 
-					//console.log("entre al if1",obj.EstadoQR);
-				
-			
-			Swal.fire({
-				icon: "info",
-				title: "Se generará un QR único para cada registro seleccionado",
-				showDenyButton: true,
-				showCancelButton: false,
-				confirmButtonText: "Confirmar",
-				denyButtonText: `Cancelar`,
-			}).then((result) => {
-				if (result.isConfirmed) {
-					let data = {
-						NUMOPERACION: 9,
-						CHIDs: selectionModel,
-						CHUSER: user.Id,
-					};
+				//console.log("entre al if1", obj.EstadoQR);
 
-					CatalogosServices.Estudiante(data).then((res) => {
-						if (res.SUCCESS) {
-							// Mostrar mensaje de éxito
-							Toast.fire({
-								icon: "success",
-								title: res.STRMESSAGE.success,
-							});
 
-							// Si hay warnings, mostrar una alerta adicional
-							if (res.STRMESSAGE.warnings) {
-								const studentNames = res.STRMESSAGE.warnings.students.join(", ");
-								Swal.fire({
-									icon: "warning",
-									title: "Advertencia",
-									html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
-								});
-							}
-
-							// Refrescar la tabla y limpiar selección
-							consulta();
-							setSelectionModel([]);
-						} else {
-							// Mostrar errores críticos
-							const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
-							Swal.fire("¡Error!", errorDetails, "error");
-						}
-					});
-				} else if (result.isDenied) {
-					Swal.fire("No se realizaron cambios", "", "info");
-				}
-			});
-			}else if (obj?.EstadoQR === "1"){
-				console.log("entre al if de qr generado");
-				
 				Swal.fire({
 					icon: "info",
-					title: "Los QR que ya se generaron antes solo se reenviarán por correo de nuevo",
+					title: "Se generará un QR único para cada registro seleccionado",
 					showDenyButton: true,
 					showCancelButton: false,
 					confirmButtonText: "Confirmar",
 					denyButtonText: `Cancelar`,
 				}).then((result) => {
 					if (result.isConfirmed) {
-						let data = {
+						setProcessingQR(true);
+						let dataSend = {
 							NUMOPERACION: 9,
 							CHIDs: selectionModel,
 							CHUSER: user.Id,
 						};
-	
-						CatalogosServices.Estudiante(data).then((res) => {
+
+						CatalogosServices.Estudiante(dataSend).then((res) => {
 							if (res.SUCCESS) {
 								// Mostrar mensaje de éxito
 								Toast.fire({
 									icon: "success",
 									title: res.STRMESSAGE.success,
 								});
-	
+
 								// Si hay warnings, mostrar una alerta adicional
 								if (res.STRMESSAGE.warnings) {
 									const studentNames = res.STRMESSAGE.warnings.students.join(", ");
@@ -199,7 +151,16 @@ console.log("EstadoQr1",obj.EstadoQR);
 										html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
 									});
 								}
-	
+
+								// actualiza visualmente antes de consultar de nuevo
+								setData((prev: any[]) =>
+									prev.map((item: any) =>
+										selectionModel.includes(item.id)
+											? { ...item, EstadoQR: "1" }
+											: item
+									)
+								);
+
 								// Refrescar la tabla y limpiar selección
 								consulta();
 								setSelectionModel([]);
@@ -208,14 +169,86 @@ console.log("EstadoQr1",obj.EstadoQR);
 								const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
 								Swal.fire("¡Error!", errorDetails, "error");
 							}
-						});
+						})
+							.catch(() => {
+								Swal.fire("¡Error!", "No fue posible generar los QR.", "error");
+							})
+							.finally(() => {
+								setProcessingQR(false);
+							});
+
+					} else if (result.isDenied) {
+						Swal.fire("No se realizaron cambios", "", "info");
+					}
+				});
+			} else if (obj?.EstadoQR === "1") {
+				console.log("entre al if de qr generado");
+
+				Swal.fire({
+					icon: "info",
+					title: "Los QR que ya se generaron antes solo se reenviarán por correo de nuevo",
+					showDenyButton: true,
+					showCancelButton: false,
+					confirmButtonText: "Confirmar",
+					denyButtonText: `Cancelar`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						setProcessingQR(true);
+
+						let dataSend = {
+							NUMOPERACION: 9,
+							CHIDs: selectionModel,
+							CHUSER: user.Id,
+						};
+
+						CatalogosServices.Estudiante(dataSend).then((res) => {
+							if (res.SUCCESS) {
+								// Mostrar mensaje de éxito
+								Toast.fire({
+									icon: "success",
+									title: res.STRMESSAGE.success,
+								});
+
+								// Si hay warnings, mostrar una alerta adicional
+								if (res.STRMESSAGE.warnings) {
+									const studentNames = res.STRMESSAGE.warnings.students.join(", ");
+									Swal.fire({
+										icon: "warning",
+										title: "Advertencia",
+										html: `<p>${res.STRMESSAGE.warnings.message}</p><p><strong>Estudiantes:</strong> ${studentNames}</p>`,
+									});
+								}
+
+								setData((prev: any[]) =>
+									prev.map((item: any) =>
+										selectionModel.includes(item.id)
+											? { ...item, EstadoQR: "1" }
+											: item
+									)
+								);
+
+								// Refrescar la tabla y limpiar selección
+								consulta();
+								setSelectionModel([]);
+							} else {
+								// Mostrar errores críticos
+								const errorDetails = res.STRMESSAGE.errors?.message || "Ha ocurrido un error inesperado.";
+								Swal.fire("¡Error!", errorDetails, "error");
+							}
+						})
+							.catch(() => {
+								Swal.fire("¡Error!", "No fue posible procesar los QR.", "error");
+							})
+							.finally(() => {
+								setProcessingQR(false);
+							});
+
+
 					} else if (result.isDenied) {
 						Swal.fire("No se realizaron cambios", "", "info");
 					}
 				});
 			}
-			
-			
 		} else {
 			Swal.fire({
 				title: "No se han seleccionado registros",
@@ -226,80 +259,80 @@ console.log("EstadoQr1",obj.EstadoQR);
 
 	// Función para exportar en un formato
 	const handleExport = (format: "pdf" | "qr") => {
-		
+
 		handleMenuClose();
-		if (selectionModel.length >= 1){
-			
+		if (selectionModel.length >= 1) {
+
 			// Validar formato soportado
-		if (!["pdf", "qr"].includes(format)) {
-			console.error("Formato no soportado:", format);
-			return;
-		}
-	
-		if (selectionModel.length === 0) {
-			console.error("No se han seleccionado IDs para exportar.");
-			return;
-		}
-	
-		const dataR = {
-			ids: selectionModel,
-			CHUSER: user.Id, // Asegúrate de que `user.Id` esté definido
-			output_format: format,
-		};
-	
-		axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + 'makeQrEstudiante', {
-			params: dataR,
-			responseType: 'blob', // Asegura que recibes un blob
-		})
-			.then((response) => {
-				const contentType = response.headers['content-type']; // Detecta el tipo de archivo devuelto
-				let fileExtension = "pdf"; // Asume PDF por defecto
-	
-				if (contentType === "application/zip") {
-					fileExtension = "zip";
-				} else if (contentType === "image/png" || format === "qr") {
-					fileExtension = "png";
-				}
-	
-				let fileName = "";
-        if (selectionModel.length === 1) {
-			console.log("select 1",selectedRow);
-			console.log("select 2",selectionModel);
-			
-			//let obj = data.find((dato: any) => dato.id === selectionModel[0]);
-			let obj = data.find((dato: any) => dato.id === selectionModel[0]);
+			if (!["pdf", "qr"].includes(format)) {
+				console.error("Formato no soportado:", format);
+				return;
+			}
 
-// Verificar si obj es undefined o no tiene 'Nombre'
-			fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
+			if (selectionModel.length === 0) {
+				console.error("No se han seleccionado IDs para exportar.");
+				return;
+			}
 
+			const dataR = {
+				ids: selectionModel,
+				CHUSER: user.Id, // Asegúrate de que `user.Id` esté definido
+				output_format: format,
+			};
 
-        } else {
-            // Si hay más de uno, usa el nombre genérico
-            fileName = `archivo.${fileExtension}`;
-        }
-				//const fileName = `archivo.${fileExtension}`;
-				const blob = new Blob([response.data], { type: contentType });
-	
-				// Crear un enlace para descargar
-				const link = document.createElement('a');
-				link.href = URL.createObjectURL(blob);
-				link.download = fileName;
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link); // Limpia el DOM
+			axios.get(process.env.REACT_APP_APPLICATION_BASE_URL + 'makeQrEstudiante', {
+				params: dataR,
+				responseType: 'blob', // Asegura que recibes un blob
 			})
-			.catch((error) => {
-				console.error('Error al descargar el archivo:', error);
-			});
-		}else {
+				.then((response) => {
+					const contentType = response.headers['content-type']; // Detecta el tipo de archivo devuelto
+					let fileExtension = "pdf"; // Asume PDF por defecto
+
+					if (contentType === "application/zip") {
+						fileExtension = "zip";
+					} else if (contentType === "image/png" || format === "qr") {
+						fileExtension = "png";
+					}
+
+					let fileName = "";
+					if (selectionModel.length === 1) {
+						console.log("select 1", selectedRow);
+						console.log("select 2", selectionModel);
+
+						//let obj = data.find((dato: any) => dato.id === selectionModel[0]);
+						let obj = data.find((dato: any) => dato.id === selectionModel[0]);
+
+						// Verificar si obj es undefined o no tiene 'Nombre'
+						fileName = (obj && obj.Nombre ? obj.Nombre : 'archivo') + `.${fileExtension}`;
+
+
+					} else {
+						// Si hay más de uno, usa el nombre genérico
+						fileName = `archivo.${fileExtension}`;
+					}
+					//const fileName = `archivo.${fileExtension}`;
+					const blob = new Blob([response.data], { type: contentType });
+
+					// Crear un enlace para descargar
+					const link = document.createElement('a');
+					link.href = URL.createObjectURL(blob);
+					link.download = fileName;
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link); // Limpia el DOM
+				})
+				.catch((error) => {
+					console.error('Error al descargar el archivo:', error);
+				});
+		} else {
 			Swal.fire({
 				title: "No se han seleccionado registros",
 				icon: "warning",
 			});
 		}
-		
+
 	};
-	
+
 
 	const handleOpenExtenderFecha = (row: any) => {
 		setSelectedRow(row);
@@ -462,33 +495,33 @@ console.log("EstadoQr1",obj.EstadoQR);
 	};
 
 	const consulta = async () => {
-	try {
-		setLoadingTabla(true);
-		setOpenSlider(true);
+		try {
+			setLoadingTabla(true);
+			setOpenSlider(true);
 
-		let data = {
-			NUMOPERACION: 4,
-		};
+			let data = {
+				NUMOPERACION: 4,
+			};
 
-		const res = await CatalogosServices.Estudiante(data);
+			const res = await CatalogosServices.Estudiante(data);
 
-		console.log("res", res);
-		console.log("data", data);
+			console.log("res", res);
+			console.log("data", data);
 
-		if (res.SUCCESS) {
-			setData(res.RESPONSE);
-			console.log("res.RESPONSE", res.RESPONSE);
-		} else {
-			Swal.fire("¡Error!", res.STRMESSAGE, "error");
+			if (res.SUCCESS) {
+				setData(res.RESPONSE);
+				console.log("res.RESPONSE", res.RESPONSE);
+			} else {
+				Swal.fire("¡Error!", res.STRMESSAGE, "error");
+			}
+		} catch (error) {
+			console.error(error);
+			Swal.fire("¡Error!", "No fue posible consultar estudiantes", "error");
+		} finally {
+			setLoadingTabla(false);
+			setOpenSlider(false);
 		}
-	} catch (error) {
-		console.error(error);
-		Swal.fire("¡Error!", "No fue posible consultar estudiantes", "error");
-	} finally {
-		setLoadingTabla(false);
-		setOpenSlider(false);
-	}
-};
+	};
 	// const consulta = () => {
 	// 	let data = {
 	// 		NUMOPERACION: 4,
@@ -509,15 +542,15 @@ console.log("EstadoQr1",obj.EstadoQR);
 	// 	});
 	// };
 
-	
+
 	const handleCatInstitucion = (v: any) => {
 		//setTipoOperacion(1);
 		//setModo("Agregar Registro");
 		setOpenCatInstitucion(true);
 		//setVrows("");
 	};
-	
-	
+
+
 	const handleCatEscolaridad = (v: any) => {
 		//setTipoOperacion(1);
 		//setModo("Agregar Registro");
@@ -576,24 +609,27 @@ console.log("EstadoQr1",obj.EstadoQR);
 			field: "EstadoQR",
 			headerName: "Estado de QR",
 			minWidth: 100,
-			renderCell: (params: any) => (
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "center", // Centrar horizontalmente
-						alignItems: "center", // Centrar verticalmente
-						padding: "4px 10px",
-						borderRadius: "5px",
-						color: "white",
-						fontWeight: "bold",
-						backgroundColor:
-							params.row.EstadoQR === "1" ? "#4CAF50" : "#F44336",
-						textAlign: "center",
-					}}
-				>
-					{params.row.EstadoQR === "1" ? "GENERADO" : "NO GENERADO"}
-				</Box>
-			),
+			renderCell: (params: any) => {
+				const estado = String(params.row.EstadoQR);
+
+				return (
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							padding: "4px 10px",
+							borderRadius: "5px",
+							color: "white",
+							fontWeight: "bold",
+							backgroundColor: estado === "1" ? "#4CAF50" : "#F44336",
+							textAlign: "center",
+						}}
+					>
+						{estado === "1" ? "GENERADO" : "NO GENERADO"}
+					</Box>
+				);
+			},
 		},
 		{
 			field: "TipoEstudiante",
@@ -720,47 +756,47 @@ console.log("EstadoQr1",obj.EstadoQR);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [anchorElSettings, setAnchorElSettings] = useState<null | HTMLElement>(null);
 
-/////////////////////////////////////////////////////////////////
-///////////// Reportes con Filtro ///////////////////////////////
+	/////////////////////////////////////////////////////////////////
+	///////////// Reportes con Filtro ///////////////////////////////
 
-const GenerarReporteEstudiantes = () => {
-    const data = {
-        idUnidadAdministrativa:idUnidadAdministrativa === "false" ? "" : idUnidadAdministrativa,
-        idEstudiante:idEstudiante === "false" ? "" :idEstudiante,
-		fInicioFiltro: fInicioFiltro ? fInicioFiltro.format("YYYY-MM-DD") : "", // Convierte Dayjs a string
-		fFinFiltro: fFinFiltro ? fFinFiltro.format("YYYY-MM-DD") : "", // Convierte Dayjs a string
-    };
+	const GenerarReporteEstudiantes = () => {
+		const data = {
+			idUnidadAdministrativa: idUnidadAdministrativa === "false" ? "" : idUnidadAdministrativa,
+			idEstudiante: idEstudiante === "false" ? "" : idEstudiante,
+			fInicioFiltro: fInicioFiltro ? fInicioFiltro.format("YYYY-MM-DD") : "", // Convierte Dayjs a string
+			fFinFiltro: fFinFiltro ? fFinFiltro.format("YYYY-MM-DD") : "", // Convierte Dayjs a string
+		};
 
-    try {
-        const config = {
-            method: "post",
-            maxBodyLength: Infinity,
-            url: process.env.REACT_APP_APPLICATION_BASE_URL + "ReporteGeneralEstudiantes",
-            headers: {
-                "Content-Type": "application/json",
-                responseType: "blob",
-            },
-            data: data, // Envía los filtros aquí
-        };
+		try {
+			const config = {
+				method: "post",
+				maxBodyLength: Infinity,
+				url: process.env.REACT_APP_APPLICATION_BASE_URL + "ReporteGeneralEstudiantes",
+				headers: {
+					"Content-Type": "application/json",
+					responseType: "blob",
+				},
+				data: data, // Envía los filtros aquí
+			};
 
-        axios
-            .request(config)
-            .then((response) => {
-                const bufferArray = base64ToArrayBuffer(String(response.data.RESPONSE.response64));
-                const blobStore = new Blob([bufferArray], { type: "application/*" });
+			axios
+				.request(config)
+				.then((response) => {
+					const bufferArray = base64ToArrayBuffer(String(response.data.RESPONSE.response64));
+					const blobStore = new Blob([bufferArray], { type: "application/*" });
 
-                const link = document.createElement("a");
-                link.href = window.URL.createObjectURL(blobStore);
-                link.download = "Informe de estudiantes." + response.data.RESPONSE.extencion;
-                link.click();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    } catch (err) {
-        console.log(err);
-    }
-};
+					const link = document.createElement("a");
+					link.href = window.URL.createObjectURL(blobStore);
+					link.download = "Informe de estudiantes." + response.data.RESPONSE.extencion;
+					link.click();
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	const handleFilterChangeFFin = (v: any) => {
 		setFFin(v);
@@ -787,13 +823,13 @@ const GenerarReporteEstudiantes = () => {
 	const loadFilter = (operacion: number, id?: string) => {
 		let data = { NUMOPERACION: operacion, P_ID: id };
 		ShareService.SelectIndex(data).then((res) => {
-		  if (operacion === 5) {
-			//  setCatInforme(res.RESPONSE);
-		  } else if (operacion === 14) {
-			setListIdEstudiante(res.RESPONSE);
-		  } else if (operacion === 15) {
-			setListIdUnidadAdministrativa(res.RESPONSE);
-		  } 
+			if (operacion === 5) {
+				//  setCatInforme(res.RESPONSE);
+			} else if (operacion === 14) {
+				setListIdEstudiante(res.RESPONSE);
+			} else if (operacion === 15) {
+				setListIdUnidadAdministrativa(res.RESPONSE);
+			}
 		});
 	};
 	const clearFilter = () => {
@@ -802,19 +838,19 @@ const GenerarReporteEstudiantes = () => {
 		setFFinFiltro(null);
 		setFInicioFiltro(null);
 
-		
+
 	};
 
 	const verfiltros = () => {
 		if (showfilter) {
-		  setshowfilter(false);
+			setshowfilter(false);
 		} else {
-		  setshowfilter(true);
+			setshowfilter(true);
 		}
-	  };
-////////////////////////////////////////////////////////////////////
-///////////// Fin Reportes con Filtro //////////////////////////////
-	
+	};
+	////////////////////////////////////////////////////////////////////
+	///////////// Fin Reportes con Filtro //////////////////////////////
+
 
 	const handleClose = () => {
 		setOpen(false);
@@ -878,15 +914,15 @@ const GenerarReporteEstudiantes = () => {
 
 	useEffect(() => {
 		permisos.map((item: PERMISO) => {
-		  if (String(item.menu) === "Estudiantes") {
-			if (String(item.ControlInterno) === "REPORTE") {
-				setReporte(true);
-				console.log("tengo reporte");
-				
+			if (String(item.menu) === "Estudiantes") {
+				if (String(item.ControlInterno) === "REPORTE") {
+					setReporte(true);
+					console.log("tengo reporte");
+
+				}
 			}
-		  }
 		});
-	  }, []);
+	}, []);
 
 	return (
 		<>
@@ -895,103 +931,103 @@ const GenerarReporteEstudiantes = () => {
 				{reporte ? <>
 					{/* <Collapse in={showfilter} timeout="auto" unmountOnExit> */}
 					<Grid
-					  container
-					  item
-					  spacing={1}
-					  xs={12}
-					  sm={12}
-					  md={12}
-					  lg={12}
-					  direction="row"
-					  justifyContent="center"
-					  alignItems="center"
-					  sx={{ padding: "1%" }}
+						container
+						item
+						spacing={1}
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+						sx={{ padding: "1%" }}
 					>
-					  <Grid item xs={12} sm={6} md={4} lg={3}>
-						<Typography sx={{ fontFamily: "sans-serif" }}>
-						  Unidad Administrativa:
-						</Typography>
-						<SelectFrag
-						  value={idUnidadAdministrativa}
-						  options={ListIdUnidadAdministrativa}
-						  onInputChange={handleFilterChangeUnidadAdministrativa}
-						  placeholder={"Seleccione.."}
-						  disabled={false}
-						/>
-					  </Grid>
-					  <Grid item xs={12} sm={6} md={4} lg={3}>
-						<Typography sx={{ fontFamily: "sans-serif" }}>
-						  Estudiante:
-						</Typography>
-						<SelectFrag
-						  value={idEstudiante}
-						  options={ListIdEstudiante}
-						  onInputChange={handleFilterChangeEstudiante}
-						  placeholder={"Seleccione.."}
-						  disabled={false}
-						/>
-					  </Grid>
-					  <Grid item xs={12} sm={6} md={4} lg={3}>
-									<CustomizedDate
-										value={fInicioFiltro}
-										label={"Desde"}
-										onchange={handleFilterChangeFInicioFiltro}
-									/>
-					  </Grid>
-					  <Grid item xs={12} sm={6} md={4} lg={3}>
-					  <CustomizedDate
-										value={fFinFiltro}
-										label={"Hasta"}
-										onchange={handleFilterChangeFFinFiltro}
-									/>
-					  </Grid>
-					</Grid>
-					
-					<Grid
-					  container
-					  item
-					  spacing={1}
-					  xs={12}
-					  sm={12}
-					  md={12}
-					  lg={12}
-					  direction="row"
-					  justifyContent="center"
-					  alignItems="center"
-					  sx={{ padding: "1%" }}
-					>
-					  <Grid item xs={12} sm={6} md={4} lg={2}>
-						<Tooltip title="Buscar">
-						  <Button
-							onClick={GenerarReporteEstudiantes}
-							variant="contained"
-							color="secondary"
-							endIcon={<SendIcon sx={{ color: "white" }} />}
-						  >
-							<Typography sx={{ color: "white" }}> Descargar Reporte </Typography>
-						  </Button>
-						</Tooltip>
-					  </Grid>
-					  <Grid item xs={12} sm={6} md={4} lg={2}>
-						<Tooltip title="Limpiar Filtros">
-						  <Button
-							onClick={clearFilter}
-							variant="contained"
-							color="secondary"
-							endIcon={<CleaningServicesIcon sx={{ color: "white" }} />}
-						  >
-							<Typography sx={{ color: "white" }}>
-							  Limpiar Filtros
+						<Grid item xs={12} sm={6} md={4} lg={3}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								Unidad Administrativa:
 							</Typography>
-						  </Button>
-						</Tooltip>
-					  </Grid>
-					  <Grid item xs={12} sm={6} md={4} lg={2}>
-					  </Grid>
-					  <Grid item xs={12} sm={6} md={4} lg={6}></Grid>
-							</Grid>
-						  {/* </Collapse> */}
-						  <Grid
+							<SelectFrag
+								value={idUnidadAdministrativa}
+								options={ListIdUnidadAdministrativa}
+								onInputChange={handleFilterChangeUnidadAdministrativa}
+								placeholder={"Seleccione.."}
+								disabled={false}
+							/>
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={3}>
+							<Typography sx={{ fontFamily: "sans-serif" }}>
+								Estudiante:
+							</Typography>
+							<SelectFrag
+								value={idEstudiante}
+								options={ListIdEstudiante}
+								onInputChange={handleFilterChangeEstudiante}
+								placeholder={"Seleccione.."}
+								disabled={false}
+							/>
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={3}>
+							<CustomizedDate
+								value={fInicioFiltro}
+								label={"Desde"}
+								onchange={handleFilterChangeFInicioFiltro}
+							/>
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={3}>
+							<CustomizedDate
+								value={fFinFiltro}
+								label={"Hasta"}
+								onchange={handleFilterChangeFFinFiltro}
+							/>
+						</Grid>
+					</Grid>
+
+					<Grid
+						container
+						item
+						spacing={1}
+						xs={12}
+						sm={12}
+						md={12}
+						lg={12}
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+						sx={{ padding: "1%" }}
+					>
+						<Grid item xs={12} sm={6} md={4} lg={2}>
+							<Tooltip title="Buscar">
+								<Button
+									onClick={GenerarReporteEstudiantes}
+									variant="contained"
+									color="secondary"
+									endIcon={<SendIcon sx={{ color: "white" }} />}
+								>
+									<Typography sx={{ color: "white" }}> Descargar Reporte </Typography>
+								</Button>
+							</Tooltip>
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={2}>
+							<Tooltip title="Limpiar Filtros">
+								<Button
+									onClick={clearFilter}
+									variant="contained"
+									color="secondary"
+									endIcon={<CleaningServicesIcon sx={{ color: "white" }} />}
+								>
+									<Typography sx={{ color: "white" }}>
+										Limpiar Filtros
+									</Typography>
+								</Button>
+							</Tooltip>
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={2}>
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={6}></Grid>
+					</Grid>
+					{/* </Collapse> */}
+					<Grid
 						item
 						xs={12}
 						sm={6}
@@ -1008,197 +1044,202 @@ const GenerarReporteEstudiantes = () => {
 							row={undefined}
 						/> */}
 					</Grid>
-				</>:<>
+				</> : <>
 					<Collapse in={showfilter} timeout="auto" unmountOnExit>
-            <Grid
-              container
-              item
-              spacing={1}
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ padding: "1%" }}
-            >
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <Typography sx={{ fontFamily: "sans-serif" }}>
-                  Unidad Administrativa:
-                </Typography>
-                <SelectFrag
-                  value={idUnidadAdministrativa}
-                  options={ListIdUnidadAdministrativa}
-                  onInputChange={handleFilterChangeUnidadAdministrativa}
-                  placeholder={"Seleccione.."}
-                  disabled={false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <Typography sx={{ fontFamily: "sans-serif" }}>
-                  Estudiante:
-                </Typography>
-                <SelectFrag
-                  value={idEstudiante}
-                  options={ListIdEstudiante}
-                  onInputChange={handleFilterChangeEstudiante}
-                  placeholder={"Seleccione.."}
-                  disabled={false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-							<CustomizedDate
-								value={fInicioFiltro}
-								label={"Desde"}
-								onchange={handleFilterChangeFInicioFiltro}
-							/>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-			  <CustomizedDate
-								value={fFinFiltro}
-								label={"Hasta"}
-								onchange={handleFilterChangeFFinFiltro}
-							/>
-              </Grid>
-            </Grid>
-            
-            <Grid
-              container
-              item
-              spacing={1}
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              sx={{ padding: "1%" }}
-            >
-              <Grid item xs={12} sm={6} md={4} lg={2}>
-                <Tooltip title="Buscar">
-                  <Button
-                    onClick={GenerarReporteEstudiantes}
-                    variant="contained"
-                    color="secondary"
-                    endIcon={<SendIcon sx={{ color: "white" }} />}
-                  >
-                    <Typography sx={{ color: "white" }}> Descargar Reporte </Typography>
-                  </Button>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={2}>
-                <Tooltip title="Limpiar Filtros">
-                  <Button
-                    onClick={clearFilter}
-                    variant="contained"
-                    color="secondary"
-                    endIcon={<CleaningServicesIcon sx={{ color: "white" }} />}
-                  >
-                    <Typography sx={{ color: "white" }}>
-                      Limpiar Filtros
-                    </Typography>
-                  </Button>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={2}>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={6}></Grid>
-           		 </Grid>
-         		 </Collapse>
+						<Grid
+							container
+							item
+							spacing={1}
+							xs={12}
+							sm={12}
+							md={12}
+							lg={12}
+							direction="row"
+							justifyContent="center"
+							alignItems="center"
+							sx={{ padding: "1%" }}
+						>
+							<Grid item xs={12} sm={6} md={4} lg={3}>
+								<Typography sx={{ fontFamily: "sans-serif" }}>
+									Unidad Administrativa:
+								</Typography>
+								<SelectFrag
+									value={idUnidadAdministrativa}
+									options={ListIdUnidadAdministrativa}
+									onInputChange={handleFilterChangeUnidadAdministrativa}
+									placeholder={"Seleccione.."}
+									disabled={false}
+								/>
+							</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={3}>
+								<Typography sx={{ fontFamily: "sans-serif" }}>
+									Estudiante:
+								</Typography>
+								<SelectFrag
+									value={idEstudiante}
+									options={ListIdEstudiante}
+									onInputChange={handleFilterChangeEstudiante}
+									placeholder={"Seleccione.."}
+									disabled={false}
+								/>
+							</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={3}>
+								<CustomizedDate
+									value={fInicioFiltro}
+									label={"Desde"}
+									onchange={handleFilterChangeFInicioFiltro}
+								/>
+							</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={3}>
+								<CustomizedDate
+									value={fFinFiltro}
+									label={"Hasta"}
+									onchange={handleFilterChangeFFinFiltro}
+								/>
+							</Grid>
+						</Grid>
 
-				 <Grid container spacing={2}>
-  {/* Botones principales */}
- 
-  <Grid
-    item
-    xs={12}
-    sm={6}
-    md={4}
-    lg={3}
-    display="flex"
-    alignItems="center"
-  >
-    <Box sx={{ padding: "0px 8px" }}>
-      <ButtonsAdd handleOpen={handleOpen} agregar={true} />
-    </Box>
-    <Box sx={{ padding: "4px 8px" }}>
-      <ButtonsImport handleOpen={handleUpload} agregar={true} />
-    </Box>
-    <Box sx={{ padding: "4px 8px" }}>
-      <Tooltip title={"Generar QR Seleccionados"}>
-        <ToggleButton
-          value="check"
-          className="guardar"
-          size="small"
-          onChange={() => noSelection()}
-          sx={{
-            padding: "8px", // Ajusta el tamaño del botón
-          }}
-        >
-          <IconButton
-            color="inherit"
-            component="label"
-            size="small"
-          >
-            <QrCodeIcon />
-          </IconButton>
-        </ToggleButton>
-      </Tooltip>
-    </Box>
-    <Box sx={{ padding: "4px 8px" }}>
-      <Tooltip title={"Exportar QRs"}>
-        <Button
-          variant="contained"
-          sx={{
-            padding: "7px", // Ajusta el tamaño del botón
-            backgroundColor: "#15212f",
-            color: "white",
-            minWidth: "40px",
-            "&:hover": {
-              backgroundColor: "#1C1C1C",
-            },
-          }}
-          onMouseEnter={(event) => setAnchorEl(event.currentTarget)} // Abre el menú
-        >
-          <IconButton
-            color="inherit"
-            component="label"
-            size="small"
-          >
-            <FileDownloadIcon />
-          </IconButton>
-        </Button>
-      </Tooltip>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)} // Cierra el menú al hacer clic afuera
-        MenuListProps={{
-          onMouseEnter: () => setAnchorEl(anchorEl), // Mantiene el menú abierto si el mouse está dentro
-          onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
-        }}
-      >
-        <MenuItem onClick={() => handleExport("pdf")}>
-          Exportar como PDF
-        </MenuItem>
-        <MenuItem onClick={() => handleExport("qr")}>
-          Exportar como PNG
-        </MenuItem>
-      </Menu>
-    </Box>
-    <ButtonsShare
-      title={showfilter ? "Ocultar Reporte" : "Generar Reporte"}
-      handleFunction={verfiltros}
-      show={true}
-      icon={showfilter ? <PlaylistRemoveIcon /> : <FormatListBulletedIcon />}
-      row={undefined}
-    />
-  </Grid>
-  
- {/* Nuevo botón de configuración */}
-	{/* <Grid
+						<Grid
+							container
+							item
+							spacing={1}
+							xs={12}
+							sm={12}
+							md={12}
+							lg={12}
+							direction="row"
+							justifyContent="center"
+							alignItems="center"
+							sx={{ padding: "1%" }}
+						>
+							<Grid item xs={12} sm={6} md={4} lg={2}>
+								<Tooltip title="Buscar">
+									<Button
+										onClick={GenerarReporteEstudiantes}
+										variant="contained"
+										color="secondary"
+										endIcon={<SendIcon sx={{ color: "white" }} />}
+									>
+										<Typography sx={{ color: "white" }}> Descargar Reporte </Typography>
+									</Button>
+								</Tooltip>
+							</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={2}>
+								<Tooltip title="Limpiar Filtros">
+									<Button
+										onClick={clearFilter}
+										variant="contained"
+										color="secondary"
+										endIcon={<CleaningServicesIcon sx={{ color: "white" }} />}
+									>
+										<Typography sx={{ color: "white" }}>
+											Limpiar Filtros
+										</Typography>
+									</Button>
+								</Tooltip>
+							</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={2}>
+							</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={6}></Grid>
+						</Grid>
+					</Collapse>
+
+					<Grid container spacing={2}>
+						{/* Botones principales */}
+
+						<Grid
+							item
+							xs={12}
+							sm={6}
+							md={4}
+							lg={3}
+							display="flex"
+							alignItems="center"
+						>
+							<Box sx={{ padding: "0px 8px" }}>
+								<ButtonsAdd handleOpen={handleOpen} agregar={true} />
+							</Box>
+							<Box sx={{ padding: "4px 8px" }}>
+								<ButtonsImport handleOpen={handleUpload} agregar={true} />
+							</Box>
+							<Box sx={{ padding: "4px 8px" }}>
+								<Tooltip title={"Generar QR Seleccionados"}>
+									<ToggleButton
+										value="check"
+										className="guardar"
+										size="small"
+										disabled={processingQR}
+										onChange={() => noSelection()}
+										sx={{
+											padding: "8px", // Ajusta el tamaño del botón
+										}}
+									>
+										{processingQR ? (
+											<CircularProgress size={20} sx={{ color: "white" }} />
+										) : (
+											<IconButton
+												color="inherit"
+												component="label"
+												size="small"
+											>
+												<QrCodeIcon />
+											</IconButton>
+										)}
+									</ToggleButton>
+								</Tooltip>
+							</Box>
+							<Box sx={{ padding: "4px 8px" }}>
+								<Tooltip title={"Exportar QRs"}>
+									<Button
+										variant="contained"
+										sx={{
+											padding: "7px", // Ajusta el tamaño del botón
+											backgroundColor: "#15212f",
+											color: "white",
+											minWidth: "40px",
+											"&:hover": {
+												backgroundColor: "#1C1C1C",
+											},
+										}}
+										onMouseEnter={(event) => setAnchorEl(event.currentTarget)} // Abre el menú
+									>
+										<IconButton
+											color="inherit"
+											component="label"
+											size="small"
+										>
+											<FileDownloadIcon />
+										</IconButton>
+									</Button>
+								</Tooltip>
+								<Menu
+									anchorEl={anchorEl}
+									open={Boolean(anchorEl)}
+									onClose={() => setAnchorEl(null)} // Cierra el menú al hacer clic afuera
+									MenuListProps={{
+										onMouseEnter: () => setAnchorEl(anchorEl), // Mantiene el menú abierto si el mouse está dentro
+										onMouseLeave: () => setAnchorEl(null), // Cierra el menú si el mouse sale
+									}}
+								>
+									<MenuItem onClick={() => handleExport("pdf")}>
+										Exportar como PDF
+									</MenuItem>
+									<MenuItem onClick={() => handleExport("qr")}>
+										Exportar como PNG
+									</MenuItem>
+								</Menu>
+							</Box>
+							<ButtonsShare
+								title={showfilter ? "Ocultar Reporte" : "Generar Reporte"}
+								handleFunction={verfiltros}
+								show={true}
+								icon={showfilter ? <PlaylistRemoveIcon /> : <FormatListBulletedIcon />}
+								row={undefined}
+							/>
+						</Grid>
+
+						{/* Nuevo botón de configuración */}
+						{/* <Grid
   item
   xs={12}
   sm={6}
@@ -1250,99 +1291,99 @@ const GenerarReporteEstudiantes = () => {
 	</Grid> */}
 
 
-  {/* Tabla */}
-  <Grid item xs={12}>
-    <Box
-      sx={{
-        height: { xs: 300, sm: 400, md: 500 },
-        width: "100%",
-        overflowX: "auto",
-      }}
-    >
-      <MUIXDataGridEstudiantes
-        columns={columnsRel}
-        rows={data}
-        setRowSelected={setSelectionModel}
-		loading={loadingTabla}
-      />
-    </Box>
-  </Grid>
-</Grid>
+						{/* Tabla */}
+						<Grid item xs={12}>
+							<Box
+								sx={{
+									height: { xs: 300, sm: 400, md: 500 },
+									width: "100%",
+									overflowX: "auto",
+								}}
+							>
+								<MUIXDataGridEstudiantes
+									columns={columnsRel}
+									rows={data}
+									setRowSelected={setSelectionModel}
+									loading={loadingTabla || processingQR}
+								/>
+							</Box>
+						</Grid>
+					</Grid>
 
-{openCatInstitucion ? (
-					<CatInstitucion
-						//tipo={tipoOperacion}
-						handleClose={handleClose}
+					{openCatInstitucion ? (
+						<CatInstitucion
+							//tipo={tipoOperacion}
+							handleClose={handleClose}
 						//dt={vrows}
-					/>
-				) : (
-					""
-				)}
-				{openCatEscolaridad ? (
-					<CatEscolaridad
-						//tipo={tipoOperacion}
-						handleClose={handleClose}
-						//dt={vrows}
-					/>
-				) : (
-					""
-				)}
-
-				{open ? (
-					<EstudiantesModal
-						tipo={tipoOperacion}
-						handleClose={handleClose}
-						dt={vrows}
-					/>
-				) : (
-					""
-				)}
-
-				{/* Modal para extender fecha */}
-				<Dialog
-					open={openExtenderFechaModal}
-					onClose={handleCloseExtenderFecha}
-					maxWidth="xs"
-					fullWidth
-				>
-					{/* Botón de cierre en la parte superior derecha */}
-					<IconButton
-						aria-label="close"
-						onClick={handleCloseExtenderFecha}
-						sx={{
-							position: "absolute",
-							right: 8,
-							top: 8,
-							color: (theme) => theme.palette.grey[500],
-						}}
-					>
-						<CloseIcon />
-					</IconButton>
-
-					<DialogTitle
-						sx={{
-							fontWeight: "bold",
-							textAlign: "center",
-							fontSize: 24,
-							color: "#A57F52",
-						}}
-					>
-						EXTENDER FECHA DE FIN
-					</DialogTitle>
-
-					<DialogContent sx={{ textAlign: "center", mb: 2 }}>
-						<Typography sx={{ mb: 2, fontWeight: "bold" }}>
-							Fecha de Fin Actual: {selectedRow?.FechaFin || "N/A"}
-						</Typography>
-						<CustomizedDate
-							value={fFin}
-							label={"Fecha de Vigencia (Inicio)"}
-							onchange={handleFilterChangeFFin}
 						/>
-					</DialogContent>
+					) : (
+						""
+					)}
+					{openCatEscolaridad ? (
+						<CatEscolaridad
+							//tipo={tipoOperacion}
+							handleClose={handleClose}
+						//dt={vrows}
+						/>
+					) : (
+						""
+					)}
 
-					<DialogActions sx={{ justifyContent: "center", gap: 2, pb: 3 }}>
-						{/* <Button
+					{open ? (
+						<EstudiantesModal
+							tipo={tipoOperacion}
+							handleClose={handleClose}
+							dt={vrows}
+						/>
+					) : (
+						""
+					)}
+
+					{/* Modal para extender fecha */}
+					<Dialog
+						open={openExtenderFechaModal}
+						onClose={handleCloseExtenderFecha}
+						maxWidth="xs"
+						fullWidth
+					>
+						{/* Botón de cierre en la parte superior derecha */}
+						<IconButton
+							aria-label="close"
+							onClick={handleCloseExtenderFecha}
+							sx={{
+								position: "absolute",
+								right: 8,
+								top: 8,
+								color: (theme) => theme.palette.grey[500],
+							}}
+						>
+							<CloseIcon />
+						</IconButton>
+
+						<DialogTitle
+							sx={{
+								fontWeight: "bold",
+								textAlign: "center",
+								fontSize: 24,
+								color: "#A57F52",
+							}}
+						>
+							EXTENDER FECHA DE FIN
+						</DialogTitle>
+
+						<DialogContent sx={{ textAlign: "center", mb: 2 }}>
+							<Typography sx={{ mb: 2, fontWeight: "bold" }}>
+								Fecha de Fin Actual: {selectedRow?.FechaFin || "N/A"}
+							</Typography>
+							<CustomizedDate
+								value={fFin}
+								label={"Fecha de Vigencia (Inicio)"}
+								onchange={handleFilterChangeFFin}
+							/>
+						</DialogContent>
+
+						<DialogActions sx={{ justifyContent: "center", gap: 2, pb: 3 }}>
+							{/* <Button
 							variant="contained"
 							onClick={handleCloseExtenderFecha}
 							sx={{
@@ -1353,150 +1394,150 @@ const GenerarReporteEstudiantes = () => {
 						>
 							CANCELAR
 						</Button> */}
-						<Button
-							variant="contained"
-							onClick={handleConfirmarFecha}
-							sx={{
-								backgroundColor: "black",
-								color: "white",
-								"&:hover": {
-									backgroundColor: "grey.300",
-									color: "black",
-								},
-							}}
-						>
-							Confirmar
-						</Button>
-					</DialogActions>
-				</Dialog>
-
-				{/* Modal para subir foto */}
-				<Dialog
-					open={openModal}
-					onClose={() => setOpenModal(false)}
-					maxWidth="xs"
-					fullWidth
-				>
-					{/* Botón de cierre en la parte superior derecha */}
-					<IconButton
-						aria-label="close"
-						onClick={() => setOpenModal(false)}
-						sx={{
-							position: "absolute",
-							right: 8,
-							top: 8,
-							color: (theme) => theme.palette.grey[500],
-						}}
-					>
-						<CloseIcon />
-					</IconButton>
-
-					<DialogTitle
-						sx={{
-							fontWeight: "bold",
-							textAlign: "center",
-							fontSize: 24,
-							color: "#A57F52",
-						}}
-					>
-						Cargar Imagen de Perfil
-					</DialogTitle>
-
-					<DialogContent sx={{ color: "black", mb: 2 }}>
-						<Typography sx={{ mb: 1 }}>
-							Seleccione una imagen adecuada que representará el perfil
-							del estudiante.
-						</Typography>
-						<Box
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center", // Centrar el contenido horizontalmente
-								mt: 2,
-								textAlign: "center", // Centrar el texto dentro del Typography
-							}}
-						>
-							<input
-								type="file"
-								accept="image/*"
-								onChange={(e) =>
-									setFile(e.target.files ? e.target.files[0] : null)
-								}
-								id="upload-button"
-								style={{ display: "none" }}
-							/>
-							<label htmlFor="upload-button">
-								<Button
-									variant="outlined"
-									component="span"
-									startIcon={<UploadFileIcon />}
-									sx={{
-										mr: 2,
-										backgroundColor: "#F0F0F0",
-										color: "#333333",
-										borderColor: "#A0A0A0",
-										"&:hover": {
-											backgroundColor: "#E0E0E0",
-											color: "#000000",
-										},
-										fontSize: 14,
-										textTransform: "none",
-									}}
-								>
-									Seleccionar Archivo
-								</Button>
-							</label>
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								sx={{ color: "#666666" }}
+							<Button
+								variant="contained"
+								onClick={handleConfirmarFecha}
+								sx={{
+									backgroundColor: "black",
+									color: "white",
+									"&:hover": {
+										backgroundColor: "grey.300",
+										color: "black",
+									},
+								}}
 							>
-								{file ? file.name : "No hay archivo seleccionado"}
-							</Typography>
-						</Box>
-					</DialogContent>
+								Confirmar
+							</Button>
+						</DialogActions>
+					</Dialog>
 
-					<DialogActions
-						sx={{ justifyContent: "flex-end", pb: 3, pt: 2, mx: 3 }}
+					{/* Modal para subir foto */}
+					<Dialog
+						open={openModal}
+						onClose={() => setOpenModal(false)}
+						maxWidth="xs"
+						fullWidth
 					>
-						<Button
+						{/* Botón de cierre en la parte superior derecha */}
+						<IconButton
+							aria-label="close"
 							onClick={() => setOpenModal(false)}
-							variant="contained"
 							sx={{
-								backgroundColor: "#A57F52",
-								color: "white",
-								"&:hover": {
-									backgroundColor: "grey.300", // Cambia a gris claro en hover
-									color: "black", // Cambia a letras negras en hover
-								},
+								position: "absolute",
+								right: 8,
+								top: 8,
+								color: (theme) => theme.palette.grey[500],
 							}}
 						>
-							Cancelar
-						</Button>
+							<CloseIcon />
+						</IconButton>
 
-						<Button
-							onClick={subirFoto}
-							color="primary"
-							disabled={loading || !file}
+						<DialogTitle
 							sx={{
-								backgroundColor: "black",
-								color: "white",
-								width: "40%", // Más ancho
-								height: 36, // Altura reducida
-								"&:hover": {
-									backgroundColor: "#333",
-								},
+								fontWeight: "bold",
+								textAlign: "center",
+								fontSize: 24,
+								color: "#A57F52",
 							}}
 						>
-							{loading ? <CircularProgress size={24} /> : "Subir"}
-						</Button>
-					</DialogActions>
-				</Dialog>
+							Cargar Imagen de Perfil
+						</DialogTitle>
+
+						<DialogContent sx={{ color: "black", mb: 2 }}>
+							<Typography sx={{ mb: 1 }}>
+								Seleccione una imagen adecuada que representará el perfil
+								del estudiante.
+							</Typography>
+							<Box
+								sx={{
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center", // Centrar el contenido horizontalmente
+									mt: 2,
+									textAlign: "center", // Centrar el texto dentro del Typography
+								}}
+							>
+								<input
+									type="file"
+									accept="image/*"
+									onChange={(e) =>
+										setFile(e.target.files ? e.target.files[0] : null)
+									}
+									id="upload-button"
+									style={{ display: "none" }}
+								/>
+								<label htmlFor="upload-button">
+									<Button
+										variant="outlined"
+										component="span"
+										startIcon={<UploadFileIcon />}
+										sx={{
+											mr: 2,
+											backgroundColor: "#F0F0F0",
+											color: "#333333",
+											borderColor: "#A0A0A0",
+											"&:hover": {
+												backgroundColor: "#E0E0E0",
+												color: "#000000",
+											},
+											fontSize: 14,
+											textTransform: "none",
+										}}
+									>
+										Seleccionar Archivo
+									</Button>
+								</label>
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									sx={{ color: "#666666" }}
+								>
+									{file ? file.name : "No hay archivo seleccionado"}
+								</Typography>
+							</Box>
+						</DialogContent>
+
+						<DialogActions
+							sx={{ justifyContent: "flex-end", pb: 3, pt: 2, mx: 3 }}
+						>
+							<Button
+								onClick={() => setOpenModal(false)}
+								variant="contained"
+								sx={{
+									backgroundColor: "#A57F52",
+									color: "white",
+									"&:hover": {
+										backgroundColor: "grey.300", // Cambia a gris claro en hover
+										color: "black", // Cambia a letras negras en hover
+									},
+								}}
+							>
+								Cancelar
+							</Button>
+
+							<Button
+								onClick={subirFoto}
+								color="primary"
+								disabled={loading || !file}
+								sx={{
+									backgroundColor: "black",
+									color: "white",
+									width: "40%", // Más ancho
+									height: 36, // Altura reducida
+									"&:hover": {
+										backgroundColor: "#333",
+									},
+								}}
+							>
+								{loading ? <CircularProgress size={24} /> : "Subir"}
+							</Button>
+						</DialogActions>
+					</Dialog>
 				</>}
-				
 
 
-				
+
+
 			</Box>
 		</>
 	);
